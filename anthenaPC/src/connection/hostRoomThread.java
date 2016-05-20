@@ -19,6 +19,10 @@ public class hostRoomThread implements Runnable {
         running = false;
     }
     
+    public void sendData (String data) {
+        //Implement the function call to the program here
+    }
+    
     private void listenAtPort() {
         ServerSocket serverSocket = null;
         Socket socket = null;
@@ -39,6 +43,7 @@ public class hostRoomThread implements Runnable {
                 dataOutputStream = new DataOutputStream(socket.getOutputStream());
                 System.out.println("ip: " + socket.getInetAddress());
                 System.out.println("message: " + dataInputStream.readUTF());
+                sendData(dataInputStream.readUTF());
                 dataOutputStream.writeUTF("Hello!");
             } catch (IOException e) {
                 e.printStackTrace();
