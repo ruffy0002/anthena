@@ -105,7 +105,10 @@ public class GameLoop extends AnimationTimer {
 		// collision check
 		for (int k = 0; k < attack.size(); k++) {
 			for (int kk = 0; kk < ants.size(); kk++) {
-				attack.get(k).intersects(ants.get(kk));
+				boolean hasCollided = attack.get(k).intersects(ants.get(kk));
+				if (hasCollided) {
+					ants.get(kk).setDead();
+				}
 			}
 		}
 	}
@@ -116,7 +119,7 @@ public class GameLoop extends AnimationTimer {
 		for (int i = 0; i < ants.size(); i++) {
 			ants.get(i).render(graphicContext);
 		}
-		
+
 		for (int i = 0; i < attack.size(); i++) {
 			attack.get(i).render(graphicContext);
 		}
