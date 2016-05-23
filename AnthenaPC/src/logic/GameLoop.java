@@ -74,7 +74,7 @@ public class GameLoop extends AnimationTimer {
 		for (int i = 0; i < temp.size(); i++) {
 			KeyCode code = temp.get(i);
 			if (code.compareTo(KeyCode.G) == 0) {
-				createAttack();
+				createAttack(50, 50);
 			}
 			for (int k = 0; k < ants.size(); k++) {
 				ants.get(k).update(code);
@@ -139,10 +139,11 @@ public class GameLoop extends AnimationTimer {
 		graphicContext.fillText(String.valueOf(frameRate) + "fps", 460, 490);
 	}
 
-	private void createAttack() {
+	public void createAttack(double x, double y) {
+
 		Attack att = new Attack();
-		att.setPositionX(50);
-		att.setPositionY(90);
+		att.setPositionX(x);
+		att.setPositionY(y);
 		att.setWidth(30);
 		att.setHeight(30);
 

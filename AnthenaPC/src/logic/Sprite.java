@@ -20,6 +20,8 @@ public class Sprite {
 	private double halfHeight;
 	protected double rotationAngle;
 	protected double velocityRotate;
+	
+	double animationFrame;
 
 	public double getVelocityRotate() {
 		return velocityRotate;

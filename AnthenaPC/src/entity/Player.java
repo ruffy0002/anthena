@@ -27,7 +27,7 @@ public class Player extends Sprite {
 		super.setPositionY(0);
 		super.setVelocityX(0);
 		super.setRotationAngle(0);
-		super.setImage("ant.png");
+		super.setImage("sprite/ant.png");
 	}
 
 	public void initRandomAnt() {
@@ -45,7 +45,7 @@ public class Player extends Sprite {
 		super.setPositionY(200);
 		super.setVelocityX(0);
 		super.setRotationAngle(0);
-		super.setImage("ant.png");
+		super.setImage("sprite/ant.png");
 	}
 
 	public void update(double time) {

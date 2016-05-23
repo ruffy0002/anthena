@@ -1,9 +1,11 @@
 package connection;
 
+import logic.LogicMain;
+
 public class SocketInterface {
     private static hostRoomThread roomThread;
-    public static void broadcastRoom() {
-        roomThread = new hostRoomThread();
+    public static void broadcastRoom(LogicMain logicMain) {
+        roomThread = new hostRoomThread(logicMain);
         Thread thread = new Thread(roomThread);
         thread.start();
     }
@@ -15,6 +17,6 @@ public class SocketInterface {
     }
     
     public static void main (String[] args) {
-        broadcastRoom();
+        broadcastRoom(null);
     }
 }
