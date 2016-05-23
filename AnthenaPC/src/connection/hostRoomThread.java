@@ -3,8 +3,13 @@ package connection;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import com.main.anthenaandroid.GamePacket;
+import com.main.anthenaandroid.BroadcastPacket;
 
 public class hostRoomThread implements Runnable {
 
@@ -19,15 +24,15 @@ public class hostRoomThread implements Runnable {
         running = false;
     }
     
-    public void sendData (String data) {
-        //Implement the function call to the program here
+    public void sendDataToProgram (GamePacket data) {
+        System.out.println("X: " + data.getX() + ", Y: " + data.getY());
     }
     
     private void listenAtPort() {
         ServerSocket serverSocket = null;
         Socket socket = null;
-        DataInputStream dataInputStream = null;
-        DataOutputStream dataOutputStream = null;
+        ObjectInputStream dataInputStream = null;
+        ObjectOutputStream dataOutputStream = null;
 
         try {
             serverSocket = new ServerSocket(PORT_NO);
@@ -39,13 +44,21 @@ public class hostRoomThread implements Runnable {
         while (running) {
             try {
                 socket = serverSocket.accept();
-                dataInputStream = new DataInputStream(socket.getInputStream());
-                dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                dataInputStream = new ObjectInputStream(socket.getInputStream());
+                dataOutputStream = new ObjectOutputStream(socket.getOutputStream());
                 System.out.println("ip: " + socket.getInetAddress());
-                System.out.println("message: " + dataInputStream.readUTF());
-                sendData(dataInputStream.readUTF());
-                dataOutputStream.writeUTF("Hello!");
+                Object object = dataInputStream.readObject();
+                if(object instanceof GamePacket) {
+                    GamePacket p = (GamePacket) object;
+                    sendDataToProgram(p);
+                } else if (object instanceof BroadcastPacket)
+                {
+                    System.out.println("Broadcast recieved");
+                }
+                
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } finally {
                 if (socket != null) {
