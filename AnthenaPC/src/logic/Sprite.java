@@ -14,8 +14,8 @@ public class Sprite {
 	protected double positionY;
 	protected double velocityX;
 	protected double velocityY;
-	private double width;
-	private double height;
+	protected double width;
+	protected double height;
 	private double halfWidth;
 	private double halfHeight;
 	protected double rotationAngle;
@@ -113,11 +113,9 @@ public class Sprite {
 	}
 
 	public Rectangle getBoundary() {
-
 		Rectangle r = new Rectangle(positionX, positionY, width, height);
 		r.setRotate(rotationAngle);
 		return r;
-
 	}
 
 	public boolean intersects(Sprite s) {

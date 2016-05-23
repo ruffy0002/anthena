@@ -3,6 +3,7 @@ package logic;
 import java.util.ArrayList;
 
 import controls.Controller;
+import entity.Attack;
 import entity.Player;
 
 import javafx.animation.AnimationTimer;
@@ -21,8 +22,11 @@ public class GameLoop extends AnimationTimer {
 	private GraphicsContext graphicContext;
 	private Controller controller;
 	private ArrayList<Player> ants = new ArrayList<Player>();
+	private ArrayList<Attack> attack = new ArrayList<Attack>();
 
 	public GameLoop(Canvas canvas, Controller controller) {
+
+		new LogicMain(this);
 
 		this.controller = controller;
 		mainCanvas = canvas;
@@ -31,7 +35,6 @@ public class GameLoop extends AnimationTimer {
 		initGameComponents();
 		initGameLoop();
 	}
-
 
 	public void initGameComponents() {
 		Player p = new Player();
@@ -70,6 +73,9 @@ public class GameLoop extends AnimationTimer {
 		ArrayList<KeyCode> temp = controller.getKeyCodes();
 		for (int i = 0; i < temp.size(); i++) {
 			KeyCode code = temp.get(i);
+			if (code.compareTo(KeyCode.G) == 0) {
+				createAttack();
+			}
 			for (int k = 0; k < ants.size(); k++) {
 				ants.get(k).update(code);
 			}
@@ -82,10 +88,24 @@ public class GameLoop extends AnimationTimer {
 			ants.get(k).update(elapsedTime);
 		}
 
-		for (int k = 0; k < ants.size(); k++) {
+		ArrayList<Integer> lsitToRemove = new ArrayList<Integer>();
+		for (int k = 0; k < attack.size(); k++) {
+			if (attack.get(k).getReadyToClear()) {
+				lsitToRemove.add(k);
+			} else {
+				attack.get(k).update(elapsedTime);
+			}
+		}
+
+		// remove attacks from list
+		for (int i = lsitToRemove.size() - 1; i >= 0; i--) {
+			attack.remove(i);
+		}
+
+		// collision check
+		for (int k = 0; k < attack.size(); k++) {
 			for (int kk = 0; kk < ants.size(); kk++) {
-				if (k != kk)
-					ants.get(k).intersects(ants.get(kk));
+				attack.get(k).intersects(ants.get(kk));
 			}
 		}
 	}
@@ -95,6 +115,10 @@ public class GameLoop extends AnimationTimer {
 		drawFrameRate();
 		for (int i = 0; i < ants.size(); i++) {
 			ants.get(i).render(graphicContext);
+		}
+		
+		for (int i = 0; i < attack.size(); i++) {
+			attack.get(i).render(graphicContext);
 		}
 	}
 
@@ -112,4 +136,13 @@ public class GameLoop extends AnimationTimer {
 		graphicContext.fillText(String.valueOf(frameRate) + "fps", 460, 490);
 	}
 
+	private void createAttack() {
+		Attack att = new Attack();
+		att.setPositionX(50);
+		att.setPositionY(90);
+		att.setWidth(30);
+		att.setHeight(30);
+
+		attack.add(att);
+	}
 }
