@@ -3,7 +3,7 @@ package entity;
 import javafx.scene.canvas.GraphicsContext;
 import logic.Sprite;
 
-public class Attack extends Sprite {
+public class Attack extends Player {
 
 	private double lifeTime = 3;
 	private double fadeSpeed = 1;

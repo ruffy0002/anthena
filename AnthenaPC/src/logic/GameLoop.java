@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import controls.Controller;
 import entity.Attack;
 import entity.Player;
+import entity.Character;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
@@ -21,7 +22,7 @@ public class GameLoop extends AnimationTimer {
 	private Canvas mainCanvas;
 	private GraphicsContext graphicContext;
 	private Controller controller;
-	private ArrayList<Player> ants = new ArrayList<Player>();
+	private ArrayList<Character> ants = new ArrayList<Character>();
 	private ArrayList<Attack> attack = new ArrayList<Attack>();
 
 	public GameLoop(Canvas canvas, Controller controller) {
@@ -37,11 +38,12 @@ public class GameLoop extends AnimationTimer {
 	}
 
 	public void initGameComponents() {
-		Player p = new Player();
-		p.initHardCodeAnt();
+		Character p = new Character();
+		p.init();
 		ants.add(p);
 
-		Player temp = new Player();
+		Character temp = new Character();
+		temp.init();
 		temp.initRandomAnt();
 		ants.add(temp);
 	}

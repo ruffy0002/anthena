@@ -10,41 +10,60 @@ import javafx.scene.transform.Rotate;
 public class Sprite {
 
 	private Image image;
+	protected int animationLength;
+	protected int animationSpeed;
+	protected int currentAnimationFrame;
+	protected int animationFrameWidth;
+	protected int animationFrameHeight;
+
 	protected double positionX;
 	protected double positionY;
 	protected double velocityX;
 	protected double velocityY;
 	protected double width;
 	protected double height;
-	private double halfWidth;
-	private double halfHeight;
+	protected double halfWidth;
+	protected double halfHeight;
 	protected double rotationAngle;
 	protected double velocityRotate;
-	
-	double animationFrame;
+	protected double scale;
 
-	public double getVelocityRotate() {
-		return velocityRotate;
+	public void setImage(String image) {
+		this.image = new Image(image);
 	}
 
-	public void setVelocityRotate(double velocityRotate) {
-		this.velocityRotate = velocityRotate;
+	public void setWidth(double width) {
+		this.width = width;
+		halfWidth = width / 2;
 	}
 
-	public double getRotationAngle() {
-		return rotationAngle;
-	}
-
-	public void setRotationAngle(double rotationAngle) {
-		this.rotationAngle = rotationAngle;
+	public void setHeight(double height) {
+		this.height = height;
+		halfHeight = height / 2;
 	}
 
 	public Image getImage() {
 		return image;
 	}
 
-	public void setImage(String image) {
-		this.image = new Image(image);
+	public void setImage(Image image) {
+		this.image = image;
+	}
+
+	public int getAnimationLength() {
+		return animationLength;
+	}
+
+	public void setAnimationLength(int animationLength) {
+		this.animationLength = animationLength;
+	}
+
+	public int getAnimationSpeed() {
+		return animationSpeed;
+	}
+
+	public void setAnimationSpeed(int animationSpeed) {
+		this.animationSpeed = animationSpeed;
 	}
 
 	public double getPositionX() {
@@ -79,27 +98,56 @@ public class Sprite {
 		this.velocityY = velocityY;
 	}
 
-	public double getWidth() {
-		return width;
+	public double getHalfWidth() {
+		return halfWidth;
 	}
 
-	public void setWidth(double width) {
-		this.width = width;
-		halfWidth = width / 2;
+	public void setHalfWidth(double halfWidth) {
+		this.halfWidth = halfWidth;
+	}
+
+	public double getHalfHeight() {
+		return halfHeight;
+	}
+
+	public void setHalfHeight(double halfHeight) {
+		this.halfHeight = halfHeight;
+	}
+
+	public double getRotationAngle() {
+		return rotationAngle;
+	}
+
+	public void setRotationAngle(double rotationAngle) {
+		this.rotationAngle = rotationAngle;
+	}
+
+	public double getVelocityRotate() {
+		return velocityRotate;
+	}
+
+	public void setVelocityRotate(double velocityRotate) {
+		this.velocityRotate = velocityRotate;
+	}
+
+	public double getScale() {
+		return scale;
+	}
+
+	public void setScale(double scale) {
+		this.scale = scale;
+	}
+
+	public double getWidth() {
+		return width;
 	}
 
 	public double getHeight() {
 		return height;
 	}
 
-	public void setHeight(double height) {
-		this.height = height;
-		halfHeight = height / 2;
-	}
-
 	public void update(double time) {
-		positionX += velocityX * time;
-		positionY += velocityY * time;
+
 	}
 
 	private void rotate(GraphicsContext gc, double angle, double px, double py) {
@@ -110,7 +158,8 @@ public class Sprite {
 	public void render(GraphicsContext gc) {
 		gc.save();
 		rotate(gc, rotationAngle, positionX + halfWidth, positionY + halfHeight);
-		gc.drawImage(image, 0, 0, 250, 222, positionX, positionY, width, height);
+		gc.drawImage(image, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth, animationFrameHeight,
+				positionX, positionY, width, height);
 		gc.restore();
 	}
 
