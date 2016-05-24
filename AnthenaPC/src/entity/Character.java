@@ -32,7 +32,6 @@ public class Character extends Player {
 	}
 
 	public void update(double time) {
-
 		rotationAngle += velocityRotate * time;
 		rotationAngle = rotationAngle % 360;
 		double strightLineDistance = velocityX * time;
