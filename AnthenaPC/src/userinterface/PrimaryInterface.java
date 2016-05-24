@@ -22,14 +22,15 @@ public class PrimaryInterface extends Application {
 		Group root = new Group();
 		Scene theScene = new Scene(root);
 		stage.setScene(theScene);
-		Canvas canvas = new Canvas(500, 500);
-		root.getChildren().add(canvas);
-
+		Canvas mainCanvas = new Canvas(500, 500);
+		Canvas backgroundCanvas = new Canvas(500, 500);
+		root.getChildren().add(backgroundCanvas);
+		root.getChildren().add(mainCanvas);
 		stage.show();
 
-		initResources();
+		Resources resources = initResources();
 		initControls(theScene);
-		initGameLoop(canvas);
+		initGameLoop(mainCanvas, backgroundCanvas, resources);
 	}
 
 	private void initControls(Scene theScene) {
@@ -37,13 +38,17 @@ public class PrimaryInterface extends Application {
 		controller.initController(theScene);
 	}
 
-	private void initGameLoop(Canvas canvas) {
-		GameLoop gameLoop = new GameLoop(canvas, controller);
+	private void initGameLoop(Canvas mainCanvas, Canvas backgroundCanvas, Resources resource) {
+		GameLoop gameLoop = new GameLoop(mainCanvas, backgroundCanvas, controller, resource);
 		gameLoop.start();
 	}
 
-	private void initResources() {
+	private Resources initResources() {
 		Resources resource = new Resources();
+		resource.loadMap();
+		resource.loadCharacterSprites();
+		resource.loadColors();
+		return resource;
 	}
 
 }

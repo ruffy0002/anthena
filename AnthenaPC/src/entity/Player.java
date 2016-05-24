@@ -1,8 +1,10 @@
 package entity;
 
-import controls.Control;
+import controls.Control; 
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import logic.Sprite;
+import resource.Resources;
 
 public class Player extends Sprite {
 
@@ -31,7 +33,9 @@ public class Player extends Sprite {
 		super.setPositionY(200);
 		super.setVelocityX(0);
 		super.setRotationAngle(0);
-		super.setImage("sprite/ant.png");
+		super.setImage(Resources.getCharacterImage(0), Resources.getCharacterImage(1));
+		
+		color = Resources.getRandomColor();
 	}
 
 }

@@ -8,7 +8,7 @@ public class LogicMain {
 
 	public LogicMain(GameLoop gameLoop) {
 		this.gameLoop = gameLoop;
-		SocketInterface.broadcastRoom(this);
+		//SocketInterface.broadcastRoom(this);
 	}
 
 	public void hostGame() {

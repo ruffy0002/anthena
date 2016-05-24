@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 import controls.Controller;
 import entity.Attack;
-import entity.Player;
 import entity.Character;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
+import resource.Resources;
 
 public class GameLoop extends AnimationTimer {
 
@@ -20,17 +20,24 @@ public class GameLoop extends AnimationTimer {
 	private double deltaSum = 0;
 
 	private Canvas mainCanvas;
+	private Canvas backgroundCanvas;
 	private GraphicsContext graphicContext;
 	private Controller controller;
 	private ArrayList<Character> ants = new ArrayList<Character>();
 	private ArrayList<Attack> attack = new ArrayList<Attack>();
 
-	public GameLoop(Canvas canvas, Controller controller) {
+	private Resources resources;
+
+	public GameLoop(Canvas mainCanvas, Canvas backgroundCanvas, Controller controller, Resources resources) {
 
 		new LogicMain(this);
+		this.resources = resources;
 
 		this.controller = controller;
-		mainCanvas = canvas;
+		this.mainCanvas = mainCanvas;
+		this.backgroundCanvas = backgroundCanvas;
+		
+		drawMap();
 		graphicContext = mainCanvas.getGraphicsContext2D();
 
 		initGameComponents();
@@ -119,12 +126,19 @@ public class GameLoop extends AnimationTimer {
 		graphicContext.clearRect(0, 0, 512, 512);
 		drawFrameRate();
 		for (int i = 0; i < ants.size(); i++) {
-			ants.get(i).render(graphicContext);
+			if (ants.get(i).isAlive()) {
+				ants.get(i).render(graphicContext);
+			}
 		}
 
 		for (int i = 0; i < attack.size(); i++) {
 			attack.get(i).render(graphicContext);
 		}
+	}
+
+	private void drawMap() {
+		GraphicsContext bgc = backgroundCanvas.getGraphicsContext2D();
+		bgc.drawImage(resources.getGameMap(0), 0, 0, 512, 512, 0, 0, 512, 512);
 	}
 
 	private void updateFrameRate(double elapsedTime) {

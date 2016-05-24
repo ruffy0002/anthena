@@ -1,13 +1,17 @@
 package entity;
 
+import javax.annotation.Resource;
+
 import controls.Control;
 import javafx.scene.input.KeyCode;
+import resource.Resources;
 
 public class Character extends Player {
 
 	private double movementSpeed = 100;
 	private double rotationSpeed = 200;
 	private double movementDistance = 0;
+	private boolean isAlive = true;
 
 	public void init() {
 		Control c = new Control();
@@ -23,12 +27,14 @@ public class Character extends Player {
 		super.setPositionY(0);
 		super.setVelocityX(0);
 		super.setRotationAngle(0);
-		super.setImage("sprite/ant.png");
+		super.setImage(Resources.getCharacterImage(0), Resources.getCharacterImage(1));
 
 		animationLength = 3;
 		animationSpeed = 9;
 		animationFrameWidth = 249;
 		animationFrameHeight = 222;
+		
+		color = Resources.getRandomColor();
 	}
 
 	public void update(double time) {
@@ -63,6 +69,10 @@ public class Character extends Player {
 	}
 
 	public void setDead() {
+		isAlive = false;
+	}
 
+	public boolean isAlive() {
+		return isAlive;
 	}
 }
