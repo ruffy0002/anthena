@@ -36,7 +36,7 @@ public class GameLoop extends AnimationTimer {
 		this.controller = controller;
 		this.mainCanvas = mainCanvas;
 		this.backgroundCanvas = backgroundCanvas;
-		
+
 		drawMap();
 		graphicContext = mainCanvas.getGraphicsContext2D();
 
@@ -113,10 +113,12 @@ public class GameLoop extends AnimationTimer {
 
 		// collision check
 		for (int k = 0; k < attack.size(); k++) {
-			for (int kk = 0; kk < ants.size(); kk++) {
-				boolean hasCollided = attack.get(k).intersects(ants.get(kk));
-				if (hasCollided) {
-					ants.get(kk).setDead();
+			if (attack.get(k).isReadyForCollide()) {
+				for (int kk = 0; kk < ants.size(); kk++) {
+					boolean hasCollided = attack.get(k).intersects(ants.get(kk));
+					if (hasCollided) {
+						ants.get(kk).setDead();
+					}
 				}
 			}
 		}
@@ -158,10 +160,15 @@ public class GameLoop extends AnimationTimer {
 	public void createAttack(double x, double y) {
 
 		Attack att = new Attack();
+
 		att.setPositionX(x);
 		att.setPositionY(y);
+
 		att.setWidth(30);
 		att.setHeight(30);
+
+		att.setBoundaryX(att.getPositionX() - att.getHalfWidth());
+		att.setBoundaryY(att.getPositionY() - att.getHalfHeight());
 
 		attack.add(att);
 	}

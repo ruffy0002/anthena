@@ -23,6 +23,10 @@ public class Sprite {
 
 	protected double positionX;
 	protected double positionY;
+
+	protected double boundaryX;
+	protected double boundaryY;
+
 	protected double velocityX;
 	protected double velocityY;
 	protected double width;
@@ -46,6 +50,7 @@ public class Sprite {
 	public void setHeight(double height) {
 		this.height = height;
 		halfHeight = height / 2;
+		boundaryY = height;
 	}
 
 	public Image getImage() {
@@ -78,6 +83,7 @@ public class Sprite {
 
 	public void setPositionX(double positionX) {
 		this.positionX = positionX;
+		boundaryX = positionX;
 	}
 
 	public double getPositionY() {
@@ -86,6 +92,7 @@ public class Sprite {
 
 	public void setPositionY(double positionY) {
 		this.positionY = positionY;
+		boundaryY = positionY;
 	}
 
 	public double getVelocityX() {
@@ -110,6 +117,22 @@ public class Sprite {
 
 	public void setHalfWidth(double halfWidth) {
 		this.halfWidth = halfWidth;
+	}
+
+	public double getBoundaryX() {
+		return boundaryX;
+	}
+
+	public void setBoundaryX(double boundaryX) {
+		this.boundaryX = boundaryX;
+	}
+
+	public double getBoundaryY() {
+		return boundaryY;
+	}
+
+	public void setBoundaryY(double boundaryY) {
+		this.boundaryY = boundaryY;
 	}
 
 	public double getHalfHeight() {
@@ -183,7 +206,7 @@ public class Sprite {
 	}
 
 	public Rectangle getBoundary() {
-		Rectangle r = new Rectangle(positionX, positionY, width, height);
+		Rectangle r = new Rectangle(boundaryX, boundaryY, width, height);
 		r.setRotate(rotationAngle);
 		return r;
 	}

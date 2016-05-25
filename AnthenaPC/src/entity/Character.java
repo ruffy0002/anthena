@@ -1,7 +1,5 @@
 package entity;
 
-import javax.annotation.Resource;
-
 import controls.Control;
 import javafx.scene.input.KeyCode;
 import resource.Resources;
@@ -33,18 +31,22 @@ public class Character extends Player {
 		animationSpeed = 9;
 		animationFrameWidth = 249;
 		animationFrameHeight = 222;
-		
+
 		color = Resources.getRandomColor();
 	}
 
 	public void update(double time) {
-		rotationAngle += velocityRotate * time;
-		rotationAngle = rotationAngle % 360;
+
 		double strightLineDistance = velocityX * time;
+		if (strightLineDistance != 0) {
+			rotationAngle += velocityRotate * time;
+			rotationAngle = rotationAngle % 360;
+		}
+
 		movementDistance += strightLineDistance;
-		currentAnimationFrame = (int) ((movementDistance / animationSpeed) % animationLength);
-		positionY += -(strightLineDistance * Math.cos(Math.toRadians(rotationAngle)));
-		positionX += (strightLineDistance * Math.sin(Math.toRadians(rotationAngle)));
+		currentAnimationFrame = Math.abs((int) ((movementDistance / animationSpeed) % animationLength));
+		super.setPositionX(positionX + (strightLineDistance * Math.sin(Math.toRadians(rotationAngle))));
+		super.setPositionY(positionY + -(strightLineDistance * Math.cos(Math.toRadians(rotationAngle))));
 	}
 
 	public void update(KeyCode code) {
