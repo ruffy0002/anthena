@@ -30,7 +30,7 @@ public class IpReplyThread implements Runnable {
         try {
             // Keep a socket open to listen to all the UDP traffic that is
             // destined for this port
-            socket = new DatagramSocket(1356, InetAddress.getByName("0.0.0.0"));
+            socket = new DatagramSocket(portNo, InetAddress.getByName("0.0.0.0"));
             socket.setBroadcast(true);
             while (running) {
                 System.out.println("Ready to receive broadcast packets!");

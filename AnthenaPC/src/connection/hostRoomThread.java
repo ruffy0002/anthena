@@ -65,6 +65,7 @@ public class hostRoomThread implements Runnable {
     private void listenForPlayer(ServerSocket serverSocket) throws IOException {
         if(currentPlayerNo < PLAYER_NO) {
             Socket temSocket = serverSocket.accept();
+            temSocket.setKeepAlive(true);
             if (checkRepeatedIp(temSocket) ) {
                 return;
             } else {
