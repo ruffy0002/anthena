@@ -15,110 +15,84 @@ import logic.LogicMain;
 import com.main.anthenaandroid.BroadcastPacket;
 
 public class hostRoomThread implements Runnable {
-
-	public static final int PORT_NO = 1356;
+    private static final int PLAYER_NO = 4;
+    
+	public int portNo;
 	private boolean running = true;
 	private LogicMain logicMain;
+	PlayerThread[] playerThreads;
+	private int currentPlayerNo = 0;
 
-	public hostRoomThread(LogicMain logicMain) {
+	public hostRoomThread(LogicMain logicMain, int portNo) {
 		this.logicMain = logicMain;
+		this.portNo = portNo;
+		playerThreads = new PlayerThread[PLAYER_NO];
 	}
 
 	public void run() {
 		listenAtPort();
+		
 	}
 
 	public void stop() {
+	    for(int i = 0; i < PLAYER_NO; i++) {
+	        if(playerThreads[i] != null) {
+	            playerThreads[i].stop();
+	        }
+	    }
 		running = false;
-	}
-
-	public void sendDataToProgram(GamePacket data) {
-		System.out.println("X: " + data.getX() + ", Y: " + data.getY());
-		if (logicMain != null) {
-			logicMain.addAttack(data.getX(), data.getY());
-		}
 	}
 
 	private void listenAtPort() {
 		ServerSocket serverSocket = null;
-		Socket socket = null;
-		ObjectInputStream dataInputStream = null;
-		ObjectOutputStream dataOutputStream = null;
 
 		try {
-			serverSocket = new ServerSocket(PORT_NO);
-			System.out.println("Listening :" + PORT_NO);
+			serverSocket = new ServerSocket(portNo);
+			System.out.println("Listening :" + portNo);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		while (running) {
 			try {
-				socket = serverSocket.accept();
-				dataInputStream = new ObjectInputStream(socket.getInputStream());
-				dataOutputStream = new ObjectOutputStream(socket.getOutputStream());
-				System.out.println("ip: " + socket.getInetAddress());
-				Object object = dataInputStream.readObject();
-				if (object instanceof GamePacket) {
-					GamePacket p = (GamePacket) object;
-					sendDataToProgram(p);
-				} else if (object instanceof BroadcastPacket) {
-					System.out.println("Broadcast recieved");
-				}
-
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} finally {
-				if (socket != null) {
-					try {
-						socket.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-
-				if (dataInputStream != null) {
-					try {
-						dataInputStream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-
-				if (dataOutputStream != null) {
-					try {
-						dataOutputStream.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-
-		if (socket != null) {
-			try {
-				socket.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		if (dataInputStream != null) {
-			try {
-				dataInputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		if (dataOutputStream != null) {
-			try {
-				dataOutputStream.close();
+			    listenForPlayer(serverSocket);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
+
+    private void listenForPlayer(ServerSocket serverSocket) throws IOException {
+        if(currentPlayerNo < PLAYER_NO) {
+            Socket temSocket = serverSocket.accept();
+            if (checkRepeatedIp(temSocket) ) {
+                return;
+            } else {
+                createPlayerThread(temSocket);
+            }
+        }
+    }
+
+    private void createPlayerThread(Socket temSocket) {
+        for(int i = 0; i < PLAYER_NO; i++) {
+            if(playerThreads[i] == null) {
+                playerThreads[i] = new PlayerThread(temSocket.getInetAddress(), i, temSocket, logicMain);
+                Thread thread = new Thread(playerThreads[i]);
+                thread.start();
+                currentPlayerNo++;
+                break;
+            }
+        }
+    }
+
+    private boolean checkRepeatedIp(Socket temSocket) {
+        for(int i = 0; i < PLAYER_NO; i++) {
+            if(playerThreads[i] != null) {
+                if(playerThreads[i].getIp() == temSocket.getInetAddress()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
