@@ -31,7 +31,6 @@ public class hostRoomThread implements Runnable {
 
 	public void run() {
 		listenAtPort();
-		
 	}
 
 	public void stop() {
