@@ -30,7 +30,6 @@ public class GameLoop extends AnimationTimer {
 
 	public GameLoop(Canvas mainCanvas, Canvas backgroundCanvas, Controller controller, Resources resources) {
 
-		new LogicMain(this);
 		this.resources = resources;
 
 		this.controller = controller;
