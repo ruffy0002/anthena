@@ -5,8 +5,10 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 
 public class GameRoomInterface implements GameScene {
 
@@ -19,10 +21,15 @@ public class GameRoomInterface implements GameScene {
 	}
 
 	public void init(Rectangle2D screenBounds) {
-		Group root = new Group();
-		Canvas mainCanvas = new Canvas(screenBounds.getWidth(), screenBounds.getHeight());
-		root.getChildren().add(mainCanvas);
-		scene = new Scene(root);
+		BorderPane border = new BorderPane();
+		border.setPrefSize(screenBounds.getWidth(), screenBounds.getHeight());
+		border.setStyle("-fx-background-color:black");
+		
+		Label l = new Label("press enter again, to start game, this suppose to show the players who have join and can choose team.");
+		l.setStyle("-fx-text-fill:white");
+		border.setCenter(l);
+		
+		scene = new Scene(border);
 	}
 
 	public void initControls(EventHandler<KeyEvent> event) {
