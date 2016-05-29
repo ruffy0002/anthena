@@ -19,6 +19,7 @@ import resource.Resources;
 
 public class PrimaryInterface extends Application {
 
+	public static final String FONT_TITLE_LABLES = "lucida sans";
 	private Controller controller;
 	private Resources resources;
 	public static Rectangle2D _screenBounds;
