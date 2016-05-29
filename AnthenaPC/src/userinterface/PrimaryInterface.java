@@ -27,16 +27,14 @@ public class PrimaryInterface extends Application {
 	private Scene scenes[] = new Scene[3];
 	private LogicMain logic;
 
-
 	public PrimaryInterface() {
 		resources = initResources();
 		logic = new LogicMain();
-		
+
 		_screenBounds = Screen.getPrimary().getVisualBounds();
 		scenes[0] = initStartScene();
-		scenes[1] = initGameScene();
-		
-		
+		scenes[1] = initGameRoomScene();
+		scenes[2] = initGameScene();
 
 	}
 
@@ -59,22 +57,35 @@ public class PrimaryInterface extends Application {
 
 	private Scene initStartScene() {
 		StartMenuInterface startMenu = StartMenuInterface.getStartScene(_screenBounds);
-		startMenu.initControls(initControlsForStartScene());
+		startMenu.initControls(initControlsForStartScene(startMenu));
 		return startMenu.getScene();
 	}
 
-	private EventHandler<KeyEvent> initControlsForStartScene() {
+	private EventHandler<KeyEvent> initControlsForStartScene(GameScene gs) {
 		EventHandler<KeyEvent> keyUp = new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
 				KeyCode keyCode = e.getCode();
-				if (keyCode.compareTo(KeyCode.ENTER) == 0) {
-					// blackout
-					stage.setScene(scenes[1]);
-					logic.startGameLoop();
+				int result = gs.updateControl(keyCode);
+				if (gs instanceof StartMenuInterface) {
+					if (result == 1) {
+						logic.hostGame();
+						stage.setScene(scenes[1]);
+					}
+				} else if (gs instanceof GameRoomInterface) {
+					if (result == 1) {
+						stage.setScene(scenes[2]);
+						logic.startGameLoop();
+					}
 				}
 			}
 		};
 		return keyUp;
+	}
+
+	private Scene initGameRoomScene() {
+		GameRoomInterface hostRoomInterface = GameRoomInterface.getStartScene(_screenBounds);
+		hostRoomInterface.initControls(initControlsForStartScene(hostRoomInterface));
+		return hostRoomInterface.getScene();
 	}
 
 	private Scene initGameScene() {
@@ -94,7 +105,7 @@ public class PrimaryInterface extends Application {
 
 		initControlsForGameScene(theScene);
 		logic.initGameLoop(mainCanvas, backgroundCanvas, controller, resources);
-		
+
 		return theScene;
 	}
 

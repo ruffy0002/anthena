@@ -8,14 +8,14 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-public class StartMenuInterface implements GameScene {
+public class GameRoomInterface implements GameScene {
 
 	private static Scene scene;
 
-	public static StartMenuInterface getStartScene(Rectangle2D screenBounds) {
-		StartMenuInterface smi = new StartMenuInterface();
-		smi.init(screenBounds);
-		return smi;
+	public static GameRoomInterface getStartScene(Rectangle2D screenBounds) {
+		GameRoomInterface gri = new GameRoomInterface();
+		gri.init(screenBounds);
+		return gri;
 	}
 
 	public void init(Rectangle2D screenBounds) {
@@ -33,6 +33,7 @@ public class StartMenuInterface implements GameScene {
 		return scene;
 	}
 
+	@Override
 	public int updateControl(KeyCode key) {
 		if (key.compareTo(KeyCode.UP) == 0) {
 
@@ -43,4 +44,5 @@ public class StartMenuInterface implements GameScene {
 		}
 		return -1;
 	}
+
 }
