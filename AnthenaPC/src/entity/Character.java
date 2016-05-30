@@ -27,9 +27,8 @@ public class Character extends Player {
 			currentAnimationFrame = currentAnimationFrame + 1;
 			if (currentAnimationFrame > 5) {
 				int temp = animationLength - currentAnimationFrame;
-				currentAnimationFrame =  5 - temp;
+				currentAnimationFrame = 5 - temp;
 			}
-			System.out.println(currentAnimationFrame);
 			super.setPositionX(positionX + moveX);
 			super.setPositionY(positionY + moveY);
 		}
