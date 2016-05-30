@@ -10,27 +10,27 @@ public class CharacterSwordMan extends Character {
 
 	public void init() {
 		super.init();
-		
+
 		Control c = new Control();
 		c.setUp(KeyCode.UP);
 		c.setDown(KeyCode.DOWN);
 		c.setLeft(KeyCode.LEFT);
 		c.setRight(KeyCode.RIGHT);
 		control = c;
-		
-		super.setWidth(50);
-		super.setHeight(88.5);
+
+		animationLength = 9;
+		animationSpeed = 9;
+		animationFrameWidth = 300;
+		animationFrameHeight = 531;
+
+		super.setWidth(100);
+		super.setHeight(getWidth() / animationFrameWidth * animationFrameHeight);
 		super.setPositionX(0);
 		super.setPositionY(0);
 		super.setVelocityX(0);
 		super.setRotationAngle(0);
 		super.setImage(Resources.getcharacterSet(0), null);
-		
-		animationLength = 9;
-		animationSpeed = 9;
-		animationFrameWidth = 300;
-		animationFrameHeight = 531;
-		
+
 		color = Resources.getRandomColor();
 	}
 }

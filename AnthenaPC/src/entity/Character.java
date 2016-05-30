@@ -1,12 +1,9 @@
 package entity;
 
-import javafx.animation.RotateTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.input.KeyCode;
-import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Shear;
 
 public class Character extends Player {
 
