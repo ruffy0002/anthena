@@ -3,9 +3,10 @@ package logic;
 import java.util.ArrayList;
 
 import controls.Controller;
+import entity.Ant;
 import entity.Attack;
 import entity.Character;
-
+import entity.CharacterSwordMan;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -23,7 +24,7 @@ public class GameLoop extends AnimationTimer {
 	private Canvas backgroundCanvas;
 	private GraphicsContext graphicContext;
 	private Controller controller;
-	private ArrayList<Character> ants = new ArrayList<Character>();
+	private ArrayList<Character> character = new ArrayList<Character>();
 	private ArrayList<Attack> attack = new ArrayList<Attack>();
 
 	private Resources resources;
@@ -44,14 +45,14 @@ public class GameLoop extends AnimationTimer {
 	}
 
 	public void initGameComponents() {
-		Character p = new Character();
+		CharacterSwordMan p = new CharacterSwordMan();
 		p.init();
-		ants.add(p);
+		character.add(p);
 
-		Character temp = new Character();
+		Ant temp = new Ant();
 		temp.init();
 		temp.initRandomAnt();
-		ants.add(temp);
+		character.add(temp);
 	}
 
 	public void initGameLoop() {
@@ -71,10 +72,10 @@ public class GameLoop extends AnimationTimer {
 	private void process() {
 
 		// set all ants velocity to 0
-		for (int k = 0; k < ants.size(); k++) {
-			ants.get(k).setVelocityX(0);
-			ants.get(k).setVelocityY(0);
-			ants.get(k).setVelocityRotate(0);
+		for (int k = 0; k < character.size(); k++) {
+			character.get(k).setVelocityX(0);
+			character.get(k).setVelocityY(0);
+			character.get(k).setVelocityRotate(0);
 		}
 
 		// process user controls
@@ -84,16 +85,16 @@ public class GameLoop extends AnimationTimer {
 			if (code.compareTo(KeyCode.G) == 0) {
 				createAttack(50, 50);
 			}
-			for (int k = 0; k < ants.size(); k++) {
-				ants.get(k).update(code);
+			for (int k = 0; k < character.size(); k++) {
+				character.get(k).update(code);
 			}
 		}
 	}
 
 	private void update(double elapsedTime) {
 		updateFrameRate(elapsedTime);
-		for (int k = 0; k < ants.size(); k++) {
-			ants.get(k).update(elapsedTime);
+		for (int k = 0; k < character.size(); k++) {
+			character.get(k).update(elapsedTime);
 		}
 
 		ArrayList<Integer> lsitToRemove = new ArrayList<Integer>();
@@ -113,10 +114,10 @@ public class GameLoop extends AnimationTimer {
 		// collision check
 		for (int k = 0; k < attack.size(); k++) {
 			if (attack.get(k).isReadyForCollide()) {
-				for (int kk = 0; kk < ants.size(); kk++) {
-					boolean hasCollided = attack.get(k).intersects(ants.get(kk));
+				for (int kk = 0; kk < character.size(); kk++) {
+					boolean hasCollided = attack.get(k).intersects(character.get(kk));
 					if (hasCollided) {
-						ants.get(kk).setDead();
+						character.get(kk).setDead();
 					}
 				}
 			}
@@ -126,9 +127,9 @@ public class GameLoop extends AnimationTimer {
 	private void draw() {
 		graphicContext.clearRect(0, 0, 512, 512);
 		drawFrameRate();
-		for (int i = 0; i < ants.size(); i++) {
-			if (ants.get(i).isAlive()) {
-				ants.get(i).render(graphicContext);
+		for (int i = 0; i < character.size(); i++) {
+			if (character.get(i).isAlive()) {
+				character.get(i).render(graphicContext);
 			}
 		}
 

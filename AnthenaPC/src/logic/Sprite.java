@@ -12,8 +12,8 @@ import javafx.scene.transform.Rotate;
 
 public class Sprite {
 
-	private Image image;
-	private Image image2;
+	protected Image image;
+	protected Image image2;
 	protected Color color;
 	protected int animationLength;
 	protected int animationSpeed;
@@ -176,10 +176,10 @@ public class Sprite {
 	}
 
 	public void update(double time) {
-
+		
 	}
 
-	private void rotate(GraphicsContext gc, double angle, double px, double py) {
+	protected void rotate(GraphicsContext gc, double angle, double px, double py) {
 		Rotate r = new Rotate(angle, px, py);
 		gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 	}
@@ -187,20 +187,9 @@ public class Sprite {
 	public void render(GraphicsContext gc) {
 		gc.save();
 
-		rotate(gc, rotationAngle, positionX + halfWidth, positionY + halfHeight);
-
 		gc.setGlobalBlendMode(BlendMode.DARKEN);
 		gc.drawImage(image, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth, animationFrameHeight,
 				positionX, positionY, width, height);
-
-		gc.setGlobalBlendMode(BlendMode.LIGHTEN);
-		gc.drawImage(image2, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth, animationFrameHeight,
-				positionX, positionY, width, height);
-
-		gc.setGlobalBlendMode(BlendMode.DARKEN);
-		gc.setFill(this.color);
-		// gc.fillRect(positionX, positionY, width, height);
-		gc.fillRect(positionX + ((width - 9) / 2), positionY + ((height - 9) / 2) + 12, 9, 9);
 
 		gc.restore();
 	}
