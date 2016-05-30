@@ -18,7 +18,7 @@ public class Character extends Player {
 		double moveX = velocityX * time;
 		double moveY = velocityY * time;
 
-		if (moveX + moveY == 0) {
+		if (moveX == 0 && moveY == 0) {
 			currentAnimationFrame = 0;
 			movementDistance = 0;
 		} else {
@@ -35,7 +35,6 @@ public class Character extends Player {
 	}
 
 	public void update(KeyCode code) {
-
 		if (control.contains(code)) {
 			if (code.equals(control.getUp())) {
 				super.setVelocityY(-movementSpeed);
