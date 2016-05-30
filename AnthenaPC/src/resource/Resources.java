@@ -10,6 +10,7 @@ public class Resources {
 	private static Image[] gameMap = new Image[10];
 	private static Image[] ant = new Image[2];
 	private static Image[] characterSet = new Image[1];
+	private static Image[] attackSet = new Image[1];
 	private static Color[] colors = new Color[10];
 
 	public void loadMap() {
@@ -23,6 +24,9 @@ public class Resources {
 
 	public void loadCharacterSprites() {
 		characterSet[0] = new Image("sprite/characterSwordMan.png");
+
+		attackSet[0] = new Image("sprite/attackPattern1.png");
+		
 		ant[0] = new Image("sprite/ant.png");
 		ant[1] = new Image("sprite/ant2.png");
 	}
@@ -30,9 +34,13 @@ public class Resources {
 	public static Image getCharacterImage(int index) {
 		return ant[index];
 	}
-	
+
 	public static Image getcharacterSet(int index) {
 		return characterSet[index];
+	}
+	
+	public static Image getAttackSet(int index) {
+		return attackSet[index];
 	}
 
 	public void loadColors() {

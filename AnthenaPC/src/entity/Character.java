@@ -1,6 +1,12 @@
 package entity;
 
+import javafx.animation.RotateTransition;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.input.KeyCode;
+import javafx.scene.transform.Affine;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Shear;
 
 public class Character extends Player {
 
@@ -8,6 +14,7 @@ public class Character extends Player {
 	double rotationSpeed = 200;
 	double movementDistance = 0;
 	private boolean isAlive = true;
+	private boolean isFlipped = false;
 
 	public void init() {
 
@@ -17,6 +24,12 @@ public class Character extends Player {
 
 		double moveX = velocityX * time;
 		double moveY = velocityY * time;
+
+		if (moveX < 0) {
+			isFlipped = true;
+		} else if (moveX > 0) {
+			isFlipped = false;
+		}
 
 		if (moveX == 0 && moveY == 0) {
 			currentAnimationFrame = 0;
@@ -32,6 +45,26 @@ public class Character extends Player {
 			super.setPositionX(positionX + moveX);
 			super.setPositionY(positionY + moveY);
 		}
+	}
+
+	public void render(GraphicsContext gc) {
+		gc.save();
+		gc.setGlobalBlendMode(BlendMode.DARKEN);
+		if (!isFlipped) {
+			gc.drawImage(image, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth,
+					animationFrameHeight, positionX, positionY, width, height);
+		} else {
+
+			Rotate r = new Rotate(180, positionX, positionY);
+			r.setAxis(Rotate.Y_AXIS);
+
+			gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+			gc.translate(-width, 0);
+			gc.drawImage(image, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth,
+					animationFrameHeight, positionX, positionY, width, height);
+		}
+
+		gc.restore();
 	}
 
 	public void update(KeyCode code) {

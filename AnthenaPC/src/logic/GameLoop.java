@@ -83,7 +83,7 @@ public class GameLoop extends AnimationTimer {
 		for (int i = 0; i < temp.size(); i++) {
 			KeyCode code = temp.get(i);
 			if (code.compareTo(KeyCode.G) == 0) {
-				createAttack(50, 50);
+				createAttack(100, 100);
 			}
 			for (int k = 0; k < character.size(); k++) {
 				character.get(k).update(code);
@@ -93,6 +93,7 @@ public class GameLoop extends AnimationTimer {
 
 	private void update(double elapsedTime) {
 		updateFrameRate(elapsedTime);
+
 		for (int k = 0; k < character.size(); k++) {
 			character.get(k).update(elapsedTime);
 		}
@@ -125,7 +126,7 @@ public class GameLoop extends AnimationTimer {
 	}
 
 	private void draw() {
-		graphicContext.clearRect(0, 0, 512, 512);
+		graphicContext.clearRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
 		drawFrameRate();
 		for (int i = 0; i < character.size(); i++) {
 			if (character.get(i).isAlive()) {
@@ -140,7 +141,8 @@ public class GameLoop extends AnimationTimer {
 
 	private void drawMap() {
 		GraphicsContext bgc = backgroundCanvas.getGraphicsContext2D();
-		bgc.drawImage(resources.getGameMap(0), 0, 0, 512, 512, 0, 0, 512, 512);
+		// bgc.drawImage(resources.getGameMap(0), 0, 0, 512, 512, 0, 0, 512,
+		// 512);
 	}
 
 	private void updateFrameRate(double elapsedTime) {
@@ -154,22 +156,12 @@ public class GameLoop extends AnimationTimer {
 	}
 
 	private void drawFrameRate() {
-		graphicContext.fillText(String.valueOf(frameRate) + "fps", 460, 490);
+		graphicContext.fillText(String.valueOf(frameRate) + "fps", mainCanvas.getWidth() - 50,
+				mainCanvas.getHeight() - 50);
 	}
 
 	public void createAttack(double x, double y) {
-
-		Attack att = new Attack();
-
-		att.setPositionX(x);
-		att.setPositionY(y);
-
-		att.setWidth(30);
-		att.setHeight(30);
-
-		att.setBoundaryX(att.getPositionX() - att.getHalfWidth());
-		att.setBoundaryY(att.getPositionY() - att.getHalfHeight());
-
+		Attack att = new Attack(x, y);
 		attack.add(att);
 	}
 }

@@ -3,17 +3,45 @@ package entity;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.paint.Color;
+import resource.Resources;
 
 public class Attack extends Player {
 
-	private double lifeTime = 3;
-	private double fadeSpeed = 1;
-	private double currentDelay = 3;
-	private double delay = 3;
-	private double scale = 0;
-	private boolean isReadyForCollide = false;
+	private double timePast;
+	private double fadeTime = 3;
+	private double fadeDelay = 1;
+	private double currentFadeTime = 3;
+	private double fadeSpeed = 3;
+	private double fadeOpacity = 1;
 
+	private boolean isReadyForCollide = false;
 	private boolean readyToClear = false;
+
+	public Attack(double x, double y) {
+
+		timePast = 0;
+		super.setImage(Resources.getAttackSet(0), null);
+
+		animationFrameWidth = 490;
+		animationFrameHeight = 360;
+
+		currentAnimationFrame = 0;
+		currentAnimationFrameX = 0;
+		currentAnimationFrameY = 0;
+
+		animationLength = 12;
+		animationSpeed = 1500;
+
+		setPositionX(x);
+		setPositionY(y);
+
+		setWidth(100);
+		setHeight(100);
+
+		setBoundaryX(getPositionX() - getHalfWidth());
+		setBoundaryY(getPositionY() - getHalfHeight());
+
+	}
 
 	public boolean getReadyToClear() {
 		return readyToClear;
@@ -21,32 +49,33 @@ public class Attack extends Player {
 
 	public void render(GraphicsContext gc) {
 		gc.save();
-		gc.setGlobalAlpha(scale);
-		gc.setGlobalBlendMode(BlendMode.SCREEN);
-		if (scale < 1) {
-			gc.setFill(Color.BLACK);
-			double cWidth = width * scale;
-			double cHeight = height * scale;
-			gc.fillOval(positionX - (cWidth / 2), positionY - (cHeight / 2), cWidth, cHeight);
-		} else {
-			gc.setFill(Color.RED);
-			gc.fillOval(positionX - (width / 2), positionY - (height / 2), width, height);
-		}
+		gc.setGlobalAlpha(fadeOpacity);
+		gc.setGlobalBlendMode(BlendMode.DARKEN);
+		gc.drawImage(image, animationFrameWidth * currentAnimationFrameX, animationFrameHeight * currentAnimationFrameY,
+				animationFrameWidth, animationFrameHeight, getBoundaryX(), getBoundaryY(), width, height);
 		gc.setGlobalAlpha(1);
 		gc.restore();
 	}
 
 	public void update(double time) {
 		if (!isReadyForCollide) {
-			currentDelay -= (delay * time);
-			scale = (delay - currentDelay) / delay;
-			if (currentDelay <= 0) {
+			timePast += time;
+			currentAnimationFrame = (int) ((timePast * 1000) / animationSpeed * animationLength);
+			spiltFrameToXandY(4);
+			if (currentAnimationFrame == animationLength - 1) {
 				isReadyForCollide = true;
 			}
 		} else {
-			lifeTime -= (fadeSpeed * time);
-			if (lifeTime <= 0) {
+			// Ready for collision detection
+			if (fadeOpacity <= 0) {
 				readyToClear = true;
+			} else {
+				if (fadeDelay > 0) {
+					fadeDelay -= (fadeSpeed * time);
+				} else {
+					currentFadeTime -= (fadeSpeed * time);
+					fadeOpacity = currentFadeTime / fadeTime;
+				}
 			}
 		}
 	}

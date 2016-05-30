@@ -33,15 +33,4 @@ public class CharacterSwordMan extends Character {
 		
 		color = Resources.getRandomColor();
 	}
-
-	
-	public void render(GraphicsContext gc) {
-		gc.save();
-
-		gc.setGlobalBlendMode(BlendMode.DARKEN);
-		gc.drawImage(image, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth, animationFrameHeight,
-				positionX, positionY, width, height);
-
-		gc.restore();
-	}
 }

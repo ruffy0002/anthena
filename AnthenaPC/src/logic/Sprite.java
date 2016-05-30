@@ -15,9 +15,12 @@ public class Sprite {
 	protected Image image;
 	protected Image image2;
 	protected Color color;
+
 	protected int animationLength;
 	protected int animationSpeed;
 	protected int currentAnimationFrame;
+	protected int currentAnimationFrameX;
+	protected int currentAnimationFrameY;
 	protected int animationFrameWidth;
 	protected int animationFrameHeight;
 
@@ -176,7 +179,7 @@ public class Sprite {
 	}
 
 	public void update(double time) {
-		
+
 	}
 
 	protected void rotate(GraphicsContext gc, double angle, double px, double py) {
@@ -207,6 +210,18 @@ public class Sprite {
 			return true;
 		}
 		return false;
+	}
+
+	public void spiltFrameToXandY(int x) {
+
+		if (currentAnimationFrame != 0) {
+			currentAnimationFrameX = currentAnimationFrame % x;
+			currentAnimationFrameY = currentAnimationFrame / x;
+		} else {
+			currentAnimationFrameX = 0;
+			currentAnimationFrameY = 0;
+		}
+
 	}
 
 }
