@@ -3,9 +3,12 @@ package logic;
 import java.util.Random;
 
 import connection.SocketInterface;
+import controls.Control;
 import controls.Controller;
+import entity.Player;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import resource.Resources;
 
 public class LogicMain {
@@ -13,6 +16,8 @@ public class LogicMain {
 	private GameLoop gameLoop;
 	private boolean[] nameAssigned;
 	private Resources resources;
+
+	private int controlsIndex = 0;
 
 	public LogicMain(Resources resources) {
 		this.resources = resources;
@@ -28,6 +33,7 @@ public class LogicMain {
 	}
 
 	public void startGameLoop() {
+		gameLoop.initGameLoop();
 		gameLoop.start();
 	}
 
@@ -48,6 +54,29 @@ public class LogicMain {
 		Random r = new Random();
 		int index = r.nextInt(length);
 		return Resources.NAMES[index];
+	}
+
+	public Color getRandomColor() {
+		Random random = new Random();
+		return Resources.COLORS[random.nextInt(Resources.COLORS.length)];
+	}
+
+	public Control getNextControl() {
+		if (controlsIndex < Resources.controls.size()) {
+			return Resources.controls.get(controlsIndex++);
+		}
+		return null;
+	}
+
+	public Player addNewPlayer() {
+
+		Control control = getNextControl();
+		if (control != null) {
+			Player player = new Player(control, getRandomName(), getRandomColor());
+			gameLoop.addPlayer(player);
+			return player;
+		}
+		return null;
 	}
 
 }

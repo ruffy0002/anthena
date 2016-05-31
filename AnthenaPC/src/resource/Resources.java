@@ -1,8 +1,11 @@
 package resource;
 
+import java.util.ArrayList;
 import java.util.Random;
 
+import controls.Control;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
 public class Resources {
@@ -11,19 +14,33 @@ public class Resources {
 	private static final Image[] ANTS = new Image[2];
 	private static final Image[] CHARACTER_SET = new Image[1];
 	private static final Image[] ATTACK_SET = new Image[1];
-	private static final Color[] COLORS = new Color[10];
+	public static final Color[] COLORS = new Color[10];
 
 	public static final Image[] CHARACTER_ATTACK_PROFILE = new Image[2];
 	private static final Image[] CHARACTER_DEFEND_PROFILE = new Image[1];
 
 	public static final String[] NAMES = new String[10];
+	public static final ArrayList<Control> controls = new ArrayList<Control>();
 
 	public Resources() {
+		loadControls();
 		loadName();
 		loadProfiles();
 		loadMap();
 		loadCharacterSprites();
 		loadColors();
+	}
+
+	private void loadControls() {
+		// will change to setting bindings.
+		Control c1 = new Control(KeyCode.LEFT, KeyCode.UP, KeyCode.RIGHT, KeyCode.DOWN);
+		controls.add(c1);
+		Control c2 = new Control(KeyCode.A, KeyCode.W, KeyCode.D, KeyCode.S);
+		controls.add(c2);
+		Control c3 = new Control(KeyCode.G, KeyCode.Y, KeyCode.J, KeyCode.H);
+		controls.add(c3);
+		Control c4 = new Control(KeyCode.L, KeyCode.P, KeyCode.QUOTE, KeyCode.SEMICOLON);
+		controls.add(c4);
 	}
 
 	private void loadName() {
@@ -89,11 +106,6 @@ public class Resources {
 		COLORS[7] = new Color(0.2, 0.8, 0.2, 1);
 		COLORS[8] = new Color(0.2, 0.2, 0.8, 1);
 		COLORS[9] = new Color(0.4, 0.4, 0.4, 1);
-	}
-
-	public static Color getRandomColor() {
-		Random random = new Random();
-		return COLORS[random.nextInt(10)];
 	}
 
 }

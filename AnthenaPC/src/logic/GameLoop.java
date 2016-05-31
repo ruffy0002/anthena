@@ -7,6 +7,7 @@ import entity.Ant;
 import entity.Attack;
 import entity.Character;
 import entity.CharacterSwordMan;
+import entity.Player;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -14,6 +15,8 @@ import javafx.scene.input.KeyCode;
 import resource.Resources;
 
 public class GameLoop extends AnimationTimer {
+
+	private ArrayList<Player> players = new ArrayList<Player>();
 
 	private long startNanoTime;
 	private int frameRate = 0;
@@ -39,9 +42,6 @@ public class GameLoop extends AnimationTimer {
 
 		drawMap();
 		graphicContext = mainCanvas.getGraphicsContext2D();
-
-		initGameComponents();
-		initGameLoop();
 	}
 
 	public void initGameComponents() {
@@ -56,6 +56,9 @@ public class GameLoop extends AnimationTimer {
 	}
 
 	public void initGameLoop() {
+		for (int i = 0; i < players.size(); i++) {
+			character.add(players.get(i).createSprite());
+		}
 		startNanoTime = System.nanoTime();
 	}
 
@@ -82,7 +85,7 @@ public class GameLoop extends AnimationTimer {
 		ArrayList<KeyCode> temp = controller.getKeyCodes();
 		for (int i = 0; i < temp.size(); i++) {
 			KeyCode code = temp.get(i);
-			if (code.compareTo(KeyCode.G) == 0) {
+			if (code.compareTo(KeyCode.DIGIT1) == 0) {
 				createAttack(100, 100);
 			}
 			for (int k = 0; k < character.size(); k++) {
@@ -169,5 +172,9 @@ public class GameLoop extends AnimationTimer {
 			attack.add(att);
 			attackCount = 1;
 		}
+	}
+
+	public void addPlayer(Player p) {
+		players.add(p);
 	}
 }

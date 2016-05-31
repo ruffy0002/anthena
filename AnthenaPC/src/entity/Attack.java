@@ -5,7 +5,7 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.paint.Color;
 import resource.Resources;
 
-public class Attack extends Player {
+public class Attack extends Sprite {
 
 	private double timePast;
 	private double fadeTime = 3;
@@ -52,7 +52,7 @@ public class Attack extends Player {
 
 	public void render(GraphicsContext gc) {
 		gc.save();
-		shear(gc);
+		rotateX(gc);
 		rotate(gc, rotationAngle, getBoundaryX() + halfWidth, getBoundaryY() + halfHeight);
 		gc.setGlobalAlpha(fadeOpacity);
 		gc.setGlobalBlendMode(BlendMode.DARKEN);

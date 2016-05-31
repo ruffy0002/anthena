@@ -1,6 +1,5 @@
 package entity;
 
-import controls.Control;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.input.KeyCode;
@@ -22,19 +21,9 @@ public class Ant extends Character {
 		animationSpeed = 9;
 		animationFrameWidth = 249;
 		animationFrameHeight = 222;
-
-		color = Resources.getRandomColor();
 	}
 
 	public void initRandomAnt() {
-
-		Control c = new Control();
-		c.setUp(KeyCode.W);
-		c.setDown(KeyCode.S);
-		c.setLeft(KeyCode.A);
-		c.setRight(KeyCode.D);
-		control = c;
-
 		super.setWidth(44.8);
 		super.setHeight(40);
 		super.setPositionX(200);
@@ -42,8 +31,6 @@ public class Ant extends Character {
 		super.setVelocityX(0);
 		super.setRotationAngle(0);
 		super.setImage(Resources.getCharacterImage(0), Resources.getCharacterImage(1));
-
-		color = Resources.getRandomColor();
 	}
 
 	public void update(double time) {

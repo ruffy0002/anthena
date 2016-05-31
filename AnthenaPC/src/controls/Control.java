@@ -9,6 +9,13 @@ public class Control {
 	private KeyCode left;
 	private KeyCode right;
 
+	public Control(KeyCode left, KeyCode up, KeyCode right, KeyCode down) {
+		this.up = up;
+		this.down = down;
+		this.left = left;
+		this.right = right;
+	}
+
 	public KeyCode getUp() {
 		return up;
 	}

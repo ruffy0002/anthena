@@ -193,8 +193,8 @@ public class Sprite {
 		gc.setTransform(temp);
 	}
 
-	protected void shear(GraphicsContext gc) {
-		Rotate r = new Rotate(45, positionX, positionY);
+	protected void rotateX(GraphicsContext gc) {
+		Rotate r = new Rotate(60, positionX, positionY);
 		r.setAxis(Rotate.X_AXIS);
 		Affine temp = gc.getTransform();
 		temp.append(r);

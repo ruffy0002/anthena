@@ -1,11 +1,14 @@
 package entity;
 
+import controls.Control;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.input.KeyCode;
 import javafx.scene.transform.Rotate;
 
-public class Character extends Player {
+public class Character extends Sprite {
+
+	protected Control control;
 
 	double movementSpeed = 100;
 	double rotationSpeed = 200;
@@ -15,6 +18,14 @@ public class Character extends Player {
 
 	public void init() {
 
+	}
+	
+	public Control getControl() {
+		return control;
+	}
+
+	public void setControl(Control control) {
+		this.control = control;
 	}
 
 	public void update(double time) {
