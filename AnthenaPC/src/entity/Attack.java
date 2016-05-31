@@ -9,14 +9,11 @@ public class Attack extends Player {
 
 	private double timePast;
 	private double fadeTime = 3;
-	private double fadeDelay = 1;
+	private double fadeDelay = 2;
 	private double currentFadeTime = 3;
 	private double fadeSpeed = 3;
 	private double fadeOpacity = 1;
 
-	private double rotateAngle = 0;
-	
-	
 	private boolean isReadyForCollide = false;
 	private boolean readyToClear = false;
 
@@ -44,6 +41,9 @@ public class Attack extends Player {
 		setBoundaryX(getPositionX() - getHalfWidth());
 		setBoundaryY(getPositionY() - getHalfHeight());
 
+		setRotationAngle(0);
+		setVelocityRotate(10);
+
 	}
 
 	public boolean getReadyToClear() {
@@ -52,6 +52,7 @@ public class Attack extends Player {
 
 	public void render(GraphicsContext gc) {
 		gc.save();
+		rotate(gc, rotationAngle, getBoundaryX() + halfWidth, getBoundaryY() + halfHeight);
 		gc.setGlobalAlpha(fadeOpacity);
 		gc.setGlobalBlendMode(BlendMode.DARKEN);
 		gc.drawImage(image, animationFrameWidth * currentAnimationFrameX, animationFrameHeight * currentAnimationFrameY,
@@ -64,12 +65,15 @@ public class Attack extends Player {
 		if (!isReadyForCollide) {
 			timePast += time;
 			currentAnimationFrame = (int) ((timePast * 1000) / animationSpeed * animationLength);
+			int rotationMultiplier = (animationLength - 1) - currentAnimationFrame;
 			spiltFrameToXandY(4);
+			setRotationAngle(getRotationAngle() + (rotationMultiplier * getVelocityRotate()) * time);
 			if (currentAnimationFrame == animationLength - 1) {
 				isReadyForCollide = true;
 			}
 		} else {
 			// Ready for collision detection
+			setRotationAngle(getRotationAngle() + getVelocityRotate() * time);
 			if (fadeOpacity <= 0) {
 				readyToClear = true;
 			} else {
