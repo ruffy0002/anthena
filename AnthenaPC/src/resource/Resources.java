@@ -7,58 +7,93 @@ import javafx.scene.paint.Color;
 
 public class Resources {
 
-	private static Image[] gameMap = new Image[10];
-	private static Image[] ant = new Image[2];
-	private static Image[] characterSet = new Image[1];
-	private static Image[] attackSet = new Image[1];
-	private static Color[] colors = new Color[10];
+	private static final Image[] GAME_MAPS = new Image[10];
+	private static final Image[] ANTS = new Image[2];
+	private static final Image[] CHARACTER_SET = new Image[1];
+	private static final Image[] ATTACK_SET = new Image[1];
+	private static final Color[] COLORS = new Color[10];
+
+	public static final Image[] CHARACTER_ATTACK_PROFILE = new Image[2];
+	private static final Image[] CHARACTER_DEFEND_PROFILE = new Image[1];
+
+	public static final String[] NAMES = new String[10];
+
+	public Resources() {
+		loadName();
+		loadProfiles();
+		loadMap();
+		loadCharacterSprites();
+		loadColors();
+	}
+
+	private void loadName() {
+		NAMES[0] = "RainbowUnicorn";
+		NAMES[1] = "BlackFish";
+		NAMES[2] = "SaltyDog";
+		NAMES[3] = "MummyBoy";
+		NAMES[4] = "DadMistress";
+		NAMES[5] = "TwerkKing";
+		NAMES[6] = "SmellyButt";
+		NAMES[7] = "FacePalm";
+		NAMES[8] = "BlindBat";
+		NAMES[9] = "HotCream";
+	}
+
+	public String[] getNames() {
+		return NAMES;
+	}
 
 	public void loadMap() {
-		Resources.gameMap[0] = new Image("sprite/tempGameMap.png");
-		Resources.gameMap[1] = null;
+		Resources.GAME_MAPS[0] = new Image("sprite/tempGameMap.png");
+		Resources.GAME_MAPS[1] = null;
 	}
 
 	public Image getGameMap(int index) {
-		return gameMap[index];
+		return GAME_MAPS[index];
+	}
+
+	public void loadProfiles() {
+		CHARACTER_ATTACK_PROFILE[0] = new Image("sprite/swordmanProfile.png");
+		CHARACTER_ATTACK_PROFILE[1] = new Image("sprite/antProfile.png");
 	}
 
 	public void loadCharacterSprites() {
-		characterSet[0] = new Image("sprite/characterSwordMan.png");
+		CHARACTER_SET[0] = new Image("sprite/characterSwordMan.png");
 
-		attackSet[0] = new Image("sprite/attackPattern1.png");
-		
-		ant[0] = new Image("sprite/ant.png");
-		ant[1] = new Image("sprite/ant2.png");
+		ATTACK_SET[0] = new Image("sprite/attackPattern1.png");
+
+		ANTS[0] = new Image("sprite/ant.png");
+		ANTS[1] = new Image("sprite/ant2.png");
 	}
 
 	public static Image getCharacterImage(int index) {
-		return ant[index];
+		return ANTS[index];
 	}
 
 	public static Image getcharacterSet(int index) {
-		return characterSet[index];
+		return CHARACTER_SET[index];
 	}
-	
+
 	public static Image getAttackSet(int index) {
-		return attackSet[index];
+		return ATTACK_SET[index];
 	}
 
 	public void loadColors() {
-		colors[0] = new Color(1, 0, 0, 1);
-		colors[1] = new Color(0, 1, 0, 1);
-		colors[2] = new Color(0, 0, 1, 1);
-		colors[3] = new Color(1, 1, 0, 1);
-		colors[4] = new Color(1, 0, 1, 1);
-		colors[5] = new Color(0, 1, 1, 1);
-		colors[6] = new Color(0.8, 0.2, 0.2, 1);
-		colors[7] = new Color(0.2, 0.8, 0.2, 1);
-		colors[8] = new Color(0.2, 0.2, 0.8, 1);
-		colors[9] = new Color(0.4, 0.4, 0.4, 1);
+		COLORS[0] = new Color(1, 0, 0, 1);
+		COLORS[1] = new Color(0, 1, 0, 1);
+		COLORS[2] = new Color(0, 0, 1, 1);
+		COLORS[3] = new Color(1, 1, 0, 1);
+		COLORS[4] = new Color(1, 0, 1, 1);
+		COLORS[5] = new Color(0, 1, 1, 1);
+		COLORS[6] = new Color(0.8, 0.2, 0.2, 1);
+		COLORS[7] = new Color(0.2, 0.8, 0.2, 1);
+		COLORS[8] = new Color(0.2, 0.2, 0.8, 1);
+		COLORS[9] = new Color(0.4, 0.4, 0.4, 1);
 	}
 
 	public static Color getRandomColor() {
 		Random random = new Random();
-		return colors[random.nextInt(10)];
+		return COLORS[random.nextInt(10)];
 	}
 
 }

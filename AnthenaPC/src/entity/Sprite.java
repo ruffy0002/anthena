@@ -1,4 +1,4 @@
-package logic;
+package entity;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Group;

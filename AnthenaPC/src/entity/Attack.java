@@ -14,6 +14,9 @@ public class Attack extends Player {
 	private double fadeSpeed = 3;
 	private double fadeOpacity = 1;
 
+	private double rotateAngle = 0;
+	
+	
 	private boolean isReadyForCollide = false;
 	private boolean readyToClear = false;
 
@@ -22,8 +25,8 @@ public class Attack extends Player {
 		timePast = 0;
 		super.setImage(Resources.getAttackSet(0), null);
 
-		animationFrameWidth = 490;
-		animationFrameHeight = 360;
+		animationFrameWidth = 400;
+		animationFrameHeight = 400;
 
 		currentAnimationFrame = 0;
 		currentAnimationFrameX = 0;

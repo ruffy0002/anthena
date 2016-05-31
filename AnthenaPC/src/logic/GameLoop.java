@@ -94,6 +94,7 @@ public class GameLoop extends AnimationTimer {
 	private void update(double elapsedTime) {
 		updateFrameRate(elapsedTime);
 
+		attackCount -= elapsedTime;
 		for (int k = 0; k < character.size(); k++) {
 			character.get(k).update(elapsedTime);
 		}
@@ -160,8 +161,13 @@ public class GameLoop extends AnimationTimer {
 				mainCanvas.getHeight() - 50);
 	}
 
+	double attackCount = 1;
+
 	public void createAttack(double x, double y) {
-		Attack att = new Attack(x, y);
-		attack.add(att);
+		if (attackCount <= 0) {
+			Attack att = new Attack(x, y);
+			attack.add(att);
+			attackCount = 1;
+		}
 	}
 }

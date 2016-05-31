@@ -30,11 +30,11 @@ public class PrimaryInterface extends Application {
 
 	public PrimaryInterface() {
 		resources = initResources();
-		logic = new LogicMain();
+		logic = new LogicMain(resources);
 
 		_screenBounds = Screen.getPrimary().getVisualBounds();
 		scenes[0] = initStartScene();
-		scenes[1] = initGameRoomScene();
+		scenes[1] = initGameRoomScene(logic);
 		scenes[2] = initGameScene();
 
 	}
@@ -83,8 +83,8 @@ public class PrimaryInterface extends Application {
 		return keyUp;
 	}
 
-	private Scene initGameRoomScene() {
-		GameRoomInterface hostRoomInterface = GameRoomInterface.getStartScene(_screenBounds);
+	private Scene initGameRoomScene(LogicMain logic) {
+		GameRoomInterface hostRoomInterface = GameRoomInterface.getStartScene(logic,_screenBounds);
 		hostRoomInterface.initControls(initControlsForStartScene(hostRoomInterface));
 		return hostRoomInterface.getScene();
 	}
@@ -117,9 +117,6 @@ public class PrimaryInterface extends Application {
 
 	private Resources initResources() {
 		Resources resource = new Resources();
-		resource.loadMap();
-		resource.loadCharacterSprites();
-		resource.loadColors();
 		return resource;
 	}
 
