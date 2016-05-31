@@ -52,6 +52,7 @@ public class Attack extends Player {
 
 	public void render(GraphicsContext gc) {
 		gc.save();
+		shear(gc);
 		rotate(gc, rotationAngle, getBoundaryX() + halfWidth, getBoundaryY() + halfHeight);
 		gc.setGlobalAlpha(fadeOpacity);
 		gc.setGlobalBlendMode(BlendMode.DARKEN);

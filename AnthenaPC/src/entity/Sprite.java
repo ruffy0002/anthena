@@ -1,6 +1,7 @@
 package entity;
 
 import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
@@ -8,7 +9,10 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Shear;
 
 public class Sprite {
 
@@ -184,7 +188,17 @@ public class Sprite {
 
 	protected void rotate(GraphicsContext gc, double angle, double px, double py) {
 		Rotate r = new Rotate(angle, px, py);
-		gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+		Affine temp = gc.getTransform();
+		temp.append(r);
+		gc.setTransform(temp);
+	}
+
+	protected void shear(GraphicsContext gc) {
+		Rotate r = new Rotate(45, positionX, positionY);
+		r.setAxis(Rotate.X_AXIS);
+		Affine temp = gc.getTransform();
+		temp.append(r);
+		gc.setTransform(temp);
 	}
 
 	public void render(GraphicsContext gc) {

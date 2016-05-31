@@ -36,7 +36,6 @@ public class PrimaryInterface extends Application {
 		scenes[0] = initStartScene();
 		scenes[1] = initGameRoomScene(logic);
 		scenes[2] = initGameScene();
-
 	}
 
 	@Override
