@@ -15,6 +15,7 @@ import java.net.Socket;
 import com.main.anthenaandroid.BroadcastPacket;
 import com.main.anthenaandroid.GamePacket;
 
+import entity.Player;
 import logic.LogicMain;
 
 public class PlayerThread implements Runnable {
@@ -24,6 +25,7 @@ public class PlayerThread implements Runnable {
     private int _playerNo;
     private Socket _socket;
     private LogicMain _logicMain;
+    private Player _player;
 
     private ObjectInputStream dataInputStream = null;
     private ObjectOutputStream dataOutputStream = null;
@@ -41,6 +43,7 @@ public class PlayerThread implements Runnable {
             e.printStackTrace();
         }
         System.out.println("Player " + playerNo + "(" + ipAddress + ") joined the game");
+        _player =_logicMain.addNewAttacker();
     }
     
     public InetAddress getIp() {

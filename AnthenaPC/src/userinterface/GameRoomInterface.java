@@ -1,6 +1,7 @@
 package userinterface;
 
 import entity.Player;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -46,7 +47,7 @@ public class GameRoomInterface implements GameScene {
 		border.setStyle("-fx-background-color:black");
 
 		Label l = new Label(
-				"press enter again, to start game, this suppose to show the players who have join and can choose team.");
+				"lol");
 		l.setStyle("-fx-text-fill:white");
 
 		border.setLeft(leftVBox);
@@ -69,7 +70,9 @@ public class GameRoomInterface implements GameScene {
 	public int updateControl(KeyCode key) {
 		if (key.compareTo(KeyCode.SPACE) == 0) {
 			Player p = logic.addNewRunner();
-			leftVBox.getChildren().add(createNewRunnnerInterface(p));
+			if (p != null) {
+				leftVBox.getChildren().add(createNewRunnnerInterface(p));
+			}
 		} else if (key.compareTo(KeyCode.UP) == 0) {
 
 		} else if (key.compareTo(KeyCode.DOWN) == 0) {
@@ -163,7 +166,12 @@ public class GameRoomInterface implements GameScene {
 	}
 
 	public void addAttacker(Player player) {
-		leftVBox.getChildren().add(createNewAttackerInterface(player));
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				rightVBox.getChildren().add(createNewAttackerInterface(player));
+			}
+		});
 	}
 
 }

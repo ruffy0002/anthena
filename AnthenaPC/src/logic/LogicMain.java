@@ -21,9 +21,8 @@ public class LogicMain {
 
 	private int controlsIndex = 0;
 
-	public LogicMain(Resources resources, GameRoomInterface hostRoomInterface) {
+	public LogicMain(Resources resources) {
 		this.resources = resources;
-		this.hostRoomInterface = hostRoomInterface;
 
 		nameAssigned = new boolean[resources.getNames().length];
 		for (int i = 0; i < resources.getNames().length; i++) {
@@ -87,6 +86,10 @@ public class LogicMain {
 		gameLoop.addRunner(player);
 		hostRoomInterface.addAttacker(player);
 		return player;
+	}
+
+	public void setHostRoomInterface(GameRoomInterface hostRoomInterface) {
+		this.hostRoomInterface = hostRoomInterface;
 	}
 
 }
