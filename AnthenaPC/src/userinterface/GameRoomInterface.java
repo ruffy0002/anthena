@@ -68,8 +68,8 @@ public class GameRoomInterface implements GameScene {
 	@Override
 	public int updateControl(KeyCode key) {
 		if (key.compareTo(KeyCode.SPACE) == 0) {
-			Player p = logic.addNewPlayer();
-			leftVBox.getChildren().add(createNewPlayerInterface(p));
+			Player p = logic.addNewRunner();
+			leftVBox.getChildren().add(createNewRunnnerInterface(p));
 		} else if (key.compareTo(KeyCode.UP) == 0) {
 
 		} else if (key.compareTo(KeyCode.DOWN) == 0) {
@@ -80,7 +80,7 @@ public class GameRoomInterface implements GameScene {
 		return -1;
 	}
 
-	public HBox createNewPlayerInterface(Player p) {
+	public HBox createNewRunnnerInterface(Player p) {
 		double totalHeight = 80;
 		double totalWidth = 240;
 
@@ -119,6 +119,51 @@ public class GameRoomInterface implements GameScene {
 		mainBox.getChildren().add(informationBox);
 
 		return mainBox;
+	}
+
+	public HBox createNewAttackerInterface(Player p) {
+		double totalHeight = 80;
+		double totalWidth = 240;
+
+		HBox mainBox = new HBox();
+		mainBox.setStyle("-fx-background-color:white");
+		mainBox.setPrefWidth(totalWidth);
+		mainBox.setPrefHeight(totalHeight);
+
+		StackPane sp = new StackPane();
+		sp.setMinHeight(totalHeight);
+		sp.setMaxHeight(totalHeight);
+		sp.setMinWidth(totalHeight);
+		sp.setMaxWidth(totalHeight);
+
+		int imageMarginAround = 5;
+
+		ImageView imageView = new ImageView();
+		imageView.setImage(logic.getDefautCharacterProfile());
+		imageView.setFitWidth(totalHeight - 2 * imageMarginAround);
+		imageView.setFitHeight(totalHeight - 2 * imageMarginAround);
+		sp.getChildren().add(imageView);
+
+		VBox informationBox = new VBox();
+		informationBox.setMinHeight(totalHeight);
+		informationBox.setMaxHeight(totalHeight);
+		informationBox.setMinWidth(totalHeight);
+		informationBox.setMaxWidth(totalHeight);
+
+		Label name = new Label(p.getName());
+		informationBox.getChildren().add(name);
+
+		Label type = new Label("SwordMan");
+		informationBox.getChildren().add(type);
+
+		mainBox.getChildren().add(sp);
+		mainBox.getChildren().add(informationBox);
+
+		return mainBox;
+	}
+
+	public void addAttacker(Player player) {
+		leftVBox.getChildren().add(createNewAttackerInterface(player));
 	}
 
 }

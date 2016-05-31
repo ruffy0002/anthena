@@ -10,17 +10,20 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import resource.Resources;
+import userinterface.GameRoomInterface;
 
 public class LogicMain {
 
 	private GameLoop gameLoop;
 	private boolean[] nameAssigned;
 	private Resources resources;
+	private GameRoomInterface hostRoomInterface;
 
 	private int controlsIndex = 0;
 
-	public LogicMain(Resources resources) {
+	public LogicMain(Resources resources, GameRoomInterface hostRoomInterface) {
 		this.resources = resources;
+		this.hostRoomInterface = hostRoomInterface;
 
 		nameAssigned = new boolean[resources.getNames().length];
 		for (int i = 0; i < resources.getNames().length; i++) {
@@ -68,15 +71,22 @@ public class LogicMain {
 		return null;
 	}
 
-	public Player addNewPlayer() {
+	public Player addNewRunner() {
 
 		Control control = getNextControl();
 		if (control != null) {
 			Player player = new Player(control, getRandomName(), getRandomColor());
-			gameLoop.addPlayer(player);
+			gameLoop.addRunner(player);
 			return player;
 		}
 		return null;
+	}
+
+	public Player addNewAttacker() {
+		Player player = new Player(null, getRandomName(), getRandomColor());
+		gameLoop.addRunner(player);
+		hostRoomInterface.addAttacker(player);
+		return player;
 	}
 
 }

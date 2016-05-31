@@ -27,10 +27,12 @@ public class PrimaryInterface extends Application {
 	private Stage stage;
 	private Scene scenes[] = new Scene[3];
 	private LogicMain logic;
+	
+	GameRoomInterface hostRoomInterface;
 
 	public PrimaryInterface() {
 		resources = initResources();
-		logic = new LogicMain(resources);
+		logic = new LogicMain(resources,hostRoomInterface);
 
 		_screenBounds = Screen.getPrimary().getVisualBounds();
 		scenes[0] = initStartScene();
@@ -83,7 +85,7 @@ public class PrimaryInterface extends Application {
 	}
 
 	private Scene initGameRoomScene(LogicMain logic) {
-		GameRoomInterface hostRoomInterface = GameRoomInterface.getStartScene(logic,_screenBounds);
+		hostRoomInterface = GameRoomInterface.getStartScene(logic,_screenBounds);
 		hostRoomInterface.initControls(initControlsForStartScene(hostRoomInterface));
 		return hostRoomInterface.getScene();
 	}

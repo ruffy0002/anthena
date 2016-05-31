@@ -16,7 +16,8 @@ import resource.Resources;
 
 public class GameLoop extends AnimationTimer {
 
-	private ArrayList<Player> players = new ArrayList<Player>();
+	private ArrayList<Player> runners = new ArrayList<Player>();
+	private ArrayList<Player> attackers = new ArrayList<Player>();
 
 	private long startNanoTime;
 	private int frameRate = 0;
@@ -56,8 +57,8 @@ public class GameLoop extends AnimationTimer {
 	}
 
 	public void initGameLoop() {
-		for (int i = 0; i < players.size(); i++) {
-			character.add(players.get(i).createSprite());
+		for (int i = 0; i < runners.size(); i++) {
+			character.add(runners.get(i).createSprite());
 		}
 		startNanoTime = System.nanoTime();
 	}
@@ -174,7 +175,11 @@ public class GameLoop extends AnimationTimer {
 		}
 	}
 
-	public void addPlayer(Player p) {
-		players.add(p);
+	public void addRunner(Player p) {
+		runners.add(p);
+	}
+
+	public void addAttackers(Player p) {
+		attackers.add(p);
 	}
 }
