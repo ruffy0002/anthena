@@ -1,8 +1,10 @@
 package entity;
 
+import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import resource.Resources;
 
 public class Attack extends Sprite {
@@ -21,6 +23,8 @@ public class Attack extends Sprite {
 
 		timePast = 0;
 		super.setImage(Resources.getAttackSet(0), null);
+
+		perceptionRotate = 60;
 
 		animationFrameWidth = 400;
 		animationFrameHeight = 400;
@@ -43,7 +47,15 @@ public class Attack extends Sprite {
 
 		setRotationAngle(0);
 		setVelocityRotate(10);
+		calculateBoundary();
+	}
 
+	public void calculateBoundary() {
+		double boundaryWidth = width;
+		double boundaryHeight = Math.sin(Math.toRadians(90 - perceptionRotate)) * (height);
+		double boundaryX = getBoundaryX();
+		double boundaryY = getBoundaryY() + (height - boundaryHeight) / 2;
+		collisionZone = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
 	}
 
 	public boolean getReadyToClear() {
@@ -59,6 +71,13 @@ public class Attack extends Sprite {
 		gc.drawImage(image, animationFrameWidth * currentAnimationFrameX, animationFrameHeight * currentAnimationFrameY,
 				animationFrameWidth, animationFrameHeight, getBoundaryX(), getBoundaryY(), width, height);
 		gc.setGlobalAlpha(1);
+		gc.restore();
+
+		// draw collison
+		gc.save();
+		gc.setGlobalBlendMode(BlendMode.LIGHTEN);
+		Bounds b = collisionZone.getLayoutBounds();
+		gc.fillRect(b.getMinX(), b.getMinY(), b.getWidth(), b.getHeight());
 		gc.restore();
 	}
 

@@ -16,6 +16,7 @@ import javafx.scene.transform.Shear;
 
 public class Sprite {
 
+	protected double perceptionRotate;
 	protected Image image;
 	protected Image image2;
 
@@ -51,6 +52,14 @@ public class Sprite {
 	protected double scaleY;
 	
 	protected Shape collisionZone;
+
+	public Shape getCollisionZone() {
+		return collisionZone;
+	}
+
+	public void setCollisionZone(Shape collisionZone) {
+		this.collisionZone = collisionZone;
+	}
 
 	public void setImage(Image image, Image image2) {
 		this.image = image;
@@ -196,7 +205,7 @@ public class Sprite {
 	}
 
 	protected void rotateX(GraphicsContext gc) {
-		Rotate r = new Rotate(60, positionX, positionY);
+		Rotate r = new Rotate(perceptionRotate, positionX, positionY);
 		r.setAxis(Rotate.X_AXIS);
 		Affine temp = gc.getTransform();
 		temp.append(r);
@@ -232,7 +241,7 @@ public class Sprite {
 	}
 
 	public boolean intersects(Sprite s) {
-		Shape rec = Rectangle.intersect(this.getBoundary(), s.getBoundary());
+		Shape rec = Rectangle.intersect(this.getCollisionZone(), s.getCollisionZone());
 		Bounds bound = rec.getLayoutBounds();
 		if (bound.getWidth() > 0 || bound.getHeight() > 0) {
 			return true;
