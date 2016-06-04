@@ -1,20 +1,23 @@
 package entity;
 
 import controls.Control;
+import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 
 public class Character extends Sprite {
 
+	protected Player player;
 	protected Control control;
 	double movementSpeed = 100;
 	double rotationSpeed = 200;
 	double movementDistance = 0;
 	private boolean isAlive = true;
-	private boolean isFlipped = false;
+	protected boolean isFlipped = false;
 	private boolean hasFinishDeathAnimation = false;
 
 	private Image deathImage;
@@ -35,6 +38,10 @@ public class Character extends Sprite {
 	protected int defeatedAnimationFrameHeight;
 	protected int currentDefeatedAnimationFrame;
 	protected int defeatAnimationRepeat;
+
+	public Character(Player p) {
+		player = p;
+	}
 
 	public void init() {
 
@@ -73,6 +80,9 @@ public class Character extends Sprite {
 				}
 				super.setPositionX(positionX + moveX);
 				super.setPositionY(positionY + moveY);
+				Rectangle r = (Rectangle) collisionZone;
+				r.setX(r.getX() +moveX);
+				r.setY(r.getY() +moveY);
 			}
 		} else {
 			frameSpeedControl += time;

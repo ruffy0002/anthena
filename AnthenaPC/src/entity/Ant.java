@@ -8,6 +8,10 @@ import resource.Resources;
 
 public class Ant extends Character {
 
+	public Ant(Player p) {
+		super(p);
+	}
+
 	public void init() {
 		super.setWidth(44.8);
 		super.setHeight(40);
@@ -82,7 +86,7 @@ public class Ant extends Character {
 				positionX, positionY, width, height);
 
 		gc.setGlobalBlendMode(BlendMode.DARKEN);
-		gc.setFill(this.color);
+		gc.setFill(player.getColor());
 		// gc.fillRect(positionX, positionY, width, height);
 		gc.fillRect(positionX + ((width - 9) / 2), positionY + ((height - 9) / 2) + 12, 9, 9);
 

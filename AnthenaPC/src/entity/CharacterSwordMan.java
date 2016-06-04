@@ -1,10 +1,15 @@
 package entity;
 
+import javafx.geometry.Bounds;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.shape.Rectangle;
 import resource.Resources;
 
 public class CharacterSwordMan extends Character {
 
-	public CharacterSwordMan() {
+	public CharacterSwordMan(Player p) {
+		super(p);
 		init();
 	}
 
@@ -41,6 +46,27 @@ public class CharacterSwordMan extends Character {
 		super.setImage(Resources.getcharacterSet(0), null);
 		super.setDeathImage(Resources.getDeathImage(0));
 		super.setDefeatedImage(Resources.getDefeatedImage(0));
+		calculateBoundary();
+	}
 
+	public void calculateBoundary() {
+		double boundaryWidth = width * 0.6;
+		double boundaryHeight = height * 0.3;
+		double boundaryX = positionX + (width - boundaryWidth) / 3;
+		double boundaryY = positionY + (height - boundaryHeight);
+		collisionZone = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
+	}
+
+	public void render(GraphicsContext gc) {
+		super.render(gc);
+
+		// draw collison box
+
+		gc.save();
+		gc.setGlobalBlendMode(BlendMode.LIGHTEN);
+		gc.setFill(player.getColor());
+		Bounds b = collisionZone.getLayoutBounds();
+		gc.fillRect(b.getMinX(), b.getMinY(), b.getWidth(), b.getHeight());
+		gc.restore();
 	}
 }

@@ -18,7 +18,6 @@ public class Sprite {
 
 	protected Image image;
 	protected Image image2;
-	protected Color color;
 
 	protected int animationLength;
 	protected int animationSpeed;
@@ -50,6 +49,8 @@ public class Sprite {
 
 	protected double scaleX;
 	protected double scaleY;
+	
+	protected Shape collisionZone;
 
 	public void setImage(Image image, Image image2) {
 		this.image = image;
@@ -59,15 +60,12 @@ public class Sprite {
 	public void setWidth(double width) {
 		this.width = width;
 		halfWidth = width / 2;
-
 		displayWidth = width * scaleX;
-
 	}
 
 	public void setHeight(double height) {
 		this.height = height;
 		halfHeight = height / 2;
-
 		displayHeight = height * scaleX;
 		boundaryY = height;
 	}

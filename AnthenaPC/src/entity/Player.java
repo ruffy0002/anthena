@@ -42,7 +42,7 @@ public class Player {
 	}
 
 	public Character createSprite() {
-		CharacterSwordMan cm = new CharacterSwordMan();
+		CharacterSwordMan cm = new CharacterSwordMan(this);
 		cm.setControl(control);
 		return cm;
 	}
