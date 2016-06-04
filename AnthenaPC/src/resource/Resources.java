@@ -12,7 +12,11 @@ public class Resources {
 
 	private static final Image[] GAME_MAPS = new Image[10];
 	private static final Image[] ANTS = new Image[2];
+
 	private static final Image[] CHARACTER_SET = new Image[1];
+	private static final Image[] CHARACTER_SET_DEATH = new Image[1];
+	private static final Image[] DEATH = new Image[1];
+
 	private static final Image[] ATTACK_SET = new Image[1];
 	public static final Color[] COLORS = new Color[10];
 
@@ -76,6 +80,8 @@ public class Resources {
 
 	public void loadCharacterSprites() {
 		CHARACTER_SET[0] = new Image("sprite/characterSwordMan.png");
+		CHARACTER_SET_DEATH[0] = new Image("sprite/swordmandefeated.png");
+		DEATH[0] = new Image("sprite/swordmandeath.png");
 
 		ATTACK_SET[0] = new Image("sprite/attackPattern1.png");
 
@@ -93,6 +99,14 @@ public class Resources {
 
 	public static Image getAttackSet(int index) {
 		return ATTACK_SET[index];
+	}
+
+	public static Image getDeathImage(int index) {
+		return DEATH[index];
+	}
+
+	public static Image getDefeatedImage(int index) {
+		return CHARACTER_SET_DEATH[index];
 	}
 
 	public void loadColors() {

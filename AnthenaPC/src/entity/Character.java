@@ -3,23 +3,30 @@ package entity;
 import controls.Control;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.transform.Rotate;
 
 public class Character extends Sprite {
 
 	protected Control control;
-
 	double movementSpeed = 100;
 	double rotationSpeed = 200;
 	double movementDistance = 0;
 	private boolean isAlive = true;
 	private boolean isFlipped = false;
 
+	private Image deathImage;
+	protected int deathAnimationLength;
+	protected int deathAnimationSpeed;
+	private Image defeatedImage;
+	protected int defeatedAnimationLength;
+	protected int defeatedAnimationSpeed;
+
 	public void init() {
-		
+
 	}
-	
+
 	public Control getControl() {
 		return control;
 	}
@@ -102,4 +109,21 @@ public class Character extends Sprite {
 	public boolean isAlive() {
 		return isAlive;
 	}
+
+	public Image getDeathImage() {
+		return deathImage;
+	}
+
+	public void setDeathImage(Image deathImage) {
+		this.deathImage = deathImage;
+	}
+
+	public Image getDefeatedImage() {
+		return defeatedImage;
+	}
+
+	public void setDefeatedImage(Image defeatedImage) {
+		this.defeatedImage = defeatedImage;
+	}
+
 }

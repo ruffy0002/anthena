@@ -97,9 +97,10 @@ public class GameLoop extends AnimationTimer {
 	}
 
 	private void update(double elapsedTime) {
+		
+		attackCount -= elapsedTime;//debug
+		
 		updateFrameRate(elapsedTime);
-
-		attackCount -= elapsedTime;
 		for (int k = 0; k < character.size(); k++) {
 			character.get(k).update(elapsedTime);
 		}
