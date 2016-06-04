@@ -17,7 +17,7 @@ public class Character extends Sprite {
 	private boolean isFlipped = false;
 
 	public void init() {
-
+		
 	}
 	
 	public Control getControl() {
@@ -57,10 +57,10 @@ public class Character extends Sprite {
 
 	public void render(GraphicsContext gc) {
 		gc.save();
-		gc.setGlobalBlendMode(BlendMode.DARKEN);
+		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
 		if (!isFlipped) {
 			gc.drawImage(image, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth,
-					animationFrameHeight, positionX, positionY, width, height);
+					animationFrameHeight, positionX, positionY, displayWidth, displayHeight);
 		} else {
 
 			Rotate r = new Rotate(180, positionX, positionY);

@@ -20,16 +20,25 @@ public class StartMenuInterface implements GameScene {
 	private static final Font FONT_LABEL = new Font(PrimaryInterface.FONT_TITLE_LABLES, FONT_SIZE);
 	private Label[] lables = new Label[TOTAL_ITEMS_SELECTABLE];
 
-	public static StartMenuInterface getStartScene(Rectangle2D screenBounds) {
+	private ScreenInformation _screenInformation;
+	private BorderPane border;
+
+	public static StartMenuInterface getStartScene(ScreenInformation _screenInformation) {
 		selector = 0;
 		StartMenuInterface smi = new StartMenuInterface();
-		smi.init(screenBounds);
+		smi.init(_screenInformation);
 		return smi;
 	}
 
-	public void init(Rectangle2D screenBounds) {
-		BorderPane border = new BorderPane();
-		border.setPrefSize(screenBounds.getWidth(), screenBounds.getHeight());
+	public void updateSceneSize(ScreenInformation _screenInformation) {
+		this._screenInformation = _screenInformation;
+		border.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
+	}
+
+	public void init(ScreenInformation _screenInformation) {
+		this._screenInformation = _screenInformation;
+		border = new BorderPane();
+		border.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
 		border.setStyle("-fx-background-color:black");
 
 		lables[0] = new Label("Host Room");
@@ -85,7 +94,13 @@ public class StartMenuInterface implements GameScene {
 				highlight(selector);
 			}
 		} else if (key.compareTo(KeyCode.ENTER) == 0) {
-			return 1;
+			if (selector == 0) {
+				return 1;
+			} else if (selector == 1) {
+				return 2;
+			} else if (selector == 2) {
+
+			}
 		}
 		return -1;
 	}

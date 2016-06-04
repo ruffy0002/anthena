@@ -10,7 +10,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import resource.Resources;
+import userinterface.GameInterface;
 import userinterface.GameRoomInterface;
+import userinterface.ScreenInformation;
 
 public class LogicMain {
 
@@ -18,6 +20,9 @@ public class LogicMain {
 	private boolean[] nameAssigned;
 	private Resources resources;
 	private GameRoomInterface hostRoomInterface;
+
+	public static final double GAME_WIDTH = 800;
+	public static final double GAME_HEIGHT = 600;
 
 	private int controlsIndex = 0;
 
@@ -30,8 +35,8 @@ public class LogicMain {
 		}
 	}
 
-	public void initGameLoop(Canvas mainCanvas, Canvas backgroundCanvas, Controller controller, Resources resources) {
-		gameLoop = new GameLoop(mainCanvas, backgroundCanvas, controller, resources);
+	public void initGameLoop(GameInterface gi, Controller controller, Resources resources) {
+		gameLoop = new GameLoop(gi, controller, resources);
 	}
 
 	public void startGameLoop() {
@@ -83,13 +88,19 @@ public class LogicMain {
 
 	public Player addNewAttacker() {
 		Player player = new Player(null, getRandomName(), getRandomColor());
-		gameLoop.addRunner(player);
+		//gameLoop.addRunner(player);
 		hostRoomInterface.addAttacker(player);
 		return player;
 	}
 
 	public void setHostRoomInterface(GameRoomInterface hostRoomInterface) {
 		this.hostRoomInterface = hostRoomInterface;
+	}
+
+	public void updateScale(ScreenInformation screenInformation) {
+		double xScale = screenInformation.get_width() / GAME_WIDTH;
+		double yScale = screenInformation.get_height() / GAME_HEIGHT;
+		gameLoop.updateScale(xScale, yScale);
 	}
 
 }

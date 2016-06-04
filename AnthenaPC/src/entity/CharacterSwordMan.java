@@ -15,7 +15,8 @@ public class CharacterSwordMan extends Character {
 		animationFrameWidth = 300;
 		animationFrameHeight = 531;
 
-		super.setWidth(100);
+		super.setScaleXY(1,1);
+		super.setWidth(50);
 		super.setHeight(getWidth() / animationFrameWidth * animationFrameHeight);
 		super.setPositionX(0);
 		super.setPositionY(0);

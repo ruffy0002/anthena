@@ -13,6 +13,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import resource.Resources;
+import userinterface.GameInterface;
 
 public class GameLoop extends AnimationTimer {
 
@@ -45,15 +46,15 @@ public class GameLoop extends AnimationTimer {
 		graphicContext = mainCanvas.getGraphicsContext2D();
 	}
 
-	public void initGameComponents() {
-		CharacterSwordMan p = new CharacterSwordMan();
-		p.init();
-		character.add(p);
+	public GameLoop(GameInterface gi, Controller controller, Resources resources) {
+		this.resources = resources;
 
-		Ant temp = new Ant();
-		temp.init();
-		temp.initRandomAnt();
-		character.add(temp);
+		this.controller = controller;
+		this.mainCanvas = gi.getMainCanvas();
+		this.backgroundCanvas = gi.getBackgroundCanvas();
+
+		drawMap();
+		graphicContext = mainCanvas.getGraphicsContext2D();
 	}
 
 	public void initGameLoop() {
@@ -181,5 +182,11 @@ public class GameLoop extends AnimationTimer {
 
 	public void addAttackers(Player p) {
 		attackers.add(p);
+	}
+
+	public void updateScale(double x, double y) {
+		for (int k = 0; k < character.size(); k++) {
+			character.get(k).updateScale(x,y);
+		}
 	}
 }

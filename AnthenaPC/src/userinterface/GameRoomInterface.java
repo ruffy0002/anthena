@@ -24,38 +24,40 @@ public class GameRoomInterface implements GameScene {
 
 	private static Scene scene;
 	private LogicMain logic;
+	private BorderPane _mainComponent;
 	private VBox leftVBox;
 	private VBox rightVBox;
+	private ScreenInformation _screenInformation;
 
-	public static GameRoomInterface getStartScene(LogicMain logic, Rectangle2D screenBounds) {
-		GameRoomInterface gri = new GameRoomInterface(logic, screenBounds);
+	public static GameRoomInterface getStartScene(LogicMain logic, ScreenInformation _screenInformation) {
+		GameRoomInterface gri = new GameRoomInterface(logic, _screenInformation);
 		return gri;
 	}
 
-	private GameRoomInterface(LogicMain logic, Rectangle2D screenBounds) {
+	private GameRoomInterface(LogicMain logic, ScreenInformation _screenInformation) {
 		this.logic = logic;
-		init(screenBounds);
+		this._screenInformation = _screenInformation;
+		init(_screenInformation);
 	}
 
-	public void init(Rectangle2D screenBounds) {
+	public void init(ScreenInformation _screenInformation) {
 
 		leftVBox = new VBox();
 		rightVBox = new VBox();
 
-		BorderPane border = new BorderPane();
-		border.setPrefSize(screenBounds.getWidth(), screenBounds.getHeight());
-		border.setStyle("-fx-background-color:black");
+		_mainComponent = new BorderPane();
+		_mainComponent.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
+		_mainComponent.setStyle("-fx-background-color:black");
 
-		Label l = new Label(
-				"lol");
+		Label l = new Label("lol");
 		l.setStyle("-fx-text-fill:white");
 
-		border.setLeft(leftVBox);
-		border.setRight(rightVBox);
+		_mainComponent.setLeft(leftVBox);
+		_mainComponent.setRight(rightVBox);
 
-		border.setCenter(l);
+		_mainComponent.setCenter(l);
 
-		scene = new Scene(border);
+		scene = new Scene(_mainComponent);
 	}
 
 	public void initControls(EventHandler<KeyEvent> event) {
@@ -172,6 +174,11 @@ public class GameRoomInterface implements GameScene {
 				rightVBox.getChildren().add(createNewAttackerInterface(player));
 			}
 		});
+	}
+
+	public void updateSceneSize(ScreenInformation _screenInformation) {
+		this._screenInformation = _screenInformation;
+		_mainComponent.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
 	}
 
 }

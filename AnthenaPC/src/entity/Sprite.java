@@ -36,13 +36,20 @@ public class Sprite {
 
 	protected double velocityX;
 	protected double velocityY;
+
 	protected double width;
 	protected double height;
 	protected double halfWidth;
 	protected double halfHeight;
+
+	protected double displayWidth;
+	protected double displayHeight;
+
 	protected double rotationAngle;
 	protected double velocityRotate;
-	protected double scale;
+
+	protected double scaleX;
+	protected double scaleY;
 
 	public void setImage(Image image, Image image2) {
 		this.image = image;
@@ -52,11 +59,16 @@ public class Sprite {
 	public void setWidth(double width) {
 		this.width = width;
 		halfWidth = width / 2;
+
+		displayWidth = width * scaleX;
+
 	}
 
 	public void setHeight(double height) {
 		this.height = height;
 		halfHeight = height / 2;
+
+		displayHeight = height * scaleX;
 		boundaryY = height;
 	}
 
@@ -166,14 +178,6 @@ public class Sprite {
 		this.velocityRotate = velocityRotate;
 	}
 
-	public double getScale() {
-		return scale;
-	}
-
-	public void setScale(double scale) {
-		this.scale = scale;
-	}
-
 	public double getWidth() {
 		return width;
 	}
@@ -215,6 +219,18 @@ public class Sprite {
 		Rectangle r = new Rectangle(boundaryX, boundaryY, width, height);
 		r.setRotate(rotationAngle);
 		return r;
+	}
+
+	public void setScaleXY(double x, double y) {
+		scaleX = x;
+		scaleY = y;
+	}
+
+	public void updateScale(double x, double y) {
+		scaleX = x;
+		scaleY = y;
+		displayWidth = width * x;
+		displayHeight = height * y;
 	}
 
 	public boolean intersects(Sprite s) {

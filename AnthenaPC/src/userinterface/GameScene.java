@@ -8,12 +8,14 @@ import javafx.scene.input.KeyEvent;
 
 public interface GameScene {
 
-	public void init(Rectangle2D screenBounds);
+	public void init(ScreenInformation screenBounds);
 
 	public void initControls(EventHandler<KeyEvent> event);
 
 	public Scene getScene();
 
 	public int updateControl(KeyCode key);
+
+	public void updateSceneSize(ScreenInformation _screenInformation);
 
 }
