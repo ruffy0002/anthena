@@ -14,15 +14,25 @@ public class CharacterSwordMan extends Character {
 		animationSpeed = 9;
 		animationFrameWidth = 300;
 		animationFrameHeight = 531;
-		
-		deathAnimationLength =2;
-		deathAnimationSpeed =5;
-		
-		defeatedAnimationLength = 2;
-		defeatedAnimationSpeed =5;
 
-		super.setScaleXY(1,1);
-		super.setWidth(50);
+		deathAnimationLength = 2;
+		deathAnimationSpeed = 0.5;
+		deathAnimationFrameSpeed = deathAnimationSpeed / deathAnimationLength;
+		deathAnimationFrameWidth = 250;
+		deathAnimationFrameHeight = 270;
+		currentDeathAnimationFrame = 0;
+		deathAnimationRepeat = -1;
+
+		defeatedAnimationLength = 2;
+		defeatedAnimationSpeed = 1;
+		defeatedAnimationFrameSpeed = defeatedAnimationSpeed / defeatedAnimationLength;
+		defeatedAnimationFrameWidth = 300;
+		defeatedAnimationFrameHeight = 531;
+		currentDefeatedAnimationFrame = 0;
+		defeatAnimationRepeat = 3;
+
+		super.setScaleXY(1, 1);
+		super.setWidth(80);
 		super.setHeight(getWidth() / animationFrameWidth * animationFrameHeight);
 		super.setPositionX(0);
 		super.setPositionY(0);
@@ -31,6 +41,6 @@ public class CharacterSwordMan extends Character {
 		super.setImage(Resources.getcharacterSet(0), null);
 		super.setDeathImage(Resources.getDeathImage(0));
 		super.setDefeatedImage(Resources.getDefeatedImage(0));
-		
+
 	}
 }

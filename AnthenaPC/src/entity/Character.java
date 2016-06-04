@@ -15,13 +15,26 @@ public class Character extends Sprite {
 	double movementDistance = 0;
 	private boolean isAlive = true;
 	private boolean isFlipped = false;
+	private boolean hasFinishDeathAnimation = false;
 
 	private Image deathImage;
 	protected int deathAnimationLength;
-	protected int deathAnimationSpeed;
+	protected double deathAnimationSpeed;
+	protected double deathAnimationFrameSpeed;
+	protected int deathAnimationFrameWidth;
+	protected int deathAnimationFrameHeight;
+	protected int currentDeathAnimationFrame;
+	protected int deathAnimationRepeat;
+
+	private double frameSpeedControl = 0;
 	private Image defeatedImage;
 	protected int defeatedAnimationLength;
-	protected int defeatedAnimationSpeed;
+	protected double defeatedAnimationSpeed;
+	protected double defeatedAnimationFrameSpeed;
+	protected int defeatedAnimationFrameWidth;
+	protected int defeatedAnimationFrameHeight;
+	protected int currentDefeatedAnimationFrame;
+	protected int defeatAnimationRepeat;
 
 	public void init() {
 
@@ -37,48 +50,76 @@ public class Character extends Sprite {
 
 	public void update(double time) {
 
-		double moveX = velocityX * time;
-		double moveY = velocityY * time;
+		if (isAlive) {
+			double moveX = velocityX * time;
+			double moveY = velocityY * time;
 
-		if (moveX < 0) {
-			isFlipped = true;
-		} else if (moveX > 0) {
-			isFlipped = false;
-		}
-
-		if (moveX == 0 && moveY == 0) {
-			currentAnimationFrame = 0;
-			movementDistance = 0;
-		} else {
-			movementDistance += Math.sqrt(Math.pow(moveX, 2) + Math.pow(moveY, 2));
-			currentAnimationFrame = Math.abs((int) ((movementDistance / animationSpeed) % animationLength));
-			currentAnimationFrame = currentAnimationFrame + 1;
-			if (currentAnimationFrame > 5) {
-				int temp = animationLength - currentAnimationFrame;
-				currentAnimationFrame = 5 - temp;
+			if (moveX < 0) {
+				isFlipped = true;
+			} else if (moveX > 0) {
+				isFlipped = false;
 			}
-			super.setPositionX(positionX + moveX);
-			super.setPositionY(positionY + moveY);
+
+			if (moveX == 0 && moveY == 0) {
+				currentAnimationFrame = 0;
+				movementDistance = 0;
+			} else {
+				movementDistance += Math.sqrt(Math.pow(moveX, 2) + Math.pow(moveY, 2));
+				currentAnimationFrame = Math.abs((int) ((movementDistance / animationSpeed) % animationLength));
+				currentAnimationFrame = currentAnimationFrame + 1;
+				if (currentAnimationFrame > 5) {
+					int temp = animationLength - currentAnimationFrame;
+					currentAnimationFrame = 5 - temp;
+				}
+				super.setPositionX(positionX + moveX);
+				super.setPositionY(positionY + moveY);
+			}
+		} else {
+			frameSpeedControl += time;
+			if (!hasFinishDeathAnimation) {
+				int tempFrame = (int) (frameSpeedControl / defeatedAnimationFrameSpeed);
+				currentDefeatedAnimationFrame = tempFrame % defeatedAnimationLength;
+
+				if (tempFrame / defeatedAnimationLength > defeatAnimationRepeat) {
+					hasFinishDeathAnimation = true;
+					frameSpeedControl = 0;
+				}
+			} else {
+				currentDeathAnimationFrame = (int) (frameSpeedControl / deathAnimationFrameSpeed);
+				currentDeathAnimationFrame = currentDeathAnimationFrame % deathAnimationLength;
+			}
+
 		}
 	}
 
 	public void render(GraphicsContext gc) {
 		gc.save();
-		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
-		if (!isFlipped) {
-			gc.drawImage(image, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth,
-					animationFrameHeight, positionX, positionY, displayWidth, displayHeight);
+		if (isAlive) {
+			gc.setGlobalBlendMode(BlendMode.SRC_OVER);
+			if (!isFlipped) {
+				gc.drawImage(image, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth,
+						animationFrameHeight, positionX, positionY, displayWidth, displayHeight);
+			} else {
+
+				Rotate r = new Rotate(180, positionX, positionY);
+				r.setAxis(Rotate.Y_AXIS);
+
+				gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+				gc.translate(-width, 0);
+				gc.drawImage(image, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth,
+						animationFrameHeight, positionX, positionY, width, height);
+			}
 		} else {
-
-			Rotate r = new Rotate(180, positionX, positionY);
-			r.setAxis(Rotate.Y_AXIS);
-
-			gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
-			gc.translate(-width, 0);
-			gc.drawImage(image, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth,
-					animationFrameHeight, positionX, positionY, width, height);
+			if (!hasFinishDeathAnimation) {
+				gc.drawImage(defeatedImage, defeatedAnimationFrameWidth * currentDefeatedAnimationFrame, 0,
+						defeatedAnimationFrameWidth, defeatedAnimationFrameHeight, positionX, positionY, displayWidth,
+						displayHeight);
+			} else {
+				gc.drawImage(deathImage, deathAnimationFrameWidth * currentDeathAnimationFrame, 0,
+						deathAnimationFrameWidth, deathAnimationFrameHeight, positionX, positionY, displayWidth,
+						displayHeight);
+			}
 		}
-
 		gc.restore();
 	}
 

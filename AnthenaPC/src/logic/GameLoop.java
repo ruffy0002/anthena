@@ -97,9 +97,9 @@ public class GameLoop extends AnimationTimer {
 	}
 
 	private void update(double elapsedTime) {
-		
-		attackCount -= elapsedTime;//debug
-		
+
+		attackCount -= elapsedTime;// debug
+
 		updateFrameRate(elapsedTime);
 		for (int k = 0; k < character.size(); k++) {
 			character.get(k).update(elapsedTime);
@@ -123,9 +123,11 @@ public class GameLoop extends AnimationTimer {
 		for (int k = 0; k < attack.size(); k++) {
 			if (attack.get(k).isReadyForCollide()) {
 				for (int kk = 0; kk < character.size(); kk++) {
-					boolean hasCollided = attack.get(k).intersects(character.get(kk));
-					if (hasCollided) {
-						character.get(kk).setDead();
+					if (character.get(kk).isAlive()) {
+						boolean hasCollided = attack.get(k).intersects(character.get(kk));
+						if (hasCollided) {
+							character.get(kk).setDead();
+						}
 					}
 				}
 			}
@@ -136,9 +138,7 @@ public class GameLoop extends AnimationTimer {
 		graphicContext.clearRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
 		drawFrameRate();
 		for (int i = 0; i < character.size(); i++) {
-			if (character.get(i).isAlive()) {
-				character.get(i).render(graphicContext);
-			}
+			character.get(i).render(graphicContext);
 		}
 
 		for (int i = 0; i < attack.size(); i++) {
@@ -187,7 +187,7 @@ public class GameLoop extends AnimationTimer {
 
 	public void updateScale(double x, double y) {
 		for (int k = 0; k < character.size(); k++) {
-			character.get(k).updateScale(x,y);
+			character.get(k).updateScale(x, y);
 		}
 	}
 }
