@@ -64,7 +64,6 @@ public class hostRoomThread implements Runnable {
     private void listenForPlayer(ServerSocket serverSocket) throws IOException {
         if(currentPlayerNo < PLAYER_NO) {
             Socket temSocket = serverSocket.accept();
-            temSocket.setKeepAlive(true);
             if (checkRepeatedIp(temSocket) ) {
                 return;
             } else {
@@ -88,7 +87,8 @@ public class hostRoomThread implements Runnable {
     private boolean checkRepeatedIp(Socket temSocket) {
         for(int i = 0; i < PLAYER_NO; i++) {
             if(playerThreads[i] != null) {
-                if(playerThreads[i].getIp() == temSocket.getInetAddress()) {
+                if(playerThreads[i].getIp().equals(temSocket.getInetAddress())) {
+                    System.out.println("Same IP already connected");
                     return true;
                 }
             }
