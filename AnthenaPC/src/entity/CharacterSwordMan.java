@@ -39,8 +39,8 @@ public class CharacterSwordMan extends Character {
 		super.setScaleXY(1, 1);
 		super.setWidth(80);
 		super.setHeight(getWidth() / animationFrameWidth * animationFrameHeight);
-		super.setPositionX(0);
-		super.setPositionY(0);
+		super.setPositionX(400);
+		super.setPositionY(200);
 		super.setVelocityX(0);
 		super.setRotationAngle(0);
 		super.setImage(Resources.getcharacterSet(0), null);
@@ -61,7 +61,6 @@ public class CharacterSwordMan extends Character {
 		super.render(gc);
 
 		// draw collison box
-
 		gc.save();
 		gc.setGlobalBlendMode(BlendMode.LIGHTEN);
 		gc.setFill(player.getColor());

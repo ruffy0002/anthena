@@ -11,7 +11,9 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
+import javafx.util.Pair;
 
 public class Character extends Sprite implements Comparable<Character> {
 
@@ -88,11 +90,27 @@ public class Character extends Sprite implements Comparable<Character> {
 					int temp = animationLength - currentAnimationFrame;
 					currentAnimationFrame = 5 - temp;
 				}
-				super.setPositionX(positionX + moveX);
-				super.setPositionY(positionY + moveY);
+
 				Rectangle r = (Rectangle) collisionZone;
+				previousBoundaryX = r.getX();
+				previousBoundaryY = r.getY();
 				r.setX(r.getX() + moveX);
 				r.setY(r.getY() + moveY);
+
+				Pair<Boolean, Boolean> xy = getCollidePair(mapBoundary);
+				
+				if (!xy.getKey()) {
+					super.setPositionX(positionX + moveX);
+				} else {
+					r.setX(previousBoundaryX);
+					
+					
+				}
+				if (!xy.getValue()) {
+					super.setPositionY(positionY + moveY);
+				} else {
+					r.setY(previousBoundaryY);
+				}
 			}
 		} else {
 			frameSpeedControl += time;
@@ -199,6 +217,28 @@ public class Character extends Sprite implements Comparable<Character> {
 			return 1;
 		}
 		return 0;
+	}
+
+	public void revertPosition() {
+		super.setPositionX(previousX);
+		super.setPositionY(previousY);
+		super.setCollisonZoneXY(previousBoundaryX, previousBoundaryY);
+	}
+
+	public Pair<Boolean, Boolean> getCollidePair(Shape bound) {
+
+		Shape col = Rectangle.union(bound, collisionZone);
+		boolean xCollide = false;
+		boolean yCollide = false;
+		if (col.getLayoutBounds().getWidth() != bound.getLayoutBounds().getWidth()) {
+			xCollide = true;
+		}
+		if (col.getLayoutBounds().getHeight() != bound.getLayoutBounds().getHeight()) {
+			yCollide = true;
+		}
+
+		Pair<Boolean, Boolean> colXcolY = new Pair<Boolean, Boolean>(xCollide, yCollide);
+		return colXcolY;
 	}
 
 }
