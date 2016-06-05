@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 
 import controls.Controller;
 import entity.Ant;
@@ -30,6 +31,7 @@ public class GameLoop extends AnimationTimer {
 	private GraphicsContext graphicContext;
 	private Controller controller;
 	private ArrayList<Character> character = new ArrayList<Character>();
+	private PriorityQueue<Character> characterPq = new PriorityQueue<>();
 	private ArrayList<Attack> attack = new ArrayList<Attack>();
 
 	private Resources resources;
@@ -101,8 +103,10 @@ public class GameLoop extends AnimationTimer {
 		attackCount -= elapsedTime;// debug
 
 		updateFrameRate(elapsedTime);
+
 		for (int k = 0; k < character.size(); k++) {
 			character.get(k).update(elapsedTime);
+			characterPq.offer(character.get(k));
 		}
 
 		ArrayList<Integer> lsitToRemove = new ArrayList<Integer>();
@@ -136,14 +140,16 @@ public class GameLoop extends AnimationTimer {
 
 	private void draw() {
 		graphicContext.clearRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
-		drawFrameRate();
-		for (int i = 0; i < character.size(); i++) {
-			character.get(i).render(graphicContext);
-		}
 
 		for (int i = 0; i < attack.size(); i++) {
 			attack.get(i).render(graphicContext);
 		}
+
+		while (!characterPq.isEmpty()) {
+			characterPq.poll().render(graphicContext);
+		}
+
+		drawFrameRate();
 	}
 
 	private void drawMap() {

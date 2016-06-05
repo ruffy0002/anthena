@@ -50,7 +50,7 @@ public class Sprite {
 
 	protected double scaleX;
 	protected double scaleY;
-	
+
 	protected Shape collisionZone;
 
 	public Shape getCollisionZone() {
@@ -258,7 +258,9 @@ public class Sprite {
 			currentAnimationFrameX = 0;
 			currentAnimationFrameY = 0;
 		}
-
 	}
 
+	public double getZIndex() {
+		return positionY + displayHeight;
+	}
 }
