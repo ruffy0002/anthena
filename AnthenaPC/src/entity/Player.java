@@ -10,11 +10,13 @@ public class Player {
 	private Color color;
 
 	private Sprite sprite;
+	private int health;
 
 	public Player(Control control, String name, Color color) {
 		this.name = name;
 		this.control = control;
 		this.color = color;
+		health = 3;
 	}
 
 	public Control getControl() {
@@ -39,6 +41,14 @@ public class Player {
 
 	public void setColor(Color color) {
 		this.color = color;
+	}
+
+	public int getHealth() {
+		return health;
+	}
+
+	public void setHealth(int health) {
+		this.health = health;
 	}
 
 	public Character createSprite() {

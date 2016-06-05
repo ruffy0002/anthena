@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
@@ -67,6 +68,30 @@ public class Character extends Sprite implements Comparable<Character> {
 		this.control = control;
 	}
 
+	public void setDead() {
+		isAlive = false;
+	}
+
+	public boolean isAlive() {
+		return isAlive;
+	}
+
+	public Image getDeathImage() {
+		return deathImage;
+	}
+
+	public void setDeathImage(Image deathImage) {
+		this.deathImage = deathImage;
+	}
+
+	public Image getDefeatedImage() {
+		return defeatedImage;
+	}
+
+	public void setDefeatedImage(Image defeatedImage) {
+		this.defeatedImage = defeatedImage;
+	}
+
 	public void update(double time) {
 
 		if (isAlive) {
@@ -85,11 +110,12 @@ public class Character extends Sprite implements Comparable<Character> {
 			} else {
 				movementDistance += Math.sqrt(Math.pow(moveX, 2) + Math.pow(moveY, 2));
 				currentAnimationFrame = Math.abs((int) ((movementDistance / animationSpeed) % animationLength));
-				currentAnimationFrame = currentAnimationFrame + 1;
-				if (currentAnimationFrame > 5) {
-					int temp = animationLength - currentAnimationFrame;
-					currentAnimationFrame = 5 - temp;
-				}
+				spiltFrameToXandY(4);
+				/*
+				 * currentAnimationFrame = currentAnimationFrame + 1; if
+				 * (currentAnimationFrame > 5) { int temp = animationLength -
+				 * currentAnimationFrame; currentAnimationFrame = 5 - temp; }
+				 */
 
 				Rectangle r = (Rectangle) collisionZone;
 				previousBoundaryX = r.getX();
@@ -98,13 +124,10 @@ public class Character extends Sprite implements Comparable<Character> {
 				r.setY(r.getY() + moveY);
 
 				Pair<Boolean, Boolean> xy = getCollidePair(mapBoundary);
-				
 				if (!xy.getKey()) {
 					super.setPositionX(positionX + moveX);
 				} else {
 					r.setX(previousBoundaryX);
-					
-					
 				}
 				if (!xy.getValue()) {
 					super.setPositionY(positionY + moveY);
@@ -131,20 +154,26 @@ public class Character extends Sprite implements Comparable<Character> {
 	}
 
 	public void render(GraphicsContext gc) {
+		renderCharacter(gc);
+		renderName(gc);
+		renderHealth(gc);
+	}
+
+	public void renderCharacter(GraphicsContext gc) {
 		gc.save();
 		if (isAlive) {
 			gc.setGlobalBlendMode(BlendMode.SRC_OVER);
 			if (!isFlipped) {
-				gc.drawImage(image, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth,
-						animationFrameHeight, positionX, positionY, displayWidth, displayHeight);
+				gc.drawImage(image, animationFrameWidth * currentAnimationFrameX,
+						animationFrameHeight * currentAnimationFrameY, animationFrameWidth, animationFrameHeight,
+						positionX, positionY, displayWidth, displayHeight);
 			} else {
-
 				Rotate r = new Rotate(180, positionX, positionY);
 				r.setAxis(Rotate.Y_AXIS);
-
 				gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 				gc.translate(-width, 0);
-				gc.drawImage(image, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth,
+				gc.drawImage(image, animationFrameWidth * currentAnimationFrameX,
+						animationFrameHeight * currentAnimationFrameY, animationFrameWidth,
 						animationFrameHeight, positionX, positionY, width, height);
 			}
 		} else {
@@ -159,9 +188,18 @@ public class Character extends Sprite implements Comparable<Character> {
 			}
 		}
 		gc.restore();
+	}
 
+	public void renderName(GraphicsContext gc) {
 		gc.save();
+		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
+		gc.setStroke(player.getColor());
 		gc.strokeText(nameLabel.getText(), positionX + (width - nameLabel.getMinWidth()) / 2, positionY + height + 12);
+		gc.restore();
+	}
+
+	public void renderHealth(GraphicsContext gc) {
+		gc.save();
 		gc.restore();
 	}
 
@@ -185,30 +223,6 @@ public class Character extends Sprite implements Comparable<Character> {
 		}
 	}
 
-	public void setDead() {
-		isAlive = false;
-	}
-
-	public boolean isAlive() {
-		return isAlive;
-	}
-
-	public Image getDeathImage() {
-		return deathImage;
-	}
-
-	public void setDeathImage(Image deathImage) {
-		this.deathImage = deathImage;
-	}
-
-	public Image getDefeatedImage() {
-		return defeatedImage;
-	}
-
-	public void setDefeatedImage(Image defeatedImage) {
-		this.defeatedImage = defeatedImage;
-	}
-
 	@Override
 	public int compareTo(Character c1) {
 		if (c1.getZIndex() > this.getZIndex()) {
@@ -217,12 +231,6 @@ public class Character extends Sprite implements Comparable<Character> {
 			return 1;
 		}
 		return 0;
-	}
-
-	public void revertPosition() {
-		super.setPositionX(previousX);
-		super.setPositionY(previousY);
-		super.setCollisonZoneXY(previousBoundaryX, previousBoundaryY);
 	}
 
 	public Pair<Boolean, Boolean> getCollidePair(Shape bound) {

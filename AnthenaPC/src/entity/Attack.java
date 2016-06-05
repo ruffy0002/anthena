@@ -67,7 +67,7 @@ public class Attack extends Sprite {
 		rotateX(gc);
 		rotate(gc, rotationAngle, getBoundaryX() + halfWidth, getBoundaryY() + halfHeight);
 		gc.setGlobalAlpha(fadeOpacity);
-		gc.setGlobalBlendMode(BlendMode.DARKEN);
+		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
 		gc.drawImage(image, animationFrameWidth * currentAnimationFrameX, animationFrameHeight * currentAnimationFrameY,
 				animationFrameWidth, animationFrameHeight, getBoundaryX(), getBoundaryY(), width, height);
 		gc.setGlobalAlpha(1);

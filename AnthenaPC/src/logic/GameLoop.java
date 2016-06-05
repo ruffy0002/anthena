@@ -51,8 +51,8 @@ public class GameLoop extends AnimationTimer {
 		drawMap();
 		graphicContext = mainCanvas.getGraphicsContext2D();
 
-		double boundaryWidth = 300;
-		double boundaryHeight = 300;
+		double boundaryWidth = mainCanvas.getWidth() - 50;
+		double boundaryHeight = mainCanvas.getHeight() - 100;
 		double boundaryX = (mainCanvas.getWidth() - boundaryWidth) / 2;
 		double boundaryY = (mainCanvas.getHeight() - boundaryHeight) / 2;
 		boundary = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
