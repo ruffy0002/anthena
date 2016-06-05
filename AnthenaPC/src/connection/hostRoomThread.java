@@ -88,7 +88,8 @@ public class hostRoomThread implements Runnable {
     private boolean checkRepeatedIp(Socket temSocket) {
         for(int i = 0; i < PLAYER_NO; i++) {
             if(playerThreads[i] != null) {
-                if(playerThreads[i].getIp() == temSocket.getInetAddress()) {
+                if(playerThreads[i].getIp().equals(temSocket.getInetAddress())) {
+                    System.out.println("Same IP already connected");
                     return true;
                 }
             }
