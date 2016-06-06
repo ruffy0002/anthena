@@ -11,6 +11,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 import com.main.anthenaandroid.BroadcastPacket;
 import com.main.anthenaandroid.GamePacket;
@@ -37,6 +38,7 @@ public class PlayerThread implements Runnable {
         _logicMain = logicMain;
         
         try {
+            _socket.setSoTimeout(500);
             dataInputStream = new ObjectInputStream(socket.getInputStream());
             dataOutputStream = new ObjectOutputStream(socket.getOutputStream());
         } catch (IOException e) {
@@ -44,6 +46,19 @@ public class PlayerThread implements Runnable {
         }
         System.out.println("Player " + playerNo + "(" + ipAddress + ") joined the game");
         _player =_logicMain.addNewAttacker();
+    }
+    
+    public void setNewSocket (Socket socket) {
+        _socket = socket;
+        
+        try {
+            _socket.setSoTimeout(500);
+            dataInputStream = new ObjectInputStream(socket.getInputStream());
+            dataOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Player " + _playerNo + "(" + _ipAddress + ") reconnected");
     }
     
     public InetAddress getIp() {
@@ -78,8 +93,10 @@ public class PlayerThread implements Runnable {
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
-            } catch (IOException e) {
+            } catch (SocketTimeoutException ex) {
                 
+            } catch (IOException e) {
+                System.out.println("Error");
             }
         }
         

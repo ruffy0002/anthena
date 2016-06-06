@@ -16,6 +16,7 @@ import com.main.anthenaandroid.BroadcastPacket;
 
 public class hostRoomThread implements Runnable {
     private static final int PLAYER_NO = 4;
+    private static final int SOCKET_NOT_REPEATED = -1;
     
 	public int portNo;
 	private boolean running = true;
@@ -65,14 +66,25 @@ public class hostRoomThread implements Runnable {
         if(currentPlayerNo < PLAYER_NO) {
             Socket temSocket = serverSocket.accept();
             temSocket.setKeepAlive(true);
-            if (checkRepeatedIp(temSocket) ) {
-                return;
+            int repeatedSocketNo = checkRepeatedIp(temSocket);
+            if (repeatedSocketNo != SOCKET_NOT_REPEATED) {
+                refreshPlayerThread(repeatedSocketNo, temSocket);
             } else {
                 createPlayerThread(temSocket);
             }
         }
     }
 
+    private boolean refreshPlayerThread(int repeatedSocketNo, Socket socket) {
+        
+        if( playerThreads[repeatedSocketNo] != null) {
+            playerThreads[repeatedSocketNo].setNewSocket(socket);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     private void createPlayerThread(Socket temSocket) {
         for(int i = 0; i < PLAYER_NO; i++) {
             if(playerThreads[i] == null) {
@@ -85,15 +97,14 @@ public class hostRoomThread implements Runnable {
         }
     }
 
-    private boolean checkRepeatedIp(Socket temSocket) {
+    private int checkRepeatedIp(Socket temSocket) {
         for(int i = 0; i < PLAYER_NO; i++) {
             if(playerThreads[i] != null) {
                 if(playerThreads[i].getIp().equals(temSocket.getInetAddress())) {
-                    System.out.println("Same IP already connected");
-                    return true;
+                    return i;
                 }
             }
         }
-        return false;
+        return SOCKET_NOT_REPEATED;
     }
 }
