@@ -20,6 +20,8 @@ public class Sprite {
 	protected Image image;
 	protected Image image2;
 
+	protected Shape mapBoundary;
+	
 	protected int animationLength;
 	protected int animationSpeed;
 	protected int currentAnimationFrame;
@@ -31,8 +33,14 @@ public class Sprite {
 	protected double positionX;
 	protected double positionY;
 
+	protected double previousX;
+	protected double previousY;
+
 	protected double boundaryX;
 	protected double boundaryY;
+
+	protected double previousBoundaryX;
+	protected double previousBoundaryY;
 
 	protected double velocityX;
 	protected double velocityY;
@@ -59,6 +67,14 @@ public class Sprite {
 
 	public void setCollisionZone(Shape collisionZone) {
 		this.collisionZone = collisionZone;
+	}
+
+	public void setCollisonZoneXY(double x, double y) {
+		Rectangle r = (Rectangle) collisionZone;
+		previousBoundaryX = r.getX();
+		previousBoundaryY = r.getY();
+		r.setX(r.getX() + x);
+		r.setY(r.getY() + y);
 	}
 
 	public void setImage(Image image, Image image2) {
@@ -108,6 +124,7 @@ public class Sprite {
 	}
 
 	public void setPositionX(double positionX) {
+		this.previousX = positionX;
 		this.positionX = positionX;
 		boundaryX = positionX;
 	}
@@ -117,6 +134,7 @@ public class Sprite {
 	}
 
 	public void setPositionY(double positionY) {
+		this.previousY = positionY;
 		this.positionY = positionY;
 		boundaryY = positionY;
 	}
@@ -222,12 +240,6 @@ public class Sprite {
 		gc.restore();
 	}
 
-	public Rectangle getBoundary() {
-		Rectangle r = new Rectangle(boundaryX, boundaryY, width, height);
-		r.setRotate(rotationAngle);
-		return r;
-	}
-
 	public void setScaleXY(double x, double y) {
 		scaleX = x;
 		scaleY = y;
@@ -262,5 +274,9 @@ public class Sprite {
 
 	public double getZIndex() {
 		return positionY + displayHeight;
+	}
+	
+	public void setGameBoundary(Shape boundary){
+		mapBoundary = boundary;
 	}
 }

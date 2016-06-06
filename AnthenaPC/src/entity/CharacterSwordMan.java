@@ -15,10 +15,10 @@ public class CharacterSwordMan extends Character {
 
 	public void init() {
 		super.init();
-		animationLength = 9;
+		animationLength = 8;
 		animationSpeed = 9;
 		animationFrameWidth = 300;
-		animationFrameHeight = 531;
+		animationFrameHeight = 537;
 
 		deathAnimationLength = 2;
 		deathAnimationSpeed = 0.5;
@@ -37,10 +37,10 @@ public class CharacterSwordMan extends Character {
 		defeatAnimationRepeat = 3;
 
 		super.setScaleXY(1, 1);
-		super.setWidth(80);
+		super.setWidth(45);
 		super.setHeight(getWidth() / animationFrameWidth * animationFrameHeight);
-		super.setPositionX(0);
-		super.setPositionY(0);
+		super.setPositionX(400);
+		super.setPositionY(200);
 		super.setVelocityX(0);
 		super.setRotationAngle(0);
 		super.setImage(Resources.getcharacterSet(0), null);
@@ -59,9 +59,7 @@ public class CharacterSwordMan extends Character {
 
 	public void render(GraphicsContext gc) {
 		super.render(gc);
-
 		// draw collison box
-
 		gc.save();
 		gc.setGlobalBlendMode(BlendMode.LIGHTEN);
 		gc.setFill(player.getColor());

@@ -10,9 +10,13 @@ import entity.Character;
 import entity.CharacterSwordMan;
 import entity.Player;
 import javafx.animation.AnimationTimer;
+import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.input.KeyCode;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import resource.Resources;
 import userinterface.GameInterface;
 
@@ -35,18 +39,7 @@ public class GameLoop extends AnimationTimer {
 	private ArrayList<Attack> attack = new ArrayList<Attack>();
 
 	private Resources resources;
-
-	public GameLoop(Canvas mainCanvas, Canvas backgroundCanvas, Controller controller, Resources resources) {
-
-		this.resources = resources;
-
-		this.controller = controller;
-		this.mainCanvas = mainCanvas;
-		this.backgroundCanvas = backgroundCanvas;
-
-		drawMap();
-		graphicContext = mainCanvas.getGraphicsContext2D();
-	}
+	private Shape boundary;
 
 	public GameLoop(GameInterface gi, Controller controller, Resources resources) {
 		this.resources = resources;
@@ -57,11 +50,19 @@ public class GameLoop extends AnimationTimer {
 
 		drawMap();
 		graphicContext = mainCanvas.getGraphicsContext2D();
+
+		double boundaryWidth = mainCanvas.getWidth() - 50;
+		double boundaryHeight = mainCanvas.getHeight() - 100;
+		double boundaryX = (mainCanvas.getWidth() - boundaryWidth) / 2;
+		double boundaryY = (mainCanvas.getHeight() - boundaryHeight) / 2;
+		boundary = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
 	}
 
 	public void initGameLoop() {
 		for (int i = 0; i < runners.size(); i++) {
-			character.add(runners.get(i).createSprite());
+			Character c = runners.get(i).createSprite();
+			c.setGameBoundary(boundary);
+			character.add(c);
 		}
 		startNanoTime = System.nanoTime();
 	}
@@ -141,6 +142,8 @@ public class GameLoop extends AnimationTimer {
 	private void draw() {
 		graphicContext.clearRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
 
+		drawBoundaryFrame(); // debug
+
 		for (int i = 0; i < attack.size(); i++) {
 			attack.get(i).render(graphicContext);
 		}
@@ -166,6 +169,15 @@ public class GameLoop extends AnimationTimer {
 			frameRate = frameRateCounter;
 			frameRateCounter = 0;
 		}
+	}
+
+	private void drawBoundaryFrame() {
+		graphicContext.save();
+		graphicContext.setGlobalBlendMode(BlendMode.LIGHTEN);
+		graphicContext.setFill(null);
+		Bounds b = boundary.getLayoutBounds();
+		graphicContext.fillRect(b.getMinX(), b.getMinY(), b.getWidth(), b.getHeight());
+		graphicContext.restore();
 	}
 
 	private void drawFrameRate() {

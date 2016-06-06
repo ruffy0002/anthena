@@ -94,8 +94,8 @@ public class Ant extends Character {
 	}
 
 	public Rectangle getBoundary() {
-		Rectangle r = new Rectangle(boundaryX, boundaryY, width, height);
-		r.setRotate(rotationAngle);
-		return r;
+		/*Rectangle r = new Rectangle(boundaryX, boundaryY, width, height);
+		r.setRotate(rotationAngle);*/
+		return null;
 	}
 }
