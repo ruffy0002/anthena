@@ -31,6 +31,8 @@ public class PlayerThread implements Runnable {
     private ObjectInputStream dataInputStream = null;
     private ObjectOutputStream dataOutputStream = null;
     
+    boolean connected = true;
+    
     public PlayerThread(InetAddress ipAddress, int playerNo, Socket socket, LogicMain logicMain) {
         _ipAddress = ipAddress;
         _playerNo = playerNo;
@@ -48,6 +50,14 @@ public class PlayerThread implements Runnable {
         _player =_logicMain.addNewAttacker();
     }
     
+    /**
+     * Checks if the player is still connected, updates every 500ms
+     * @return true if player is connected, false otherwise
+     */
+    public boolean checkConnection () {
+        return connected;
+    }
+    
     public void setNewSocket (Socket socket) {
         _socket = socket;
         
@@ -58,6 +68,7 @@ public class PlayerThread implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        connected = true;
         System.out.println("Player " + _playerNo + "(" + _ipAddress + ") reconnected");
     }
     
@@ -96,7 +107,7 @@ public class PlayerThread implements Runnable {
             } catch (SocketTimeoutException ex) {
                 
             } catch (IOException e) {
-                System.out.println("Error");
+                connected = false;
             }
         }
         
