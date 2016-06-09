@@ -121,19 +121,19 @@ public class Character extends Sprite implements Comparable<Character> {
 	public void update(KeyCode code) {
 		if (control.contains(code)) {
 			if (code.equals(control.getUp())) {
-				super.setVelocityY(-movementSpeed);
+				super.setVelocityY(-1);
 			}
 
 			if (code.equals(control.getDown())) {
-				super.setVelocityY(movementSpeed);
+				super.setVelocityY(1);
 			}
 
 			if (code.equals(control.getLeft())) {
-				super.setVelocityX(-movementSpeed);
+				super.setVelocityX(-1);
 			}
 
 			if (code.equals(control.getRight())) {
-				super.setVelocityX(movementSpeed);
+				super.setVelocityX(1);
 			}
 		}
 	}

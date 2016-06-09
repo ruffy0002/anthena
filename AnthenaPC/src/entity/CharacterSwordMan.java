@@ -103,26 +103,32 @@ public class CharacterSwordMan extends Character {
 	public void update(double time) {
 
 		if (isAlive) {
-			double moveX = velocityX * time;
-			double moveY = velocityY * time;
+			double totalMovementDistance = movementSpeed * time;
+
+			double moveX = 0;
+			double moveY = 0;
+
+			if (velocityX != 0 && velocityY != 0) {
+				double tempShort = Math.sqrt(Math.pow(totalMovementDistance, 2) / 2);
+				moveX = tempShort * velocityX;
+				moveY = tempShort * velocityY;
+			}else {
+				moveX = totalMovementDistance * velocityX;
+				moveY = totalMovementDistance * velocityY;
+			}
 
 			if (moveX < 0) {
 				isFlipped = true;
 			} else if (moveX > 0) {
 				isFlipped = false;
 			}
+			
 			if (moveX == 0 && moveY == 0) {
 				currentAnimationFrame = 0;
 				movementDistance = 0;
 			} else {
-				movementDistance += Math.sqrt(Math.pow(moveX, 2) + Math.pow(moveY, 2));
+				movementDistance += totalMovementDistance;
 				currentAnimationFrame = Math.abs((int) ((movementDistance / animationSpeed) % animationLength));
-				/*
-				 * currentAnimationFrame = currentAnimationFrame + 1; if
-				 * (currentAnimationFrame > 5) { int temp = animationLength -
-				 * currentAnimationFrame; currentAnimationFrame = 5 - temp; }
-				 */
-
 				Rectangle r = (Rectangle) collisionZone;
 				previousBoundaryX = r.getX();
 				previousBoundaryY = r.getY();
@@ -186,7 +192,7 @@ public class CharacterSwordMan extends Character {
 			}
 		}
 		gc.restore();
-
+		
 		// draw collison box
 		gc.save();
 		gc.setGlobalBlendMode(BlendMode.LIGHTEN);
