@@ -30,6 +30,26 @@ public class hostRoomThread implements Runnable {
 		playerThreads = new PlayerThread[PLAYER_NO];
 	}
 
+	/**
+	 * Checks if a player is connected
+	 * 
+	 * @param player - int corresponding to the player's number
+	 * @return -1 if player does not exist
+	 *         1 if player is connected
+	 *         0 if player is disconnected
+	 */
+	public int checkPlayerConnection (int player) {
+	    if(playerThreads[player] != null) {
+	        if( playerThreads[player].checkConnection() == false) {
+	            return 0;
+	        } else {
+	            return 1;
+	        }
+	    } else {
+	        return -1;
+	    }
+	}
+	
 	public void run() {
 		listenAtPort();
 	}
