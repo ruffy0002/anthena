@@ -101,8 +101,6 @@ public class GameLoop extends AnimationTimer {
 
 	private void update(double elapsedTime) {
 
-		attackCount -= elapsedTime;// debug
-
 		updateFrameRate(elapsedTime);
 
 		for (int k = 0; k < character.size(); k++) {
@@ -142,7 +140,7 @@ public class GameLoop extends AnimationTimer {
 	private void draw() {
 		graphicContext.clearRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
 
-		drawBoundaryFrame(); // debug
+		//drawBoundaryFrame(); // debug
 
 		for (int i = 0; i < attack.size(); i++) {
 			attack.get(i).render(graphicContext);
@@ -185,14 +183,9 @@ public class GameLoop extends AnimationTimer {
 				mainCanvas.getHeight() - 50);
 	}
 
-	double attackCount = 1;
-
 	public void createAttack(double x, double y) {
-		if (attackCount <= 0) {
-			Attack att = new Attack(x, y);
-			attack.add(att);
-			attackCount = 1;
-		}
+		Attack att = new Attack(x, y);
+		attack.add(att);
 	}
 
 	public void addRunner(Player p) {
