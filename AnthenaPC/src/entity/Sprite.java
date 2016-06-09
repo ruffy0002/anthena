@@ -21,7 +21,7 @@ public class Sprite {
 	protected Image image2;
 
 	protected Shape mapBoundary;
-	
+
 	protected int animationLength;
 	protected int animationSpeed;
 	protected int currentAnimationFrame;
@@ -270,13 +270,14 @@ public class Sprite {
 			currentAnimationFrameX = 0;
 			currentAnimationFrameY = 0;
 		}
+		System.out.println(currentAnimationFrame+" "+currentAnimationFrameX + " " + currentAnimationFrameY);
 	}
 
 	public double getZIndex() {
 		return positionY + displayHeight;
 	}
-	
-	public void setGameBoundary(Shape boundary){
+
+	public void setGameBoundary(Shape boundary) {
 		mapBoundary = boundary;
 	}
 }

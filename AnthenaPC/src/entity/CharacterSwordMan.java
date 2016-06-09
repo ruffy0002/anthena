@@ -4,9 +4,53 @@ import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
+import javafx.util.Pair;
 import resource.Resources;
 
 public class CharacterSwordMan extends Character {
+
+	private static final double[][] FRAME_POSITION = new double[14][2];
+	private static double animationLength = 14;
+	private static double animationSpeed = 5;
+
+	public static void initMain() {
+
+		double fWidth = 300;
+		double fHeight = 537;
+
+		FRAME_POSITION[0][0] = 0;
+		FRAME_POSITION[0][1] = 0;
+		FRAME_POSITION[1][0] = fWidth;
+		FRAME_POSITION[1][1] = 0;
+		FRAME_POSITION[2][0] = fWidth * 2;
+		FRAME_POSITION[2][1] = 0;
+		FRAME_POSITION[3][0] = fWidth * 3;
+		FRAME_POSITION[3][1] = 0;
+
+		FRAME_POSITION[4][0] = 0;
+		FRAME_POSITION[4][1] = fHeight;
+		FRAME_POSITION[5][0] = fWidth;
+		FRAME_POSITION[5][1] = fHeight;
+		FRAME_POSITION[6][0] = fWidth * 2;
+		FRAME_POSITION[6][1] = fHeight;
+		FRAME_POSITION[7][0] = fWidth * 3;
+		FRAME_POSITION[7][1] = fHeight;
+
+		FRAME_POSITION[8][0] = fWidth * 2;
+		FRAME_POSITION[8][1] = fHeight;
+		FRAME_POSITION[9][0] = fWidth;
+		FRAME_POSITION[9][1] = fHeight;
+		FRAME_POSITION[10][0] = 0;
+		FRAME_POSITION[10][1] = fHeight;
+		FRAME_POSITION[11][0] = fWidth * 3;
+		FRAME_POSITION[11][1] = 0;
+		FRAME_POSITION[12][0] = fWidth * 2;
+		FRAME_POSITION[12][1] = 0;
+		FRAME_POSITION[13][0] = fWidth * 1;
+		FRAME_POSITION[13][1] = 0;
+
+	}
 
 	public CharacterSwordMan(Player p) {
 		super(p);
@@ -15,8 +59,7 @@ public class CharacterSwordMan extends Character {
 
 	public void init() {
 		super.init();
-		animationLength = 8;
-		animationSpeed = 9;
+
 		animationFrameWidth = 300;
 		animationFrameHeight = 537;
 
@@ -37,7 +80,7 @@ public class CharacterSwordMan extends Character {
 		defeatAnimationRepeat = 3;
 
 		super.setScaleXY(1, 1);
-		super.setWidth(45);
+		super.setWidth(80);
 		super.setHeight(getWidth() / animationFrameWidth * animationFrameHeight);
 		super.setPositionX(400);
 		super.setPositionY(200);
@@ -57,8 +100,93 @@ public class CharacterSwordMan extends Character {
 		collisionZone = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
 	}
 
+	public void update(double time) {
+
+		if (isAlive) {
+			double moveX = velocityX * time;
+			double moveY = velocityY * time;
+
+			if (moveX < 0) {
+				isFlipped = true;
+			} else if (moveX > 0) {
+				isFlipped = false;
+			}
+			if (moveX == 0 && moveY == 0) {
+				currentAnimationFrame = 0;
+				movementDistance = 0;
+			} else {
+				movementDistance += Math.sqrt(Math.pow(moveX, 2) + Math.pow(moveY, 2));
+				currentAnimationFrame = Math.abs((int) ((movementDistance / animationSpeed) % animationLength));
+				/*
+				 * currentAnimationFrame = currentAnimationFrame + 1; if
+				 * (currentAnimationFrame > 5) { int temp = animationLength -
+				 * currentAnimationFrame; currentAnimationFrame = 5 - temp; }
+				 */
+
+				Rectangle r = (Rectangle) collisionZone;
+				previousBoundaryX = r.getX();
+				previousBoundaryY = r.getY();
+				r.setX(r.getX() + moveX);
+				r.setY(r.getY() + moveY);
+
+				Pair<Boolean, Boolean> xy = getCollidePair(mapBoundary);
+				if (!xy.getKey()) {
+					super.setPositionX(positionX + moveX);
+				} else {
+					r.setX(previousBoundaryX);
+				}
+				if (!xy.getValue()) {
+					super.setPositionY(positionY + moveY);
+				} else {
+					r.setY(previousBoundaryY);
+				}
+			}
+		} else {
+			frameSpeedControl += time;
+			if (!hasFinishDeathAnimation) {
+				int tempFrame = (int) (frameSpeedControl / defeatedAnimationFrameSpeed);
+				currentDefeatedAnimationFrame = tempFrame % defeatedAnimationLength;
+
+				if (tempFrame / defeatedAnimationLength > defeatAnimationRepeat) {
+					hasFinishDeathAnimation = true;
+					frameSpeedControl = 0;
+				}
+			} else {
+				currentDeathAnimationFrame = (int) (frameSpeedControl / deathAnimationFrameSpeed);
+				currentDeathAnimationFrame = currentDeathAnimationFrame % deathAnimationLength;
+			}
+
+		}
+	}
+
 	public void render(GraphicsContext gc) {
-		super.render(gc);
+		gc.save();
+		if (isAlive) {
+			gc.setGlobalBlendMode(BlendMode.SRC_OVER);
+			if (!isFlipped) {
+				gc.drawImage(image, FRAME_POSITION[currentAnimationFrame][0], FRAME_POSITION[currentAnimationFrame][1],
+						animationFrameWidth, animationFrameHeight, positionX, positionY, displayWidth, displayHeight);
+			} else {
+				Rotate r = new Rotate(180, positionX, positionY);
+				r.setAxis(Rotate.Y_AXIS);
+				gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+				gc.translate(-width, 0);
+				gc.drawImage(image, FRAME_POSITION[currentAnimationFrame][0], FRAME_POSITION[currentAnimationFrame][1],
+						animationFrameWidth, animationFrameHeight, positionX, positionY, width, height);
+			}
+		} else {
+			if (!hasFinishDeathAnimation) {
+				gc.drawImage(defeatedImage, defeatedAnimationFrameWidth * currentDefeatedAnimationFrame, 0,
+						defeatedAnimationFrameWidth, defeatedAnimationFrameHeight, positionX, positionY, displayWidth,
+						displayHeight);
+			} else {
+				gc.drawImage(deathImage, deathAnimationFrameWidth * currentDeathAnimationFrame, 0,
+						deathAnimationFrameWidth, deathAnimationFrameHeight, positionX, positionY, displayWidth,
+						displayHeight);
+			}
+		}
+		gc.restore();
+
 		// draw collison box
 		gc.save();
 		gc.setGlobalBlendMode(BlendMode.LIGHTEN);

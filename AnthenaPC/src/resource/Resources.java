@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import controls.Control;
+import entity.CharacterSwordMan;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -33,6 +34,7 @@ public class Resources {
 		loadMap();
 		loadCharacterSprites();
 		loadColors();
+		CharacterSwordMan.initMain();
 	}
 
 	private void loadControls() {
