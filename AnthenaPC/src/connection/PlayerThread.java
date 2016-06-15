@@ -91,6 +91,15 @@ public class PlayerThread implements Runnable {
         }
     }
     
+    public boolean sendData (Object obj) {
+        try {
+            dataOutputStream.writeObject(obj);
+            return true;
+        } catch (IOException ex) {
+            return false;
+        }
+    }
+    
     @Override
     public void run() {
         Object object;
