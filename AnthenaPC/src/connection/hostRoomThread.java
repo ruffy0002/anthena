@@ -50,6 +50,14 @@ public class hostRoomThread implements Runnable {
 	    }
 	}
 	
+	public boolean sendData (GamePacket data, int player) {
+	    if(playerThreads[player] != null) {
+            return playerThreads[player].sendData(data);
+	    } else {
+	        return false;
+	    }
+	}
+	
 	public void run() {
 		listenAtPort();
 	}

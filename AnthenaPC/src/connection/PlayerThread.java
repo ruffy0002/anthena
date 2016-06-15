@@ -91,7 +91,7 @@ public class PlayerThread implements Runnable {
         }
     }
     
-    public boolean sendData (Object obj) {
+    public boolean sendData (GamePacket obj) {
         try {
             dataOutputStream.writeObject(obj);
             return true;
