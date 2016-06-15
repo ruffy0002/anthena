@@ -61,7 +61,7 @@ public class GameLoop extends AnimationTimer {
 		double boundaryX = (mainCanvas.getWidth() - boundaryWidth) / 2;
 		double boundaryY = (mainCanvas.getHeight() - boundaryHeight) / 2;
 		map_oundary = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
-		
+
 		collectableManager = new CollectableManager(map_oundary);
 		attackManager = new AttackManager(map_oundary);
 	}
@@ -112,7 +112,7 @@ public class GameLoop extends AnimationTimer {
 		updateFrameRate(elapsedTime);
 		collectableManager.update(elapsedTime);
 		attackManager.update(elapsedTime);
-		
+
 		for (int k = 0; k < character.size(); k++) {
 			character.get(k).update(elapsedTime);
 			spriteDrawPQ.offer(character.get(k));
@@ -123,9 +123,11 @@ public class GameLoop extends AnimationTimer {
 			if (attackManager.getAttacks().get(k).isReadyForCollide()) {
 				for (int kk = 0; kk < character.size(); kk++) {
 					if (character.get(kk).isAlive()) {
-						boolean hasCollided = attackManager.getAttacks().get(k).intersects(character.get(kk));
-						if (hasCollided) {
-							character.get(kk).takeDamage();
+						if (!character.get(kk).isImmune()) {
+							boolean hasCollided = attackManager.getAttacks().get(k).intersects(character.get(kk));
+							if (hasCollided) {
+								character.get(kk).takeDamage();
+							}
 						}
 					}
 				}
@@ -153,7 +155,7 @@ public class GameLoop extends AnimationTimer {
 	private void draw() {
 		graphicContext.clearRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
 
-		//drawBoundaryFrame(); // debug
+		// drawBoundaryFrame(); // debug
 
 		attackManager.draw(graphicContext);
 
@@ -195,7 +197,7 @@ public class GameLoop extends AnimationTimer {
 	}
 
 	public void createAttack(float x, float y) {
-		attackManager.createAttack(x,y);
+		attackManager.createAttack(x, y);
 	}
 
 	public void addRunner(Player p) {

@@ -25,6 +25,9 @@ public class Character extends Sprite {
 	protected double movementDistance = 0;
 	protected boolean isAlive = true;
 	protected boolean isFlipped = false;
+	protected boolean isImmune = false;
+	protected double immuneTime = 3;
+	private double immuneTimeStore = 0;
 	protected boolean hasFinishDeathAnimation = false;
 
 	protected Image deathImage;
@@ -93,7 +96,12 @@ public class Character extends Sprite {
 	}
 
 	public void update(double time) {
-
+		if(isImmune){
+			immuneTimeStore -= time;
+			if(immuneTimeStore <=0){
+				isImmune = false;
+			}
+		}
 	}
 
 	public void render(GraphicsContext gc) {
@@ -160,9 +168,15 @@ public class Character extends Sprite {
 
 	public void takeDamage() {
 		player.takeDamage();
+		isImmune = true;
+		immuneTimeStore = immuneTime;
 		if (player.getHealth() < 0) {
 			isAlive = false;
 		}
+	}
+
+	public boolean isImmune() {
+		return isImmune;
 	}
 
 }
