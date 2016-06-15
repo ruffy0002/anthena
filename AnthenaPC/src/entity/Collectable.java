@@ -36,11 +36,11 @@ public class Collectable extends Sprite {
 		FRAME_POSITION[5][1] = 0;
 		FRAME_POSITION[6][0] = 0;
 		FRAME_POSITION[6][1] = 0;
-
+		
+		DRAW_HEIGHT = DRAW_WIDTH / FRAME_WIDTH * FRAME_HEIGHT;
 	}
 
 	public Collectable(double x, double y) {
-		DRAW_HEIGHT = DRAW_WIDTH / FRAME_WIDTH * FRAME_HEIGHT;
 		init(x,y);
 	}
 

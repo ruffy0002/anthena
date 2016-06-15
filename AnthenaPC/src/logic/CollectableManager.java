@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import entity.Collectable;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
 public class CollectableManager {
@@ -33,6 +32,7 @@ public class CollectableManager {
 		spawnminY = map_boundary.getBoundsInLocal().getMinY();
 		spawnmaxY = map_boundary.getBoundsInLocal().getMaxY() - Collectable.DRAW_HEIGHT;
 		spawnZoneHeight = spawnmaxY - spawnminY;
+		System.out.println(spawnminY+" "+spawnmaxY+" " +Collectable.DRAW_HEIGHT);
 	}
 
 	public ArrayList<Collectable> getCollectable() {
@@ -61,8 +61,8 @@ public class CollectableManager {
 
 	public void spawnCollectable() {
 		Random r = new Random();
-		double posX = (spawnZoneWidth * r.nextDouble());
-		double posY = (spawnZoneHeight * r.nextDouble());
+		double posX = (spawnZoneWidth * r.nextDouble()) + spawnminX;
+		double posY = (spawnZoneHeight * r.nextDouble()) + spawnminY;
 		Collectable c = new Collectable(posX, posY);
 		collectable.add(c);
 	}

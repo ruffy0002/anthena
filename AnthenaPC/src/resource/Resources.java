@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import controls.Control;
+import entity.Attack;
 import entity.CharacterSwordMan;
 import entity.Collectable;
 import javafx.scene.image.Image;
@@ -40,6 +41,7 @@ public class Resources {
 		loadETC();
 		CharacterSwordMan.initMain();
 		Collectable.initMain();
+		Attack.initMain();
 	}
 
 	private void loadETC() {

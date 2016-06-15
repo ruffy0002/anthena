@@ -9,6 +9,10 @@ import resource.Resources;
 
 public class Attack extends Sprite {
 
+	public static final double HEIGHT = 100;
+	public static final double WIDTH = 100;
+	public static double visibleHeight = 0;
+	private static double perceptionRotate = 60;
 	private double timePast;
 	private double fadeTime = 3;
 	private double fadeDelay = 2;
@@ -19,6 +23,10 @@ public class Attack extends Sprite {
 	private boolean isReadyForCollide = false;
 	private boolean readyToClear = false;
 
+	public static void initMain() {
+		visibleHeight = Math.cos(Math.toDegrees(60)) * HEIGHT;
+	}
+	
 	public Attack(double x, double y) {
 
 		timePast = 0;
@@ -39,8 +47,8 @@ public class Attack extends Sprite {
 		setPositionX(x);
 		setPositionY(y);
 
-		setWidth(100);
-		setHeight(100);
+		setWidth(WIDTH);
+		setHeight(HEIGHT);
 
 		setBoundaryX(getPositionX() - getHalfWidth());
 		setBoundaryY(getPositionY() - getHalfHeight());
@@ -64,7 +72,7 @@ public class Attack extends Sprite {
 
 	public void render(GraphicsContext gc) {
 		gc.save();
-		rotateX(gc);
+		rotateX(gc, perceptionRotate);
 		rotate(gc, rotationAngle, getBoundaryX() + halfWidth, getBoundaryY() + halfHeight);
 		gc.setGlobalAlpha(fadeOpacity);
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
@@ -74,6 +82,10 @@ public class Attack extends Sprite {
 		gc.restore();
 
 		// draw collison
+		//drawCollision(gc);
+	}
+	
+	public void drawCollision(GraphicsContext gc) {
 		gc.save();
 		gc.setGlobalBlendMode(BlendMode.LIGHTEN);
 		Bounds b = collisionZone.getLayoutBounds();

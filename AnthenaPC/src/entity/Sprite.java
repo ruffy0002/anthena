@@ -16,7 +16,6 @@ import javafx.scene.transform.Shear;
 
 public class Sprite implements Comparable<Sprite>{
 
-	protected double perceptionRotate;
 	protected Image image;
 	protected Image image2;
 
@@ -222,7 +221,7 @@ public class Sprite implements Comparable<Sprite>{
 		gc.setTransform(temp);
 	}
 
-	protected void rotateX(GraphicsContext gc) {
+	protected void rotateX(GraphicsContext gc, double perceptionRotate) {
 		Rotate r = new Rotate(perceptionRotate, positionX, positionY);
 		r.setAxis(Rotate.X_AXIS);
 		Affine temp = gc.getTransform();

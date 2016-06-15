@@ -42,6 +42,7 @@ public class GameLoop extends AnimationTimer {
 
 	private Resources resources;
 	private CollectableManager collectableManager;
+	private AttackManager attackManager;
 	private Shape map_oundary;
 
 	public GameLoop(GameInterface gi, Controller controller, Resources resources) {
@@ -62,6 +63,7 @@ public class GameLoop extends AnimationTimer {
 		map_oundary = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
 		
 		collectableManager = new CollectableManager(map_oundary);
+		attackManager = new AttackManager(map_oundary);
 	}
 
 	public void initGameLoop() {
@@ -109,32 +111,19 @@ public class GameLoop extends AnimationTimer {
 
 		updateFrameRate(elapsedTime);
 		collectableManager.update(elapsedTime);
-
+		attackManager.update(elapsedTime);
+		
 		for (int k = 0; k < character.size(); k++) {
 			character.get(k).update(elapsedTime);
 			spriteDrawPQ.offer(character.get(k));
 		}
 
-		ArrayList<Integer> lsitToRemove = new ArrayList<Integer>();
-		for (int k = 0; k < attack.size(); k++) {
-			if (attack.get(k).getReadyToClear()) {
-				lsitToRemove.add(k);
-			} else {
-				attack.get(k).update(elapsedTime);
-			}
-		}
-
-		// remove attacks from list
-		for (int i = lsitToRemove.size() - 1; i >= 0; i--) {
-			attack.remove(i);
-		}
-
 		// collision check
-		for (int k = 0; k < attack.size(); k++) {
-			if (attack.get(k).isReadyForCollide()) {
+		for (int k = 0; k < attackManager.getAttacks().size(); k++) {
+			if (attackManager.getAttacks().get(k).isReadyForCollide()) {
 				for (int kk = 0; kk < character.size(); kk++) {
 					if (character.get(kk).isAlive()) {
-						boolean hasCollided = attack.get(k).intersects(character.get(kk));
+						boolean hasCollided = attackManager.getAttacks().get(k).intersects(character.get(kk));
 						if (hasCollided) {
 							character.get(kk).takeDamage();
 						}
@@ -164,11 +153,9 @@ public class GameLoop extends AnimationTimer {
 	private void draw() {
 		graphicContext.clearRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
 
-		// drawBoundaryFrame(); // debug
+		//drawBoundaryFrame(); // debug
 
-		for (int i = 0; i < attack.size(); i++) {
-			attack.get(i).render(graphicContext);
-		}
+		attackManager.draw(graphicContext);
 
 		while (!spriteDrawPQ.isEmpty()) {
 			spriteDrawPQ.poll().render(graphicContext);
@@ -207,9 +194,8 @@ public class GameLoop extends AnimationTimer {
 				mainCanvas.getHeight() - 50);
 	}
 
-	public void createAttack(double x, double y) {
-		Attack att = new Attack(x, y);
-		attack.add(att);
+	public void createAttack(float x, float y) {
+		attackManager.createAttack(x,y);
 	}
 
 	public void addRunner(Player p) {
