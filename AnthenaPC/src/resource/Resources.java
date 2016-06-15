@@ -25,6 +25,7 @@ public class Resources {
 
 	public static final Image[] CHARACTER_ATTACK_PROFILE = new Image[2];
 	private static final Image[] CHARACTER_DEFEND_PROFILE = new Image[1];
+	private static final Image HEART = new Image("sprite/heart.png");
 	
 	private static final Image[] COLLECTABLE = new Image[1];
 
@@ -76,6 +77,10 @@ public class Resources {
 		return NAMES;
 	}
 
+	public static Image getHeart(){
+		return HEART;
+	}
+	
 	public void loadMap() {
 		Resources.GAME_MAPS[0] = new Image("sprite/tempGameMap.png");
 		Resources.GAME_MAPS[1] = null;

@@ -8,6 +8,7 @@ public class Player {
 	protected Control control;
 	private String name;
 	private Color color;
+	private int score;
 
 	private Sprite sprite;
 	private int health;
@@ -59,6 +60,14 @@ public class Player {
 		CharacterSwordMan cm = new CharacterSwordMan(this);
 		cm.setControl(control);
 		return cm;
+	}
+
+	public void addScore(int i) {
+		score+=i;
+	}
+
+	public int getScore() {
+		return score;
 	}
 
 }

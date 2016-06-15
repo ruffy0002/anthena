@@ -15,6 +15,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import javafx.util.Pair;
+import resource.Resources;
 
 public class Character extends Sprite {
 
@@ -48,6 +49,10 @@ public class Character extends Sprite {
 	protected int defeatedAnimationFrameHeight;
 	protected int currentDefeatedAnimationFrame;
 	protected int defeatAnimationRepeat;
+
+	private static Image heart = Resources.getHeart();
+	private static double heartWidth = 15;
+	private static double heartHeight = 15;
 
 	private Label nameLabel;
 
@@ -96,9 +101,9 @@ public class Character extends Sprite {
 	}
 
 	public void update(double time) {
-		if(isImmune){
+		if (isImmune) {
 			immuneTimeStore -= time;
-			if(immuneTimeStore <=0){
+			if (immuneTimeStore <= 0) {
 				isImmune = false;
 			}
 		}
@@ -118,11 +123,18 @@ public class Character extends Sprite {
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
 		gc.setStroke(player.getColor());
 		gc.strokeText(nameLabel.getText(), positionX + (width - nameLabel.getMinWidth()) / 2, positionY + height + 12);
+		gc.strokeText(String.valueOf(player.getScore()), positionX + (width - nameLabel.getMinWidth()) / 2,
+				positionY + height + 24);
 		gc.restore();
 	}
 
 	public void renderHealth(GraphicsContext gc) {
 		gc.save();
+		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
+		for (int i = 0; i < player.getHealth(); i++) {
+			double tempC = heartWidth * i;
+			gc.drawImage(heart, 0, 0, 65, 60, positionX + tempC, positionY - heartHeight, heartWidth, heartHeight);
+		}
 		gc.restore();
 	}
 
@@ -164,13 +176,14 @@ public class Character extends Sprite {
 
 	public void increaseSpeed() {
 		movementSpeed += 10;
+		player.addScore(10);
 	}
 
 	public void takeDamage() {
 		player.takeDamage();
 		isImmune = true;
 		immuneTimeStore = immuneTime;
-		if (player.getHealth() < 0) {
+		if (player.getHealth() <= 0) {
 			isAlive = false;
 		}
 	}
