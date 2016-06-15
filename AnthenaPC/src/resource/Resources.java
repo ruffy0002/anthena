@@ -5,6 +5,7 @@ import java.util.Random;
 
 import controls.Control;
 import entity.CharacterSwordMan;
+import entity.Collectable;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -23,6 +24,8 @@ public class Resources {
 
 	public static final Image[] CHARACTER_ATTACK_PROFILE = new Image[2];
 	private static final Image[] CHARACTER_DEFEND_PROFILE = new Image[1];
+	
+	private static final Image[] COLLECTABLE = new Image[1];
 
 	public static final String[] NAMES = new String[10];
 	public static final ArrayList<Control> controls = new ArrayList<Control>();
@@ -34,9 +37,14 @@ public class Resources {
 		loadMap();
 		loadCharacterSprites();
 		loadColors();
+		loadETC();
 		CharacterSwordMan.initMain();
+		Collectable.initMain();
 	}
 
+	private void loadETC() {
+		COLLECTABLE[0] =  new Image("sprite/cubesheet.png");
+	}
 	private void loadControls() {
 		// will change to setting bindings.
 		Control c1 = new Control(KeyCode.LEFT, KeyCode.UP, KeyCode.RIGHT, KeyCode.DOWN);
@@ -109,6 +117,10 @@ public class Resources {
 
 	public static Image getDefeatedImage(int index) {
 		return CHARACTER_SET_DEATH[index];
+	}
+	
+	public static Image getCollectable(int index){
+		return COLLECTABLE[index];
 	}
 
 	public void loadColors() {

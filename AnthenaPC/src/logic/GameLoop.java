@@ -8,7 +8,9 @@ import entity.Ant;
 import entity.Attack;
 import entity.Character;
 import entity.CharacterSwordMan;
+import entity.Collectable;
 import entity.Player;
+import entity.Sprite;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.Canvas;
@@ -35,13 +37,15 @@ public class GameLoop extends AnimationTimer {
 	private GraphicsContext graphicContext;
 	private Controller controller;
 	private ArrayList<Character> character = new ArrayList<Character>();
-	private PriorityQueue<Character> characterPq = new PriorityQueue<>();
+	private PriorityQueue<Sprite> spriteDrawPQ = new PriorityQueue<>();
 	private ArrayList<Attack> attack = new ArrayList<Attack>();
 
 	private Resources resources;
-	private Shape boundary;
+	private CollectableManager collectableManager;
+	private Shape map_oundary;
 
 	public GameLoop(GameInterface gi, Controller controller, Resources resources) {
+
 		this.resources = resources;
 
 		this.controller = controller;
@@ -55,13 +59,15 @@ public class GameLoop extends AnimationTimer {
 		double boundaryHeight = mainCanvas.getHeight() - 100;
 		double boundaryX = (mainCanvas.getWidth() - boundaryWidth) / 2;
 		double boundaryY = (mainCanvas.getHeight() - boundaryHeight) / 2;
-		boundary = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
+		map_oundary = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
+		
+		collectableManager = new CollectableManager(map_oundary);
 	}
 
 	public void initGameLoop() {
 		for (int i = 0; i < runners.size(); i++) {
 			Character c = runners.get(i).createSprite();
-			c.setGameBoundary(boundary);
+			c.setGameBoundary(map_oundary);
 			character.add(c);
 		}
 		startNanoTime = System.nanoTime();
@@ -102,10 +108,11 @@ public class GameLoop extends AnimationTimer {
 	private void update(double elapsedTime) {
 
 		updateFrameRate(elapsedTime);
+		collectableManager.update(elapsedTime);
 
 		for (int k = 0; k < character.size(); k++) {
 			character.get(k).update(elapsedTime);
-			characterPq.offer(character.get(k));
+			spriteDrawPQ.offer(character.get(k));
 		}
 
 		ArrayList<Integer> lsitToRemove = new ArrayList<Integer>();
@@ -135,19 +142,36 @@ public class GameLoop extends AnimationTimer {
 				}
 			}
 		}
+
+		// check colliosn for collectable if not add to draw q
+		for (int k = 0; k < collectableManager.getCollectable().size(); k++) {
+			for (int kk = 0; kk < character.size(); kk++) {
+				if (character.get(kk).isAlive()) {
+					boolean hasCollided = collectableManager.getCollectable().get(k).intersects(character.get(kk));
+					if (hasCollided) {
+						character.get(kk).increaseSpeed();
+						collectableManager.getCollectable().get(k).disable();
+						break;
+					}
+				}
+			}
+			if (collectableManager.getCollectable().get(k).isActive()) {
+				spriteDrawPQ.offer(collectableManager.getCollectable().get(k));
+			}
+		}
 	}
 
 	private void draw() {
 		graphicContext.clearRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
 
-		drawBoundaryFrame(); // debug
+		// drawBoundaryFrame(); // debug
 
 		for (int i = 0; i < attack.size(); i++) {
 			attack.get(i).render(graphicContext);
 		}
 
-		while (!characterPq.isEmpty()) {
-			characterPq.poll().render(graphicContext);
+		while (!spriteDrawPQ.isEmpty()) {
+			spriteDrawPQ.poll().render(graphicContext);
 		}
 
 		drawFrameRate();
@@ -173,7 +197,7 @@ public class GameLoop extends AnimationTimer {
 		graphicContext.save();
 		graphicContext.setGlobalBlendMode(BlendMode.LIGHTEN);
 		graphicContext.setFill(null);
-		Bounds b = boundary.getLayoutBounds();
+		Bounds b = map_oundary.getLayoutBounds();
 		graphicContext.fillRect(b.getMinX(), b.getMinY(), b.getWidth(), b.getHeight());
 		graphicContext.restore();
 	}

@@ -16,7 +16,7 @@ import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import javafx.util.Pair;
 
-public class Character extends Sprite  {
+public class Character extends Sprite {
 
 	protected Player player;
 	protected Control control;
@@ -152,6 +152,10 @@ public class Character extends Sprite  {
 
 		Pair<Boolean, Boolean> colXcolY = new Pair<Boolean, Boolean>(xCollide, yCollide);
 		return colXcolY;
+	}
+
+	public void increaseSpeed() {
+		movementSpeed += 10;
 	}
 
 }

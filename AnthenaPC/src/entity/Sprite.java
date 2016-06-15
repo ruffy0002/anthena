@@ -14,7 +14,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Shear;
 
-public class Sprite implements Comparable<Character>{
+public class Sprite implements Comparable<Sprite>{
 
 	protected double perceptionRotate;
 	protected Image image;
@@ -270,13 +270,11 @@ public class Sprite implements Comparable<Character>{
 			currentAnimationFrameX = 0;
 			currentAnimationFrameY = 0;
 		}
-		System.out.println(currentAnimationFrame+" "+currentAnimationFrameX + " " + currentAnimationFrameY);
 	}
 
 	public double getZIndex() {
 		Rectangle r = (Rectangle) collisionZone;
-		//System.out.println(collisionZone.getBoundsInLocal().getMinY());
-		return collisionZone.getBoundsInLocal().getMinY();
+		return collisionZone.getBoundsInLocal().getMaxY();
 	}
 
 	public void setGameBoundary(Shape boundary) {
@@ -284,7 +282,7 @@ public class Sprite implements Comparable<Character>{
 	}
 	
 	@Override
-	public int compareTo(Character c1) {
+	public int compareTo(Sprite c1) {
 		if (c1.getZIndex() > this.getZIndex()) {
 			return -1;
 		} else if (c1.getZIndex() < this.getZIndex()) {
@@ -292,4 +290,5 @@ public class Sprite implements Comparable<Character>{
 		}
 		return 0;
 	}
+
 }
