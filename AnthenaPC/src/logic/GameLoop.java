@@ -140,7 +140,7 @@ public class GameLoop extends AnimationTimer {
 	private void draw() {
 		graphicContext.clearRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
 
-		//drawBoundaryFrame(); // debug
+		drawBoundaryFrame(); // debug
 
 		for (int i = 0; i < attack.size(); i++) {
 			attack.get(i).render(graphicContext);

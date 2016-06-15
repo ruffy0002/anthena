@@ -72,12 +72,12 @@ public class CharacterSwordMan extends Character {
 		deathAnimationRepeat = -1;
 
 		defeatedAnimationLength = 2;
-		defeatedAnimationSpeed = 1;
+		defeatedAnimationSpeed = 0.5;
 		defeatedAnimationFrameSpeed = defeatedAnimationSpeed / defeatedAnimationLength;
 		defeatedAnimationFrameWidth = 300;
 		defeatedAnimationFrameHeight = 531;
 		currentDefeatedAnimationFrame = 0;
-		defeatAnimationRepeat = 3;
+		defeatAnimationRepeat = 1;
 
 		super.setScaleXY(1, 1);
 		super.setWidth(80);

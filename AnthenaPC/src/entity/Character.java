@@ -16,7 +16,7 @@ import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import javafx.util.Pair;
 
-public class Character extends Sprite implements Comparable<Character> {
+public class Character extends Sprite  {
 
 	protected Player player;
 	protected Control control;
@@ -136,16 +136,6 @@ public class Character extends Sprite implements Comparable<Character> {
 				super.setVelocityX(1);
 			}
 		}
-	}
-
-	@Override
-	public int compareTo(Character c1) {
-		if (c1.getZIndex() > this.getZIndex()) {
-			return -1;
-		} else if (c1.getZIndex() < this.getZIndex()) {
-			return 1;
-		}
-		return 0;
 	}
 
 	public Pair<Boolean, Boolean> getCollidePair(Shape bound) {

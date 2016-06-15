@@ -14,7 +14,7 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Shear;
 
-public class Sprite {
+public class Sprite implements Comparable<Character>{
 
 	protected double perceptionRotate;
 	protected Image image;
@@ -274,10 +274,22 @@ public class Sprite {
 	}
 
 	public double getZIndex() {
-		return positionY + displayHeight;
+		Rectangle r = (Rectangle) collisionZone;
+		//System.out.println(collisionZone.getBoundsInLocal().getMinY());
+		return collisionZone.getBoundsInLocal().getMinY();
 	}
 
 	public void setGameBoundary(Shape boundary) {
 		mapBoundary = boundary;
+	}
+	
+	@Override
+	public int compareTo(Character c1) {
+		if (c1.getZIndex() > this.getZIndex()) {
+			return -1;
+		} else if (c1.getZIndex() < this.getZIndex()) {
+			return 1;
+		}
+		return 0;
 	}
 }
