@@ -50,6 +50,10 @@ public class Player {
 	public void setHealth(int health) {
 		this.health = health;
 	}
+	
+	public void takeDamage(){
+		this.health--;
+	}
 
 	public Character createSprite() {
 		CharacterSwordMan cm = new CharacterSwordMan(this);

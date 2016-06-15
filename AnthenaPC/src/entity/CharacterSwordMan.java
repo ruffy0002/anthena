@@ -166,6 +166,7 @@ public class CharacterSwordMan extends Character {
 	}
 
 	public void render(GraphicsContext gc) {
+		super.render(gc);
 		gc.save();
 		if (isAlive) {
 			gc.setGlobalBlendMode(BlendMode.SRC_OVER);

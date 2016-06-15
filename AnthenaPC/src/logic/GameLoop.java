@@ -136,7 +136,7 @@ public class GameLoop extends AnimationTimer {
 					if (character.get(kk).isAlive()) {
 						boolean hasCollided = attack.get(k).intersects(character.get(kk));
 						if (hasCollided) {
-							character.get(kk).setDead();
+							character.get(kk).takeDamage();
 						}
 					}
 				}

@@ -158,4 +158,11 @@ public class Character extends Sprite {
 		movementSpeed += 10;
 	}
 
+	public void takeDamage() {
+		player.takeDamage();
+		if (player.getHealth() < 0) {
+			isAlive = false;
+		}
+	}
+
 }
