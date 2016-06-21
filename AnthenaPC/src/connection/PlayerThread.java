@@ -27,6 +27,8 @@ public class PlayerThread implements Runnable {
     private Socket _socket;
     private LogicMain _logicMain;
     private Player _player;
+    
+    public int playerType = -1;
 
     private ObjectInputStream dataInputStream = null;
     private ObjectOutputStream dataOutputStream = null;
@@ -84,11 +86,37 @@ public class PlayerThread implements Runnable {
         _running = false;
     }
     
-    private void sendDataToProgram(GamePacket data) {
-        System.out.println("Player " + _playerNo + "[X: " + data.getX() + ", Y: " + data.getY() + "]");
-        if (_logicMain != null) {
-            _logicMain.addAttack(data.getX(), data.getY());
+    private void verifyData(GamePacket data) {
+        if(data.getX() == -1000 && data.getY() == -1000) {
+            //Initialisation data
+            playerType = data.getType();
+        } else {
+            sendDataToProgram(data);
         }
+    }
+
+    private void sendDataToProgram(GamePacket data) {
+        if(data.getType() == GamePacket.TYPE_STOMPER) {
+            System.out.println("Player " + _playerNo + " stomps [X: " + data.getX() + ", Y: " + data.getY() + "]");
+            if (_logicMain != null) {
+                _logicMain.addAttack(data.getX(), data.getY());
+            }
+        } else if (data.getType() == GamePacket.TYPE_RUNNER) {
+            System.out.println("Player " + _playerNo + " running to [X: " + data.getX() + ", Y: " + data.getY() + "]");
+            if (_logicMain != null) {
+                //Fill logic main portion here
+            }
+        } else if (data.getType() == GamePacket.TYPE_POSITIONUPDATE) {
+            if (_logicMain != null) {
+                //Fill logic main portion here
+            }
+        } else {
+            System.out.println("Data sent from client not recognized!");
+        }
+    }
+    
+    public int getType () {
+        return playerType;
     }
     
     public boolean sendData (GamePacket obj) {
@@ -109,7 +137,7 @@ public class PlayerThread implements Runnable {
                 object = dataInputStream.readObject();
                 if (object instanceof GamePacket) {
                     GamePacket p = (GamePacket) object;
-                    sendDataToProgram(p);
+                    verifyData(p);
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
