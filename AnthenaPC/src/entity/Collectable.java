@@ -12,8 +12,8 @@ public class Collectable extends Sprite {
 	private static final double[][] FRAME_POSITION = new double[7][2];
 	private static final double FRAME_WIDTH = 100;
 	private static final double FRAME_HEIGHT = 170;
-	public static final double DRAW_WIDTH =40;
-	public static double DRAW_HEIGHT =40;
+	public static final double DRAW_WIDTH = 20;
+	public static double DRAW_HEIGHT;
 	private static double animationLength = 7;
 	private static double animationSpeed = 40;
 	private static double frameSpeed = animationLength / animationSpeed;
@@ -46,7 +46,7 @@ public class Collectable extends Sprite {
 
 	public void init(double x, double y) {
 		super.setScaleXY(1, 1);
-		super.setWidth(40);
+		super.setWidth(DRAW_WIDTH);
 		super.setHeight(DRAW_HEIGHT);
 		super.setPositionX(x);
 		super.setPositionY(y);

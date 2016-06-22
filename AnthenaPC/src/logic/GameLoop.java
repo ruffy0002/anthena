@@ -59,7 +59,7 @@ public class GameLoop extends AnimationTimer {
 		double boundaryWidth = mainCanvas.getWidth() - 50;
 		double boundaryHeight = mainCanvas.getHeight() - 100;
 		double boundaryX = (mainCanvas.getWidth() - boundaryWidth) / 2;
-		double boundaryY = (mainCanvas.getHeight() - boundaryHeight) / 2;
+		double boundaryY = (mainCanvas.getHeight() - boundaryHeight);
 		map_oundary = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
 
 		collectableManager = new CollectableManager(map_oundary);
@@ -155,7 +155,7 @@ public class GameLoop extends AnimationTimer {
 	private void draw() {
 		graphicContext.clearRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
 
-		// drawBoundaryFrame(); // debug
+		 drawBoundaryFrame(); // debug
 
 		attackManager.draw(graphicContext);
 

@@ -80,13 +80,13 @@ public class CharacterSwordMan extends Character {
 		defeatAnimationRepeat = 1;
 
 		super.setScaleXY(1, 1);
-		super.setWidth(80);
+		super.setWidth(25);
 		super.setHeight(getWidth() / animationFrameWidth * animationFrameHeight);
 		super.setPositionX(400);
 		super.setPositionY(200);
 		super.setVelocityX(0);
 		super.setRotationAngle(0);
-		super.setImage(Resources.getcharacterSet(0), null);
+		super.setImage(Resources.getcharacterSet(0));
 		super.setDeathImage(Resources.getDeathImage(0));
 		super.setDefeatedImage(Resources.getDefeatedImage(0));
 		calculateBoundary();
@@ -195,11 +195,11 @@ public class CharacterSwordMan extends Character {
 		gc.restore();
 		
 		// draw collison box
-		gc.save();
+		/*gc.save();
 		gc.setGlobalBlendMode(BlendMode.LIGHTEN);
 		gc.setFill(player.getColor());
 		Bounds b = collisionZone.getLayoutBounds();
 		gc.fillRect(b.getMinX(), b.getMinY(), b.getWidth(), b.getHeight());
-		gc.restore();
+		gc.restore();*/
 	}
 }

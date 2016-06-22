@@ -19,7 +19,7 @@ public class Ant extends Character {
 		super.setPositionY(0);
 		super.setVelocityX(0);
 		super.setRotationAngle(0);
-		super.setImage(Resources.getCharacterImage(0), Resources.getCharacterImage(1));
+		super.setImage(Resources.getCharacterImage(0));
 
 		animationLength = 3;
 		animationSpeed = 9;
@@ -34,7 +34,7 @@ public class Ant extends Character {
 		super.setPositionY(200);
 		super.setVelocityX(0);
 		super.setRotationAngle(0);
-		super.setImage(Resources.getCharacterImage(0), Resources.getCharacterImage(1));
+		super.setImage(Resources.getCharacterImage(0));
 	}
 
 	public void update(double time) {
@@ -80,15 +80,6 @@ public class Ant extends Character {
 		gc.setGlobalBlendMode(BlendMode.DARKEN);
 		gc.drawImage(image, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth, animationFrameHeight,
 				positionX, positionY, width, height);
-
-		gc.setGlobalBlendMode(BlendMode.LIGHTEN);
-		gc.drawImage(image2, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth, animationFrameHeight,
-				positionX, positionY, width, height);
-
-		gc.setGlobalBlendMode(BlendMode.DARKEN);
-		gc.setFill(player.getColor());
-		// gc.fillRect(positionX, positionY, width, height);
-		gc.fillRect(positionX + ((width - 9) / 2), positionY + ((height - 9) / 2) + 12, 9, 9);
 
 		gc.restore();
 	}

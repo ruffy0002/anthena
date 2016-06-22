@@ -30,7 +30,7 @@ public class Attack extends Sprite {
 	public Attack(double x, double y) {
 
 		timePast = 0;
-		super.setImage(Resources.getAttackSet(0), null);
+		super.setImage(Resources.getAttackSet(0));
 
 		perceptionRotate = 60;
 

@@ -17,7 +17,6 @@ import javafx.scene.transform.Shear;
 public class Sprite implements Comparable<Sprite>{
 
 	protected Image image;
-	protected Image image2;
 
 	protected Shape mapBoundary;
 
@@ -76,9 +75,8 @@ public class Sprite implements Comparable<Sprite>{
 		r.setY(r.getY() + y);
 	}
 
-	public void setImage(Image image, Image image2) {
+	public void setImage(Image image) {
 		this.image = image;
-		this.image2 = image2;
 	}
 
 	public void setWidth(double width) {
@@ -96,10 +94,6 @@ public class Sprite implements Comparable<Sprite>{
 
 	public Image getImage() {
 		return image;
-	}
-
-	public void setImage(Image image) {
-		this.image = image;
 	}
 
 	public int getAnimationLength() {
