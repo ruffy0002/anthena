@@ -1,6 +1,10 @@
 package entity;
 
+import com.sun.javafx.tk.FontLoader;
+import com.sun.javafx.tk.Toolkit;
+
 import controls.Control;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
 public class Player {
@@ -9,6 +13,7 @@ public class Player {
 	private String name;
 	private Color color;
 	private int score;
+	private Label nameLabel;
 
 	private Sprite sprite;
 	private int health;
@@ -18,6 +23,10 @@ public class Player {
 		this.control = control;
 		this.color = color;
 		health = 3;
+		nameLabel= new Label(name);
+		FontLoader fontLoader = Toolkit.getToolkit().getFontLoader();
+		double w = fontLoader.computeStringWidth(nameLabel.getText(), nameLabel.getFont());
+		nameLabel.setMinWidth(w);
 	}
 
 	public Control getControl() {
@@ -69,5 +78,7 @@ public class Player {
 	public int getScore() {
 		return score;
 	}
-
+	public Label getNameLabel(){
+		return nameLabel;
+	}
 }

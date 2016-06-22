@@ -54,14 +54,8 @@ public class Character extends Sprite {
 	private static double heartWidth = 15;
 	private static double heartHeight = 15;
 
-	private Label nameLabel;
-
 	public Character(Player p) {
 		player = p;
-		nameLabel = new Label(player.getName());
-		FontLoader fontLoader = Toolkit.getToolkit().getFontLoader();
-		double w = fontLoader.computeStringWidth(nameLabel.getText(), nameLabel.getFont());
-		nameLabel.setMinWidth(w);
 	}
 
 	public void init() {
@@ -122,8 +116,8 @@ public class Character extends Sprite {
 		gc.save();
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
 		gc.setStroke(player.getColor());
-		gc.strokeText(nameLabel.getText(), positionX + (width - nameLabel.getMinWidth()) / 2, positionY + height + 12);
-		gc.strokeText(String.valueOf(player.getScore()), positionX + (width - nameLabel.getMinWidth()) / 2,
+		gc.strokeText(player.getNameLabel().getText(), positionX + (width - player.getNameLabel().getMinWidth()) / 2, positionY + height + 12);
+		gc.strokeText(String.valueOf(player.getScore()), positionX + (width - player.getNameLabel().getMinWidth()) / 2,
 				positionY + height + 24);
 		gc.restore();
 	}

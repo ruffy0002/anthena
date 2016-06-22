@@ -8,13 +8,14 @@ public class SocketInterface {
     private static final int PORT_NO = 1356;
     private static final int BROADCAST_PORT_NO = 1355;
     
-    public static void broadcastRoom(LogicMain logicMain) {
+    public static hostRoomThread broadcastRoom(LogicMain logicMain) {
         roomThread = new hostRoomThread(logicMain, PORT_NO);
         discoveryThread = new IpReplyThread(BROADCAST_PORT_NO);
         Thread thread = new Thread(roomThread);
         Thread dthread = new Thread(discoveryThread);
         thread.start();
         dthread.start();
+        return roomThread;
     }
     
     public static void stopBroadCast() {

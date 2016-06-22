@@ -49,13 +49,13 @@ public class AttackManager {
 			}
 		}
 
-		elapsedTimeStore += elapsedTime;
+		/*elapsedTimeStore += elapsedTime;
 		if (elapsedTimeStore > rateOfSpawn) {
 			if (attacks.size() < maxCount) {
 				elapsedTimeStore = elapsedTimeStore - rateOfSpawn;
 				spawnAttack();
 			}
-		}
+		}*/
 	}
 
 	public void draw(GraphicsContext graphicContext) {

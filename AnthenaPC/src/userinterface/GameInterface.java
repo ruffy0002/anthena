@@ -13,6 +13,7 @@ public class GameInterface implements GameScene {
 
 	private LogicMain logic;
 	private ScreenInformation _screenInformation;
+	private Canvas overlayCanvas;
 	private Canvas mainCanvas;
 	private Canvas backgroundCanvas;
 	private Scene scene;
@@ -33,10 +34,12 @@ public class GameInterface implements GameScene {
 	public void init(ScreenInformation screenBounds) {
 		root = new Group();
 		scene = new Scene(root);
+		overlayCanvas = new Canvas(screenBounds.get_width(), screenBounds.get_height());
 		mainCanvas = new Canvas(screenBounds.get_width(), screenBounds.get_height());
 		backgroundCanvas = new Canvas(screenBounds.get_width(), screenBounds.get_height());
 		root.getChildren().add(backgroundCanvas);
 		root.getChildren().add(mainCanvas);
+		root.getChildren().add(overlayCanvas);
 	}
 
 	public void initControls(EventHandler<KeyEvent> event) {
@@ -51,6 +54,8 @@ public class GameInterface implements GameScene {
 	}
 
 	public void updateSceneSize(ScreenInformation screenInformation) {
+		overlayCanvas.setWidth(screenInformation.get_width());
+		overlayCanvas.setHeight(screenInformation.get_height());
 		mainCanvas.setWidth(screenInformation.get_width());
 		mainCanvas.setHeight(screenInformation.get_height());
 		backgroundCanvas.setWidth(screenInformation.get_width());
@@ -64,6 +69,10 @@ public class GameInterface implements GameScene {
 
 	public Canvas getBackgroundCanvas() {
 		return backgroundCanvas;
+	}
+
+	public Canvas getOverlayCanvas() {
+		return overlayCanvas;
 	}
 
 }

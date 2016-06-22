@@ -3,6 +3,7 @@ package logic;
 import java.util.Random;
 
 import connection.SocketInterface;
+import connection.hostRoomThread;
 import controls.Control;
 import controls.Controller;
 import entity.Player;
@@ -20,6 +21,7 @@ public class LogicMain {
 	private boolean[] nameAssigned;
 	private Resources resources;
 	private GameRoomInterface hostRoomInterface;
+	private hostRoomThread masterRoomThread;
 
 	public static final double GAME_WIDTH = 800;
 	public static final double GAME_HEIGHT = 600;
@@ -45,7 +47,7 @@ public class LogicMain {
 	}
 
 	public void hostGame() {
-		SocketInterface.broadcastRoom(this);
+		hostRoomThread masterRoomThread= SocketInterface.broadcastRoom(this);
 	}
 
 	public void addAttack(float x, float y) {
@@ -88,7 +90,7 @@ public class LogicMain {
 
 	public Player addNewAttacker() {
 		Player player = new Player(null, getRandomName(), getRandomColor());
-		//gameLoop.addRunner(player);
+		gameLoop.addAttackers(player);
 		hostRoomInterface.addAttacker(player);
 		return player;
 	}

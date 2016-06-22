@@ -17,6 +17,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import resource.Resources;
@@ -32,8 +33,13 @@ public class GameLoop extends AnimationTimer {
 	private int frameRateCounter = 0;
 	private double deltaSum = 0;
 
+	private double overlayRefreshRate = 5; // every 5 seconds;
+	private double overlayElapsedTimeStore = 0;
+
 	private Canvas mainCanvas;
 	private Canvas backgroundCanvas;
+	private Canvas overlayCanvas;
+
 	private GraphicsContext graphicContext;
 	private Controller controller;
 	private ArrayList<Character> character = new ArrayList<Character>();
@@ -52,6 +58,7 @@ public class GameLoop extends AnimationTimer {
 		this.controller = controller;
 		this.mainCanvas = gi.getMainCanvas();
 		this.backgroundCanvas = gi.getBackgroundCanvas();
+		this.overlayCanvas = gi.getOverlayCanvas();
 
 		drawMap();
 		graphicContext = mainCanvas.getGraphicsContext2D();
@@ -67,6 +74,7 @@ public class GameLoop extends AnimationTimer {
 	}
 
 	public void initGameLoop() {
+		rebuildOverlay();
 		for (int i = 0; i < runners.size(); i++) {
 			Character c = runners.get(i).createSprite();
 			c.setGameBoundary(map_oundary);
@@ -80,9 +88,18 @@ public class GameLoop extends AnimationTimer {
 		double elapsedTime = (currentNanoTime - startNanoTime) / 1000000000.0;
 		startNanoTime = currentNanoTime;
 
+		updateOverlay(elapsedTime);
 		process();
 		update(elapsedTime);
 		draw();
+	}
+
+	private void updateOverlay(double elapsedTime) {
+		overlayElapsedTimeStore += elapsedTime;
+		if (overlayElapsedTimeStore > overlayRefreshRate) {
+			rebuildOverlay();
+			overlayElapsedTimeStore = 0;
+		}
 	}
 
 	private void process() {
@@ -155,7 +172,7 @@ public class GameLoop extends AnimationTimer {
 	private void draw() {
 		graphicContext.clearRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
 
-		 drawBoundaryFrame(); // debug
+		drawBoundaryFrame(); // debug
 
 		attackManager.draw(graphicContext);
 
@@ -170,6 +187,37 @@ public class GameLoop extends AnimationTimer {
 		GraphicsContext bgc = backgroundCanvas.getGraphicsContext2D();
 		// bgc.drawImage(resources.getGameMap(0), 0, 0, 512, 512, 0, 0, 512,
 		// 512);
+	}
+
+	private double statusXPos = 0;
+	private double statusMargin = 5;
+
+	private void rebuildOverlay() {
+		
+		statusXPos = 0;
+		
+		GraphicsContext gc = overlayCanvas.getGraphicsContext2D();
+		gc.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
+		
+		System.out.println("rebuild" + attackers.size());
+		for (int i = 0; i < runners.size(); i++) {
+			gc.save();
+			gc.setGlobalBlendMode(BlendMode.SRC_OVER);
+			gc.setStroke(Color.GREEN);
+			gc.strokeText(runners.get(i).getNameLabel().getText(), statusXPos, 10);
+			statusXPos += runners.get(i).getNameLabel().getMinWidth() + statusMargin;
+			gc.restore();
+		}
+		
+		for (int i = 0; i < attackers.size(); i++) {
+			gc.save();
+			gc.setGlobalBlendMode(BlendMode.SRC_OVER);
+			gc.setStroke(Color.GREEN);
+			gc.strokeText(attackers.get(i).getNameLabel().getText(), statusXPos, 10);
+			statusXPos += attackers.get(i).getNameLabel().getMinWidth() + statusMargin;
+			gc.restore();
+		}
+		
 	}
 
 	private void updateFrameRate(double elapsedTime) {
