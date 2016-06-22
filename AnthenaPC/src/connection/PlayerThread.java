@@ -15,6 +15,7 @@ import java.net.SocketTimeoutException;
 
 import com.main.anthenaandroid.BroadcastPacket;
 import com.main.anthenaandroid.GamePacket;
+import com.main.anthenaandroid.PingPacket;
 
 import entity.Player;
 import logic.LogicMain;
@@ -128,6 +129,16 @@ public class PlayerThread implements Runnable {
         }
     }
     
+    public boolean sendPing() {
+        PingPacket obj = new PingPacket();
+        try {
+            dataOutputStream.writeObject(obj);
+            return true;
+        } catch (IOException ex) {
+            return false;
+        }
+    }
+    
     @Override
     public void run() {
         Object object;
@@ -144,6 +155,9 @@ public class PlayerThread implements Runnable {
             } catch (SocketTimeoutException ex) {
                 
             } catch (IOException e) {
+                connected = false;
+            }
+            if(sendPing() == false) {
                 connected = false;
             }
         }
