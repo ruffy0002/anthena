@@ -199,11 +199,14 @@ public class GameLoop extends AnimationTimer {
 		GraphicsContext gc = overlayCanvas.getGraphicsContext2D();
 		gc.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
 		
-		System.out.println("rebuild" + attackers.size());
 		for (int i = 0; i < runners.size(); i++) {
 			gc.save();
 			gc.setGlobalBlendMode(BlendMode.SRC_OVER);
-			gc.setStroke(Color.GREEN);
+			
+			gc.setStroke(Color.RED);
+			if(runners.get(i).isConnected()){
+				gc.setStroke(Color.GREEN);
+			}
 			gc.strokeText(runners.get(i).getNameLabel().getText(), statusXPos, 10);
 			statusXPos += runners.get(i).getNameLabel().getMinWidth() + statusMargin;
 			gc.restore();
@@ -212,7 +215,10 @@ public class GameLoop extends AnimationTimer {
 		for (int i = 0; i < attackers.size(); i++) {
 			gc.save();
 			gc.setGlobalBlendMode(BlendMode.SRC_OVER);
-			gc.setStroke(Color.GREEN);
+			gc.setStroke(Color.RED);
+			if(attackers.get(i).isConnected()){
+				gc.setStroke(Color.GREEN);
+			}
 			gc.strokeText(attackers.get(i).getNameLabel().getText(), statusXPos, 10);
 			statusXPos += attackers.get(i).getNameLabel().getMinWidth() + statusMargin;
 			gc.restore();

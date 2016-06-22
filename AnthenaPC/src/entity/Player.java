@@ -3,12 +3,14 @@ package entity;
 import com.sun.javafx.tk.FontLoader;
 import com.sun.javafx.tk.Toolkit;
 
+import connection.PlayerThread;
 import controls.Control;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
 public class Player {
 
+	private PlayerThread thread;
 	protected Control control;
 	private String name;
 	private Color color;
@@ -18,12 +20,13 @@ public class Player {
 	private Sprite sprite;
 	private int health;
 
-	public Player(Control control, String name, Color color) {
+	public Player(Control control, String name, Color color, PlayerThread thread) {
+		this.thread = thread;
 		this.name = name;
 		this.control = control;
 		this.color = color;
 		health = 3;
-		nameLabel= new Label(name);
+		nameLabel = new Label(name);
 		FontLoader fontLoader = Toolkit.getToolkit().getFontLoader();
 		double w = fontLoader.computeStringWidth(nameLabel.getText(), nameLabel.getFont());
 		nameLabel.setMinWidth(w);
@@ -60,8 +63,8 @@ public class Player {
 	public void setHealth(int health) {
 		this.health = health;
 	}
-	
-	public void takeDamage(){
+
+	public void takeDamage() {
 		this.health--;
 	}
 
@@ -72,13 +75,22 @@ public class Player {
 	}
 
 	public void addScore(int i) {
-		score+=i;
+		score += i;
 	}
 
 	public int getScore() {
 		return score;
 	}
-	public Label getNameLabel(){
+
+	public Label getNameLabel() {
 		return nameLabel;
+	}
+
+	public boolean isConnected() {
+		if (this.thread == null) {
+			return true;
+		}
+		System.out.println(thread.checkConnection());
+		return this.thread.checkConnection();
 	}
 }

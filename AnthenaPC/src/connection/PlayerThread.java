@@ -49,7 +49,7 @@ public class PlayerThread implements Runnable {
             e.printStackTrace();
         }
         System.out.println("Player " + playerNo + "(" + ipAddress + ") joined the game");
-        _player =_logicMain.addNewAttacker();
+        _player =_logicMain.addNewAttacker(this);
     }
     
     /**
