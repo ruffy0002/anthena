@@ -17,11 +17,15 @@ public class Player {
 	public static final int TYPE_RUNNER = 1;
 	public static final int TYPE_STOMPPER = 2;
 	
+	public static final int NOT_READY = 0;
+	public static final int READY = 1;
+
 	private static int totalPlayer = 0;
 	private static ArrayList<Player> all_players_list = new ArrayList<Player>();
 
 	private int player_id;
 	private int playerType = -1;
+	private int status;
 
 	private PlayerThread thread;
 	protected Control control;
@@ -36,7 +40,8 @@ public class Player {
 
 	private ColorAdjust colorAdjust;
 
-	public Player(Control control, String name, Color color, PlayerThread thread, LogicMain logicMain) {
+	public Player(Control control, String name, Color color, ColorAdjust colorAdjust, PlayerThread thread,
+			LogicMain logicMain) {
 		Player.all_players_list.add(this);
 		this.player_id = totalPlayer++;
 
@@ -45,16 +50,15 @@ public class Player {
 		this.name = name;
 		this.control = control;
 		this.color = color;
+		this.status = NOT_READY;
+
 		health = 3;
 		nameLabel = new Label(name);
 		FontLoader fontLoader = Toolkit.getToolkit().getFontLoader();
 		double w = fontLoader.computeStringWidth(nameLabel.getText(), nameLabel.getFont());
 		nameLabel.setMinWidth(w);
 
-		colorAdjust = new ColorAdjust();
-		colorAdjust.setSaturation(1);
-		colorAdjust.setHue(0);
-		colorAdjust.setBrightness(0.5);
+		this.colorAdjust = colorAdjust;
 	}
 
 	public Control getControl() {
@@ -67,6 +71,14 @@ public class Player {
 
 	public String getName() {
 		return name;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	public void setName(String name) {
@@ -139,6 +151,6 @@ public class Player {
 	}
 
 	public ColorAdjust getPaintEffect() {
-		return null;
+		return colorAdjust;
 	}
 }

@@ -101,7 +101,7 @@ public class Resources {
 
 	public void loadProfiles() {
 		CHARACTER_ATTACK_PROFILE[0] = new Image("sprite/swordmanProfile.png");
-		CHARACTER_ATTACK_PROFILE[1] = new Image("sprite/antProfile.png");
+		CHARACTER_ATTACK_PROFILE[1] = new Image("sprite/attackProfile.png");
 	}
 
 	public void loadCharacterSprites() {

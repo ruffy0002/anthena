@@ -118,6 +118,7 @@ public class GameRoomInterface implements GameScene {
 		informationBox.setMaxWidth(totalHeight);
 
 		Label name = new Label(p.getName());
+		name.setTextFill(p.getColor());
 		informationBox.getChildren().add(name);
 
 		Label type = new Label("SwordMan");
@@ -131,7 +132,7 @@ public class GameRoomInterface implements GameScene {
 
 	public HBox createNewAttackerInterface(Player p) {
 		double totalHeight = 80;
-		double totalWidth = 240;
+		double totalWidth = 280;
 
 		HBox mainBox = new HBox();
 		mainBox.setStyle("-fx-background-color:white");
@@ -147,7 +148,8 @@ public class GameRoomInterface implements GameScene {
 		int imageMarginAround = 5;
 
 		ImageView imageView = new ImageView();
-		imageView.setImage(logic.getDefautCharacterProfile());
+		imageView.setImage(logic.getDefautAttackProfile());
+		imageView.setEffect(p.getPaintEffect());
 		imageView.setFitWidth(totalHeight - 2 * imageMarginAround);
 		imageView.setFitHeight(totalHeight - 2 * imageMarginAround);
 		sp.getChildren().add(imageView);
@@ -161,7 +163,7 @@ public class GameRoomInterface implements GameScene {
 		Label name = new Label(p.getName());
 		informationBox.getChildren().add(name);
 
-		Label type = new Label("SwordMan");
+		Label type = new Label("Stomper");
 		informationBox.getChildren().add(type);
 
 		mainBox.getChildren().add(sp);

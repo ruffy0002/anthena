@@ -4,6 +4,8 @@ import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.ColorInput;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import resource.Resources;
 
@@ -34,6 +36,7 @@ public class Attack extends Sprite {
 		this.player = player;
 		if (player != null) {
 			paintEffect = player.getPaintEffect();
+			System.out.println("asd");
 		} else {
 			paintEffect = Resources.getNextColorAdjust();
 		}

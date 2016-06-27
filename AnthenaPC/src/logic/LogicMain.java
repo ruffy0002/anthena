@@ -8,6 +8,7 @@ import connection.hostRoomThread;
 import controls.Control;
 import controls.Controller;
 import entity.Player;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import resource.Resources;
@@ -59,9 +60,17 @@ public class LogicMain {
 	public Image getDefautCharacterProfile() {
 		return Resources.CHARACTER_ATTACK_PROFILE[0];
 	}
+	
+	public Image getDefautAttackProfile() {
+		return Resources.CHARACTER_ATTACK_PROFILE[1];
+	}
 
 	public String getNextName() {
 		return Resources.getNextName();
+	}
+	
+	private ColorAdjust getNextColorAdjust() {
+		return Resources.getNextColorAdjust();
 	}
 
 	public Color getNextColor() {
@@ -78,7 +87,7 @@ public class LogicMain {
 	public Player addNewRunner() {
 		Control control = getNextControl();
 		if (control != null) {
-			Player player = new Player(control, getNextName(), getNextColor(), null, this);
+			Player player = new Player(control, getNextName(), getNextColor(),getNextColorAdjust(), null, this);
 			gameLoop.addRunner(player);
 			return player;
 		}
@@ -86,12 +95,13 @@ public class LogicMain {
 	}
 
 	public Player addNewPlayer(PlayerThread pt) {
-		Player player = new Player(null, getNextName(), null, pt, this);
+		Player player = new Player(null, getNextName(), getNextColor(), getNextColorAdjust(), pt, this);
 		return player;
 	}
 
+
 	public Player addNewAttacker(PlayerThread pt) {
-		Player player = new Player(null, getNextName(), null, pt, this);
+		Player player = new Player(null, getNextName(), null,getNextColorAdjust(), pt, this);
 		gameLoop.addAttackers(player);
 		hostRoomInterface.addAttacker(player);
 		return player;
