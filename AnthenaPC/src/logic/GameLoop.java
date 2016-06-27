@@ -63,8 +63,8 @@ public class GameLoop extends AnimationTimer {
 		drawMap();
 		graphicContext = mainCanvas.getGraphicsContext2D();
 
-		double boundaryWidth = mainCanvas.getWidth() - 50;
-		double boundaryHeight = mainCanvas.getHeight() - 100;
+		double boundaryWidth = mainCanvas.getWidth();
+		double boundaryHeight = mainCanvas.getHeight() - 140;
 		double boundaryX = (mainCanvas.getWidth() - boundaryWidth) / 2;
 		double boundaryY = (mainCanvas.getHeight() - boundaryHeight);
 		map_oundary = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
@@ -116,7 +116,7 @@ public class GameLoop extends AnimationTimer {
 		for (int i = 0; i < temp.size(); i++) {
 			KeyCode code = temp.get(i);
 			if (code.compareTo(KeyCode.DIGIT1) == 0) {
-				createAttack(100, 100);
+				createAttack(100, 100, null);
 			}
 			for (int k = 0; k < character.size(); k++) {
 				character.get(k).update(code);
@@ -144,6 +144,9 @@ public class GameLoop extends AnimationTimer {
 							boolean hasCollided = attackManager.getAttacks().get(k).intersects(character.get(kk));
 							if (hasCollided) {
 								character.get(kk).takeDamage();
+								if (!character.get(kk).isAlive()) {
+									attackManager.getAttacks().get(k).addScore(100);
+								}
 							}
 						}
 					}
@@ -172,7 +175,7 @@ public class GameLoop extends AnimationTimer {
 	private void draw() {
 		graphicContext.clearRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
 
-		drawBoundaryFrame(); // debug
+		// drawBoundaryFrame(); // debug
 
 		attackManager.draw(graphicContext);
 
@@ -185,45 +188,45 @@ public class GameLoop extends AnimationTimer {
 
 	private void drawMap() {
 		GraphicsContext bgc = backgroundCanvas.getGraphicsContext2D();
-		// bgc.drawImage(resources.getGameMap(0), 0, 0, 512, 512, 0, 0, 512,
-		// 512);
+		bgc.drawImage(resources.getGameMap(0), 0, 0, resources.getGameMap(0).getWidth(),
+				resources.getGameMap(0).getHeight(), 0, 0, backgroundCanvas.getWidth(), backgroundCanvas.getHeight());
 	}
 
 	private double statusXPos = 0;
 	private double statusMargin = 5;
 
 	private void rebuildOverlay() {
-		
+
 		statusXPos = 0;
-		
+
 		GraphicsContext gc = overlayCanvas.getGraphicsContext2D();
 		gc.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
-		
+
 		for (int i = 0; i < runners.size(); i++) {
 			gc.save();
 			gc.setGlobalBlendMode(BlendMode.SRC_OVER);
-			
+
 			gc.setStroke(Color.RED);
-			if(runners.get(i).isConnected()){
+			if (runners.get(i).isConnected()) {
 				gc.setStroke(Color.GREEN);
 			}
 			gc.strokeText(runners.get(i).getNameLabel().getText(), statusXPos, 10);
 			statusXPos += runners.get(i).getNameLabel().getMinWidth() + statusMargin;
 			gc.restore();
 		}
-		
+
 		for (int i = 0; i < attackers.size(); i++) {
 			gc.save();
 			gc.setGlobalBlendMode(BlendMode.SRC_OVER);
 			gc.setStroke(Color.RED);
-			if(attackers.get(i).isConnected()){
+			if (attackers.get(i).isConnected()) {
 				gc.setStroke(Color.GREEN);
 			}
 			gc.strokeText(attackers.get(i).getNameLabel().getText(), statusXPos, 10);
 			statusXPos += attackers.get(i).getNameLabel().getMinWidth() + statusMargin;
 			gc.restore();
 		}
-		
+
 	}
 
 	private void updateFrameRate(double elapsedTime) {
@@ -239,6 +242,7 @@ public class GameLoop extends AnimationTimer {
 	private void drawBoundaryFrame() {
 		graphicContext.save();
 		graphicContext.setGlobalBlendMode(BlendMode.LIGHTEN);
+		graphicContext.setGlobalAlpha(0.3);
 		graphicContext.setFill(null);
 		Bounds b = map_oundary.getLayoutBounds();
 		graphicContext.fillRect(b.getMinX(), b.getMinY(), b.getWidth(), b.getHeight());
@@ -250,8 +254,8 @@ public class GameLoop extends AnimationTimer {
 				mainCanvas.getHeight() - 50);
 	}
 
-	public void createAttack(float x, float y) {
-		attackManager.createAttack(x, y);
+	public void createAttack(float x, float y, Player player) {
+		attackManager.createAttack(x, y, player);
 	}
 
 	public void addRunner(Player p) {

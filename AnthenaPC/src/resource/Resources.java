@@ -7,6 +7,7 @@ import controls.Control;
 import entity.Attack;
 import entity.CharacterSwordMan;
 import entity.Collectable;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -20,13 +21,14 @@ public class Resources {
 	private static final Image[] CHARACTER_SET_DEATH = new Image[1];
 	private static final Image[] DEATH = new Image[1];
 
-	private static final Image[] ATTACK_SET = new Image[1];
+	private static final Image[] ATTACK_SET = new Image[5];
 	public static final Color[] COLORS = new Color[10];
+	public static final ColorAdjust[] COLOR_ADJUST = new ColorAdjust[10];
 
 	public static final Image[] CHARACTER_ATTACK_PROFILE = new Image[2];
 	private static final Image[] CHARACTER_DEFEND_PROFILE = new Image[1];
 	private static final Image HEART = new Image("sprite/heart.png");
-	
+
 	private static final Image[] COLLECTABLE = new Image[1];
 
 	public static final String[] NAMES = new String[10];
@@ -34,6 +36,7 @@ public class Resources {
 
 	public Resources() {
 		loadControls();
+		loadColorAdjust();
 		loadName();
 		loadProfiles();
 		loadMap();
@@ -46,8 +49,9 @@ public class Resources {
 	}
 
 	private void loadETC() {
-		COLLECTABLE[0] =  new Image("sprite/cubesheet.png");
+		COLLECTABLE[0] = new Image("sprite/cubesheet.png");
 	}
+
 	private void loadControls() {
 		// will change to setting bindings.
 		Control c1 = new Control(KeyCode.LEFT, KeyCode.UP, KeyCode.RIGHT, KeyCode.DOWN);
@@ -77,12 +81,12 @@ public class Resources {
 		return NAMES;
 	}
 
-	public static Image getHeart(){
+	public static Image getHeart() {
 		return HEART;
 	}
-	
+
 	public void loadMap() {
-		Resources.GAME_MAPS[0] = new Image("sprite/tempGameMap.png");
+		Resources.GAME_MAPS[0] = new Image("sprite/game_map_1.jpg");
 		Resources.GAME_MAPS[1] = null;
 	}
 
@@ -100,7 +104,11 @@ public class Resources {
 		CHARACTER_SET_DEATH[0] = new Image("sprite/swordmandefeated.png");
 		DEATH[0] = new Image("sprite/swordmandeath.png");
 
-		ATTACK_SET[0] = new Image("sprite/attackPattern1.png");
+		ATTACK_SET[0] = new Image("sprite/attackPattern_master.png");
+		ATTACK_SET[1] = new Image("sprite/attackPattern_blue.png");
+		ATTACK_SET[2] = new Image("sprite/attackPattern_green.png");
+		ATTACK_SET[3] = new Image("sprite/attackPattern_yellow.png");
+		ATTACK_SET[4] = new Image("sprite/attackPattern_red.png");
 
 		ANTS[0] = new Image("sprite/ant.png");
 		ANTS[1] = new Image("sprite/ant2.png");
@@ -125,8 +133,8 @@ public class Resources {
 	public static Image getDefeatedImage(int index) {
 		return CHARACTER_SET_DEATH[index];
 	}
-	
-	public static Image getCollectable(int index){
+
+	public static Image getCollectable(int index) {
 		return COLLECTABLE[index];
 	}
 
@@ -141,6 +149,23 @@ public class Resources {
 		COLORS[7] = new Color(0.2, 0.8, 0.2, 1);
 		COLORS[8] = new Color(0.2, 0.2, 0.8, 1);
 		COLORS[9] = new Color(0.4, 0.4, 0.4, 1);
+	}
+
+	public void loadColorAdjust() {
+		COLOR_ADJUST[0] = new ColorAdjust(-1, 1, 0.3, 0.4);
+		COLOR_ADJUST[1] = new ColorAdjust(-0.2, 1, 0.3, 0.4);
+		COLOR_ADJUST[2] = new ColorAdjust(-0.4, 1, 0.2, 0.4);
+		COLOR_ADJUST[3] = new ColorAdjust(-0.6, 1, 0.2, 0.4);
+		COLOR_ADJUST[4] = new ColorAdjust(-0.8, 1, 0.4, 0.4);
+		COLOR_ADJUST[5] = new ColorAdjust(0, 1, 0.4, 0.4);
+		COLOR_ADJUST[6] = new ColorAdjust(0.2, 1, 0.4, 0.4);
+		COLOR_ADJUST[7] = new ColorAdjust(0.4, 1, 0.4, 0.4);
+		COLOR_ADJUST[8] = new ColorAdjust(0.6, 1, 0.4, 0.4);
+		COLOR_ADJUST[9] = new ColorAdjust(0.8, 1, 0.4, 0.4);
+	}
+
+	public static ColorAdjust getColorAdjust(int index) {
+		return COLOR_ADJUST[index];
 	}
 
 }

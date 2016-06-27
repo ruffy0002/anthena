@@ -51,8 +51,8 @@ public class LogicMain {
 		masterRoomThread = SocketInterface.broadcastRoom(this);
 	}
 
-	public void addAttack(float x, float y) {
-		gameLoop.createAttack(x, y);
+	public void addAttack(float x, float y, Player player) {
+		gameLoop.createAttack(x, y, player);
 	}
 
 	public Image getDefautCharacterProfile() {
@@ -82,7 +82,7 @@ public class LogicMain {
 
 		Control control = getNextControl();
 		if (control != null) {
-			Player player = new Player(control, getRandomName(), getRandomColor(),null);
+			Player player = new Player(control, getRandomName(), getRandomColor(), null,this);
 			gameLoop.addRunner(player);
 			return player;
 		}
@@ -90,7 +90,7 @@ public class LogicMain {
 	}
 
 	public Player addNewAttacker(PlayerThread pt) {
-		Player player = new Player(null, getRandomName(), getRandomColor(), pt);
+		Player player = new Player(null, getRandomName(), getRandomColor(), pt, this);
 		gameLoop.addAttackers(player);
 		hostRoomInterface.addAttacker(player);
 		return player;

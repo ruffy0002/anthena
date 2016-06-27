@@ -5,11 +5,13 @@ import java.util.Random;
 
 import entity.Attack;
 import entity.Collectable;
+import entity.Player;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Shape;
 
 public class AttackManager {
 
+	private int mode = 0;
 	private ArrayList<Attack> attacks = new ArrayList<Attack>();
 	private Shape map_boundary;
 
@@ -49,13 +51,15 @@ public class AttackManager {
 			}
 		}
 
-		/*elapsedTimeStore += elapsedTime;
-		if (elapsedTimeStore > rateOfSpawn) {
-			if (attacks.size() < maxCount) {
-				elapsedTimeStore = elapsedTimeStore - rateOfSpawn;
-				spawnAttack();
+		if (mode == 0) {
+			elapsedTimeStore += elapsedTime;
+			if (elapsedTimeStore > rateOfSpawn) {
+				if (attacks.size() < maxCount) {
+					elapsedTimeStore = elapsedTimeStore - rateOfSpawn;
+					spawnAttack();
+				}
 			}
-		}*/
+		}
 	}
 
 	public void draw(GraphicsContext graphicContext) {
@@ -68,12 +72,22 @@ public class AttackManager {
 		Random r = new Random();
 		double posX = (spawnZoneWidth * r.nextDouble()) + spawnminX;
 		double posY = (spawnZoneHeight * r.nextDouble()) + spawnminY;
-		Attack att = new Attack(posX, posY);
+		Attack att = new Attack(posX, posY, null);
 		attacks.add(att);
 	}
 
-	public void createAttack(float x, float y) {
-		Attack att = new Attack(x, y);
-		attacks.add(att);
+	public void createAttack(float x, float y, Player player) {
+		Attack att = new Attack(x, y, player);
+		if (inBounds(att)) {
+			attacks.add(att);
+		}
+	}
+
+	public boolean inBounds(Attack att) {
+		Shape shape = Shape.subtract(att.getCollisionZone(), map_boundary);
+		if (shape.getBoundsInLocal().getWidth() == -1 && shape.getBoundsInLocal().getHeight() == -1) {
+			return true;
+		}
+		return false;
 	}
 }

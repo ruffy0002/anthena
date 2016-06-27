@@ -1,15 +1,23 @@
 package entity;
 
+import java.util.ArrayList;
+
 import com.sun.javafx.tk.FontLoader;
 import com.sun.javafx.tk.Toolkit;
 
 import connection.PlayerThread;
 import controls.Control;
 import javafx.scene.control.Label;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.paint.Color;
+import logic.LogicMain;
 
 public class Player {
 
+	private static int totalPlayer = 0;
+	private static ArrayList<Player> all_players_list = new ArrayList<Player>();
+
+	private int player_id;
 	private PlayerThread thread;
 	protected Control control;
 	private String name;
@@ -17,11 +25,18 @@ public class Player {
 	private int score;
 	private Label nameLabel;
 
+	private LogicMain logicMain;
 	private Sprite sprite;
 	private int health;
+	
+	private ColorAdjust colorAdjust;
 
-	public Player(Control control, String name, Color color, PlayerThread thread) {
+	public Player(Control control, String name, Color color, PlayerThread thread, LogicMain logicMain) {
+		Player.all_players_list.add(this);
+		this.player_id = totalPlayer++;
+		
 		this.thread = thread;
+		this.logicMain = logicMain;
 		this.name = name;
 		this.control = control;
 		this.color = color;
@@ -30,6 +45,11 @@ public class Player {
 		FontLoader fontLoader = Toolkit.getToolkit().getFontLoader();
 		double w = fontLoader.computeStringWidth(nameLabel.getText(), nameLabel.getFont());
 		nameLabel.setMinWidth(w);
+		
+		colorAdjust = new ColorAdjust();
+		colorAdjust.setSaturation(1);
+		colorAdjust.setHue(0);
+		colorAdjust.setBrightness(0.5);
 	}
 
 	public Control getControl() {
@@ -90,7 +110,18 @@ public class Player {
 		if (this.thread == null) {
 			return true;
 		}
-		System.out.println(thread.checkConnection());
 		return this.thread.checkConnection();
+	}
+
+	public void executeAttack(float x, float y) {
+		logicMain.addAttack(x, y, this);
+	}
+
+	public static ArrayList<Player> getAll_players_list() {
+		return all_players_list;
+	}
+
+	public ColorAdjust getPaintEffect() {
+		return null;
 	}
 }

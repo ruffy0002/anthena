@@ -3,11 +3,13 @@ package entity;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
-import javafx.scene.paint.Color;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.shape.Rectangle;
 import resource.Resources;
 
 public class Attack extends Sprite {
+
+	private Player player;
 
 	public static final double HEIGHT = 100;
 	public static final double WIDTH = 100;
@@ -22,13 +24,21 @@ public class Attack extends Sprite {
 
 	private boolean isReadyForCollide = false;
 	private boolean readyToClear = false;
+	private ColorAdjust paintEffect;
+	
+	private static int caCounter =0; //debug
 
 	public static void initMain() {
 		visibleHeight = Math.cos(Math.toDegrees(60)) * HEIGHT;
 	}
-	
-	public Attack(double x, double y) {
 
+	public Attack(double x, double y, Player player) {
+		this.player = player;
+		if (player != null) {
+			paintEffect = player.getPaintEffect();
+		} else {
+			paintEffect = Resources.getColorAdjust(caCounter++ % 10);
+		}
 		timePast = 0;
 		super.setImage(Resources.getAttackSet(0));
 
@@ -75,16 +85,18 @@ public class Attack extends Sprite {
 		rotateX(gc, perceptionRotate);
 		rotate(gc, rotationAngle, getBoundaryX() + halfWidth, getBoundaryY() + halfHeight);
 		gc.setGlobalAlpha(fadeOpacity);
+
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
+		gc.setEffect(paintEffect);
 		gc.drawImage(image, animationFrameWidth * currentAnimationFrameX, animationFrameHeight * currentAnimationFrameY,
 				animationFrameWidth, animationFrameHeight, getBoundaryX(), getBoundaryY(), width, height);
 		gc.setGlobalAlpha(1);
 		gc.restore();
 
 		// draw collison
-		//drawCollision(gc);
+		// drawCollision(gc);
 	}
-	
+
 	public void drawCollision(GraphicsContext gc) {
 		gc.save();
 		gc.setGlobalBlendMode(BlendMode.LIGHTEN);
@@ -121,5 +133,11 @@ public class Attack extends Sprite {
 
 	public boolean isReadyForCollide() {
 		return isReadyForCollide;
+	}
+
+	public void addScore(int score) {
+		if (player != null) {
+			player.addScore(score);
+		}
 	}
 }
