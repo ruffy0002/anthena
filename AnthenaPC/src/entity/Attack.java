@@ -25,8 +25,6 @@ public class Attack extends Sprite {
 	private boolean isReadyForCollide = false;
 	private boolean readyToClear = false;
 	private ColorAdjust paintEffect;
-	
-	private static int caCounter =0; //debug
 
 	public static void initMain() {
 		visibleHeight = Math.cos(Math.toDegrees(60)) * HEIGHT;
@@ -37,7 +35,7 @@ public class Attack extends Sprite {
 		if (player != null) {
 			paintEffect = player.getPaintEffect();
 		} else {
-			paintEffect = Resources.getColorAdjust(caCounter++ % 10);
+			paintEffect = Resources.getNextColorAdjust();
 		}
 		timePast = 0;
 		super.setImage(Resources.getAttackSet(0));

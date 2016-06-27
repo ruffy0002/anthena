@@ -34,6 +34,10 @@ public class Resources {
 	public static final String[] NAMES = new String[10];
 	public static final ArrayList<Control> controls = new ArrayList<Control>();
 
+	private static int colorCounter = 0;
+	private static int nameCounter = 0;
+	private static int colorAdjustCounter = 0;
+
 	public Resources() {
 		loadControls();
 		loadColorAdjust();
@@ -75,10 +79,11 @@ public class Resources {
 		NAMES[7] = "FacePalm";
 		NAMES[8] = "BlindBat";
 		NAMES[9] = "HotCream";
+		shuffle(NAMES);
 	}
 
-	public String[] getNames() {
-		return NAMES;
+	public static String getNextName() {
+		return NAMES[nameCounter++ % NAMES.length];
 	}
 
 	public static Image getHeart() {
@@ -149,6 +154,11 @@ public class Resources {
 		COLORS[7] = new Color(0.2, 0.8, 0.2, 1);
 		COLORS[8] = new Color(0.2, 0.2, 0.8, 1);
 		COLORS[9] = new Color(0.4, 0.4, 0.4, 1);
+		shuffle(COLORS);
+	}
+
+	public static Color getNextColor() {
+		return COLORS[colorCounter++ % COLORS.length];
 	}
 
 	public void loadColorAdjust() {
@@ -162,10 +172,23 @@ public class Resources {
 		COLOR_ADJUST[7] = new ColorAdjust(0.4, 1, 0.4, 0.4);
 		COLOR_ADJUST[8] = new ColorAdjust(0.6, 1, 0.4, 0.4);
 		COLOR_ADJUST[9] = new ColorAdjust(0.8, 1, 0.4, 0.4);
+		shuffle(COLOR_ADJUST);
 	}
 
-	public static ColorAdjust getColorAdjust(int index) {
-		return COLOR_ADJUST[index];
+	public static ColorAdjust getNextColorAdjust() {
+		return COLOR_ADJUST[colorAdjustCounter++ % COLOR_ADJUST.length];
+	}
+
+	public void shuffle(Object[] array) {
+		// shuffle colors so no need get random on init
+		for (int i = 0; i < array.length; i++) {
+			Random r = new Random();
+			int x = r.nextInt(array.length);
+			int y = r.nextInt(array.length);
+			Object temp = array[x];
+			array[x] = array[y];
+			array[y] = temp;
+		}
 	}
 
 }

@@ -1,6 +1,5 @@
 package logic;
 
-import java.util.Random;
 
 import connection.PlayerThread;
 import connection.SocketInterface;
@@ -8,7 +7,6 @@ import connection.hostRoomThread;
 import controls.Control;
 import controls.Controller;
 import entity.Player;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import resource.Resources;
@@ -19,7 +17,6 @@ import userinterface.ScreenInformation;
 public class LogicMain {
 
 	private GameLoop gameLoop;
-	private boolean[] nameAssigned;
 	private Resources resources;
 	private GameRoomInterface hostRoomInterface;
 	private hostRoomThread masterRoomThread;
@@ -31,11 +28,6 @@ public class LogicMain {
 
 	public LogicMain(Resources resources) {
 		this.resources = resources;
-
-		nameAssigned = new boolean[resources.getNames().length];
-		for (int i = 0; i < resources.getNames().length; i++) {
-			nameAssigned[i] = false;
-		}
 	}
 
 	public void initGameLoop(GameInterface gi, Controller controller, Resources resources) {
@@ -59,16 +51,12 @@ public class LogicMain {
 		return Resources.CHARACTER_ATTACK_PROFILE[0];
 	}
 
-	public String getRandomName() {
-		int length = Resources.NAMES.length;
-		Random r = new Random();
-		int index = r.nextInt(length);
-		return Resources.NAMES[index];
+	public String getNextName() {
+		return Resources.getNextName();
 	}
 
-	public Color getRandomColor() {
-		Random random = new Random();
-		return Resources.COLORS[random.nextInt(Resources.COLORS.length)];
+	public Color getNextColor() {
+		return Resources.getNextColor();
 	}
 
 	public Control getNextControl() {
@@ -82,7 +70,7 @@ public class LogicMain {
 
 		Control control = getNextControl();
 		if (control != null) {
-			Player player = new Player(control, getRandomName(), getRandomColor(), null,this);
+			Player player = new Player(control, getNextName(), getNextColor(), null,this);
 			gameLoop.addRunner(player);
 			return player;
 		}
@@ -90,7 +78,7 @@ public class LogicMain {
 	}
 
 	public Player addNewAttacker(PlayerThread pt) {
-		Player player = new Player(null, getRandomName(), getRandomColor(), pt, this);
+		Player player = new Player(null, getNextName(), null, pt, this);
 		gameLoop.addAttackers(player);
 		hostRoomInterface.addAttacker(player);
 		return player;
