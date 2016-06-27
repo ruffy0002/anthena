@@ -176,9 +176,26 @@ public class GameRoomInterface implements GameScene {
 		});
 	}
 
+	private void addRunner(Player player) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				leftVBox.getChildren().add(createNewRunnnerInterface(player));
+			}
+		});
+	}
+
 	public void updateSceneSize(ScreenInformation _screenInformation) {
 		this._screenInformation = _screenInformation;
 		_mainComponent.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
+	}
+
+	public void addPlayer(Player player) {
+		if (player.getPlayerType() == Player.TYPE_RUNNER) {
+			addRunner(player);
+		} else if (player.getPlayerType() == Player.TYPE_STOMPPER) {
+			addAttacker(player);
+		}
 	}
 
 }

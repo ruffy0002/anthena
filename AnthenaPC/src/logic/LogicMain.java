@@ -1,5 +1,6 @@
 package logic;
 
+import java.util.ArrayList;
 
 import connection.PlayerThread;
 import connection.SocketInterface;
@@ -20,6 +21,7 @@ public class LogicMain {
 	private Resources resources;
 	private GameRoomInterface hostRoomInterface;
 	private hostRoomThread masterRoomThread;
+	private ArrayList<Player> playerList = new ArrayList<Player>();
 
 	public static final double GAME_WIDTH = 800;
 	public static final double GAME_HEIGHT = 600;
@@ -67,14 +69,23 @@ public class LogicMain {
 	}
 
 	public Player addNewRunner() {
-
 		Control control = getNextControl();
 		if (control != null) {
-			Player player = new Player(control, getNextName(), getNextColor(), null,this);
+			Player player = new Player(control, getNextName(), getNextColor(), null, this);
 			gameLoop.addRunner(player);
 			return player;
 		}
 		return null;
+	}
+
+	public Player addNewPlayer(PlayerThread pt) {
+		Player player = new Player(null, getNextName(), null, pt, this);
+		//hostRoomInterface.addAttacker(player);
+		return player;
+	}
+
+	public void switchTeam() {
+
 	}
 
 	public Player addNewAttacker(PlayerThread pt) {
@@ -92,6 +103,18 @@ public class LogicMain {
 		double xScale = screenInformation.get_width() / GAME_WIDTH;
 		double yScale = screenInformation.get_height() / GAME_HEIGHT;
 		gameLoop.updateScale(xScale, yScale);
+	}
+
+	public void updatePlayerType(int player_id, int type) {
+		if (Player.getAll_players_list().get(player_id).getPlayerType() != type) {
+			if(Player.getAll_players_list().get(player_id).getPlayerType() == Player.TYPE_RUNNER){
+				//remove previous component
+			}else if(Player.getAll_players_list().get(player_id).getPlayerType() == Player.TYPE_STOMPPER){
+				
+			}
+			Player.getAll_players_list().get(player_id).setPlayerType(type);
+			hostRoomInterface.addPlayer(Player.getAll_players_list().get(player_id));
+		}
 	}
 
 }

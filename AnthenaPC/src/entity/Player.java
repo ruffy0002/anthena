@@ -14,10 +14,15 @@ import logic.LogicMain;
 
 public class Player {
 
+	public static final int TYPE_RUNNER = 1;
+	public static final int TYPE_STOMPPER = 2;
+	
 	private static int totalPlayer = 0;
 	private static ArrayList<Player> all_players_list = new ArrayList<Player>();
 
 	private int player_id;
+	private int playerType = -1;
+
 	private PlayerThread thread;
 	protected Control control;
 	private String name;
@@ -28,13 +33,13 @@ public class Player {
 	private LogicMain logicMain;
 	private Sprite sprite;
 	private int health;
-	
+
 	private ColorAdjust colorAdjust;
 
 	public Player(Control control, String name, Color color, PlayerThread thread, LogicMain logicMain) {
 		Player.all_players_list.add(this);
 		this.player_id = totalPlayer++;
-		
+
 		this.thread = thread;
 		this.logicMain = logicMain;
 		this.name = name;
@@ -45,7 +50,7 @@ public class Player {
 		FontLoader fontLoader = Toolkit.getToolkit().getFontLoader();
 		double w = fontLoader.computeStringWidth(nameLabel.getText(), nameLabel.getFont());
 		nameLabel.setMinWidth(w);
-		
+
 		colorAdjust = new ColorAdjust();
 		colorAdjust.setSaturation(1);
 		colorAdjust.setHue(0);
@@ -86,6 +91,18 @@ public class Player {
 
 	public void takeDamage() {
 		this.health--;
+	}
+
+	public int getPlayerType() {
+		return playerType;
+	}
+
+	public void setPlayerType(int playerType) {
+		this.playerType = playerType;
+	}
+
+	public int getPlayer_id() {
+		return player_id;
 	}
 
 	public Character createSprite() {

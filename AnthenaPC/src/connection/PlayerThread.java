@@ -21,173 +21,169 @@ import entity.Player;
 import logic.LogicMain;
 
 public class PlayerThread implements Runnable {
-    private boolean _running = true;
-    
-    private InetAddress _ipAddress;
-    private int _playerNo;
-    private Socket _socket;
-    private LogicMain _logicMain;
-    private Player _player;
-    
-    public int playerType = -1;
+	private boolean _running = true;
 
-    private ObjectInputStream dataInputStream = null;
-    private ObjectOutputStream dataOutputStream = null;
-    
-    boolean connected = true;
-    
-    public PlayerThread(InetAddress ipAddress, int playerNo, Socket socket, LogicMain logicMain) {
-        _ipAddress = ipAddress;
-        _playerNo = playerNo;
-        _socket = socket;
-        _logicMain = logicMain;
-        
-        try {
-            _socket.setSoTimeout(500);
-            dataInputStream = new ObjectInputStream(socket.getInputStream());
-            dataOutputStream = new ObjectOutputStream(socket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Player " + playerNo + "(" + ipAddress + ") joined the game");
-        _player =_logicMain.addNewAttacker(this);
-    }
-    
-    /**
-     * Checks if the player is still connected, updates every 500ms
-     * @return true if player is connected, false otherwise
-     */
-    public boolean checkConnection () {
-        return connected;
-    }
-    
-    public void setNewSocket (Socket socket) {
-        _socket = socket;
-        
-        try {
-            _socket.setSoTimeout(500);
-            dataInputStream = new ObjectInputStream(socket.getInputStream());
-            dataOutputStream = new ObjectOutputStream(socket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        connected = true;
-        System.out.println("Player " + _playerNo + "(" + _ipAddress + ") reconnected");
-    }
-    
-    public InetAddress getIp() {
-        return _ipAddress;
-    }
-    
-    public int getPlayerNo() {
-        return _playerNo;
-    }
-    
-    public void stop() {
-        _running = false;
-    }
-    
-    private void verifyData(GamePacket data) {
-        if(data.getX() == -1000 && data.getY() == -1000) {
-            //Initialisation data
-            playerType = data.getType();
-        } else {
-            sendDataToProgram(data);
-        }
-    }
+	private InetAddress _ipAddress;
+	private int _playerNo;
+	private Socket _socket;
+	private LogicMain _logicMain;
+	private Player _player;
 
-    private void sendDataToProgram(GamePacket data) {
-        if(data.getType() == GamePacket.TYPE_STOMPER) {
-            System.out.println("Player " + _playerNo + " stomps [X: " + data.getX() + ", Y: " + data.getY() + "]");
-            if (_logicMain != null) {
-            	_player.executeAttack(data.getX(), data.getY());
-            }
-        } else if (data.getType() == GamePacket.TYPE_RUNNER) {
-            System.out.println("Player " + _playerNo + " running to [X: " + data.getX() + ", Y: " + data.getY() + "]");
-            if (_logicMain != null) {
-                //Fill logic main portion here
-            }
-        } else if (data.getType() == GamePacket.TYPE_POSITIONUPDATE) {
-            if (_logicMain != null) {
-                //Fill logic main portion here
-            }
-        } else {
-            System.out.println("Data sent from client not recognized!");
-        }
-    }
-    
-    public int getType () {
-        return playerType;
-    }
-    
-    public boolean sendData (GamePacket obj) {
-        try {
-            dataOutputStream.writeObject(obj);
-            return true;
-        } catch (IOException ex) {
-            return false;
-        }
-    }
-    
-    public boolean sendPing() {
-        PingPacket obj = new PingPacket();
-        try {
-            dataOutputStream.writeObject(obj);
-            return true;
-        } catch (IOException ex) {
-            return false;
-        }
-    }
-    
-    @Override
-    public void run() {
-        Object object;
-        
-        while(_running) {
-            try {
-                object = dataInputStream.readObject();
-                if (object instanceof GamePacket) {
-                    GamePacket p = (GamePacket) object;
-                    verifyData(p);
-                }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (SocketTimeoutException ex) {
-                
-            } catch (IOException e) {
-                connected = false;
-            }
-            if(sendPing() == false) {
-                connected = false;
-            }
-        }
-        
-        closeSocket();
-    }
+	private ObjectInputStream dataInputStream = null;
+	private ObjectOutputStream dataOutputStream = null;
 
-    private void closeSocket() {
-        if (_socket != null) {
-            try {
-                _socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+	boolean connected = true;
 
-        if (dataInputStream != null) {
-            try {
-                dataInputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+	public PlayerThread(InetAddress ipAddress, int playerNo, Socket socket, LogicMain logicMain) {
+		_ipAddress = ipAddress;
+		_playerNo = playerNo;
+		_socket = socket;
+		_logicMain = logicMain;
 
-        if (dataOutputStream != null) {
-            try {
-                dataOutputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+		try {
+			_socket.setSoTimeout(500);
+			dataInputStream = new ObjectInputStream(socket.getInputStream());
+			dataOutputStream = new ObjectOutputStream(socket.getOutputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Player " + playerNo + "(" + ipAddress + ") joined the game");
+		_player = _logicMain.addNewPlayer(this);
+	}
+
+	/**
+	 * Checks if the player is still connected, updates every 500ms
+	 * 
+	 * @return true if player is connected, false otherwise
+	 */
+	public boolean checkConnection() {
+		return connected;
+	}
+
+	public void setNewSocket(Socket socket) {
+		_socket = socket;
+
+		try {
+			_socket.setSoTimeout(500);
+			dataInputStream = new ObjectInputStream(socket.getInputStream());
+			dataOutputStream = new ObjectOutputStream(socket.getOutputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		connected = true;
+		System.out.println("Player " + _playerNo + "(" + _ipAddress + ") reconnected");
+	}
+
+	public InetAddress getIp() {
+		return _ipAddress;
+	}
+
+	public int getPlayerNo() {
+		return _playerNo;
+	}
+
+	public void stop() {
+		_running = false;
+	}
+
+	private void verifyData(GamePacket data) {
+		if (data.getX() == -1000 && data.getY() == -1000) {
+			// Initialisation data
+			System.out.println("type = " + data.getType());
+			_logicMain.updatePlayerType(_player.getPlayer_id(),data.getType());
+		} else {
+			sendDataToProgram(data);
+		}
+	}
+
+	private void sendDataToProgram(GamePacket data) {
+		if (data.getType() == GamePacket.TYPE_STOMPER) {
+			System.out.println("Player " + _playerNo + " stomps [X: " + data.getX() + ", Y: " + data.getY() + "]");
+			if (_logicMain != null) {
+				_player.executeAttack(data.getX(), data.getY());
+			}
+		} else if (data.getType() == GamePacket.TYPE_RUNNER) {
+			System.out.println("Player " + _playerNo + " running to [X: " + data.getX() + ", Y: " + data.getY() + "]");
+			if (_logicMain != null) {
+				// Fill logic main portion here
+			}
+		} else if (data.getType() == GamePacket.TYPE_POSITIONUPDATE) {
+			if (_logicMain != null) {
+				// Fill logic main portion here
+			}
+		} else {
+			System.out.println("Data sent from client not recognized!");
+		}
+	}
+
+	public boolean sendData(GamePacket obj) {
+		try {
+			dataOutputStream.writeObject(obj);
+			return true;
+		} catch (IOException ex) {
+			return false;
+		}
+	}
+
+	public boolean sendPing() {
+		PingPacket obj = new PingPacket();
+		try {
+			dataOutputStream.writeObject(obj);
+			return true;
+		} catch (IOException ex) {
+			return false;
+		}
+	}
+
+	@Override
+	public void run() {
+		Object object;
+
+		while (_running) {
+			try {
+				object = dataInputStream.readObject();
+				if (object instanceof GamePacket) {
+					GamePacket p = (GamePacket) object;
+					verifyData(p);
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SocketTimeoutException ex) {
+
+			} catch (IOException e) {
+				connected = false;
+			}
+			if (sendPing() == false) {
+				connected = false;
+			}
+		}
+
+		closeSocket();
+	}
+
+	private void closeSocket() {
+		if (_socket != null) {
+			try {
+				_socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (dataInputStream != null) {
+			try {
+				dataInputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (dataOutputStream != null) {
+			try {
+				dataOutputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
