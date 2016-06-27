@@ -37,6 +37,13 @@ public class LogicMain {
 	}
 
 	public void startGameLoop() {
+		for (int i = 0; i < Player.getAll_players_list().size(); i++) {
+			if (Player.getAll_players_list().get(i).getPlayerType() == Player.TYPE_RUNNER) {
+				gameLoop.addRunner(Player.getAll_players_list().get(i));
+			} else if (Player.getAll_players_list().get(i).getPlayerType() == Player.TYPE_STOMPPER) {
+				gameLoop.addAttackers(Player.getAll_players_list().get(i));
+			}
+		}
 		gameLoop.initGameLoop();
 		gameLoop.start();
 	}
@@ -80,12 +87,7 @@ public class LogicMain {
 
 	public Player addNewPlayer(PlayerThread pt) {
 		Player player = new Player(null, getNextName(), null, pt, this);
-		//hostRoomInterface.addAttacker(player);
 		return player;
-	}
-
-	public void switchTeam() {
-
 	}
 
 	public Player addNewAttacker(PlayerThread pt) {
@@ -107,11 +109,6 @@ public class LogicMain {
 
 	public void updatePlayerType(int player_id, int type) {
 		if (Player.getAll_players_list().get(player_id).getPlayerType() != type) {
-			if(Player.getAll_players_list().get(player_id).getPlayerType() == Player.TYPE_RUNNER){
-				//remove previous component
-			}else if(Player.getAll_players_list().get(player_id).getPlayerType() == Player.TYPE_STOMPPER){
-				
-			}
 			Player.getAll_players_list().get(player_id).setPlayerType(type);
 			hostRoomInterface.addPlayer(Player.getAll_players_list().get(player_id));
 		}

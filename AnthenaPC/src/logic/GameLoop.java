@@ -43,6 +43,7 @@ public class GameLoop extends AnimationTimer {
 	private GraphicsContext graphicContext;
 	private Controller controller;
 	private ArrayList<Character> character = new ArrayList<Character>();
+	private ArrayList<Character> mobileCharacter = new ArrayList<Character>();
 	private PriorityQueue<Sprite> spriteDrawPQ = new PriorityQueue<>();
 	private ArrayList<Attack> attack = new ArrayList<Attack>();
 
@@ -79,6 +80,9 @@ public class GameLoop extends AnimationTimer {
 			Character c = runners.get(i).createSprite();
 			c.setGameBoundary(map_oundary);
 			character.add(c);
+			if(runners.get(i).getControl() ==null){
+				mobileCharacter.add(c);
+			}
 		}
 		startNanoTime = System.nanoTime();
 	}
@@ -111,7 +115,7 @@ public class GameLoop extends AnimationTimer {
 			character.get(k).setVelocityRotate(0);
 		}
 
-		// process user controls
+		// process user controls for keyboard
 		ArrayList<KeyCode> temp = controller.getKeyCodes();
 		for (int i = 0; i < temp.size(); i++) {
 			KeyCode code = temp.get(i);
@@ -119,9 +123,12 @@ public class GameLoop extends AnimationTimer {
 				createAttack(100, 100, null);
 			}
 			for (int k = 0; k < character.size(); k++) {
-				character.get(k).update(code);
+				if (character.get(k).getControl() != null) {
+					character.get(k).update(code);
+				}
 			}
 		}
+		
 	}
 
 	private void update(double elapsedTime) {

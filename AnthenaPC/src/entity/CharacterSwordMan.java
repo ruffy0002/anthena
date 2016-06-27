@@ -104,7 +104,6 @@ public class CharacterSwordMan extends Character {
 		super.update(time);
 		if (isAlive) {
 			double totalMovementDistance = movementSpeed * time;
-
 			double moveX = 0;
 			double moveY = 0;
 

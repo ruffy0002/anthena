@@ -1,5 +1,7 @@
 package userinterface;
 
+import java.util.TreeMap;
+
 import entity.Player;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -28,6 +30,7 @@ public class GameRoomInterface implements GameScene {
 	private VBox leftVBox;
 	private VBox rightVBox;
 	private ScreenInformation _screenInformation;
+	private TreeMap<Integer,HBox> playersFace = new TreeMap<Integer,HBox>();
 
 	public static GameRoomInterface getStartScene(LogicMain logic, ScreenInformation _screenInformation) {
 		GameRoomInterface gri = new GameRoomInterface(logic, _screenInformation);
@@ -76,9 +79,9 @@ public class GameRoomInterface implements GameScene {
 				leftVBox.getChildren().add(createNewRunnnerInterface(p));
 			}
 		} else if (key.compareTo(KeyCode.UP) == 0) {
-
+			logic.updatePlayerType(0, 2);
 		} else if (key.compareTo(KeyCode.DOWN) == 0) {
-
+			logic.updatePlayerType(0, 1);
 		} else if (key.compareTo(KeyCode.ENTER) == 0) {
 			return 1;
 		}
@@ -171,7 +174,14 @@ public class GameRoomInterface implements GameScene {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				rightVBox.getChildren().add(createNewAttackerInterface(player));
+				if(playersFace.containsKey(player.getPlayer_id())){
+					HBox temp = playersFace.get(player.getPlayer_id());
+					leftVBox.getChildren().remove(temp);
+					rightVBox.getChildren().remove(temp);
+				}
+				HBox temp = createNewAttackerInterface(player);
+				playersFace.put(player.getPlayer_id(), temp);
+				rightVBox.getChildren().add(temp);
 			}
 		});
 	}
@@ -180,14 +190,16 @@ public class GameRoomInterface implements GameScene {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				leftVBox.getChildren().add(createNewRunnnerInterface(player));
+				if(playersFace.containsKey(player.getPlayer_id())){
+					HBox temp = playersFace.get(player.getPlayer_id());
+					leftVBox.getChildren().remove(temp);
+					rightVBox.getChildren().remove(temp);
+				}
+				HBox temp = createNewRunnnerInterface(player);
+				playersFace.put(player.getPlayer_id(), temp);
+				leftVBox.getChildren().add(temp);
 			}
 		});
-	}
-
-	public void updateSceneSize(ScreenInformation _screenInformation) {
-		this._screenInformation = _screenInformation;
-		_mainComponent.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
 	}
 
 	public void addPlayer(Player player) {
@@ -196,6 +208,11 @@ public class GameRoomInterface implements GameScene {
 		} else if (player.getPlayerType() == Player.TYPE_STOMPPER) {
 			addAttacker(player);
 		}
+	}
+	
+	public void updateSceneSize(ScreenInformation _screenInformation) {
+		this._screenInformation = _screenInformation;
+		_mainComponent.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
 	}
 
 }
