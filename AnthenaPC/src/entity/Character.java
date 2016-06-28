@@ -19,7 +19,12 @@ import resource.Resources;
 
 public class Character extends Sprite {
 
+	public enum State {
+		IDLE, MOVVING, ATTACKING, DEFEATED, DEAD, IMMUNE;
+	}
+
 	protected Player player;
+	protected State currentState;
 	protected Control control;
 	protected double movementSpeed = 100;
 	protected double rotationSpeed = 200;
@@ -55,6 +60,7 @@ public class Character extends Sprite {
 	private static double heartHeight = 15;
 
 	public Character(Player p) {
+		currentState = State.IDLE;
 		player = p;
 	}
 
@@ -197,6 +203,14 @@ public class Character extends Sprite {
 
 	public boolean isImmune() {
 		return isImmune;
+	}
+
+	public State getCurrentState() {
+		return currentState;
+	}
+
+	public void setState(State s) {
+		currentState = s;
 	}
 
 }
