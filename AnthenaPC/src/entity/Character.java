@@ -19,11 +19,6 @@ import resource.Resources;
 
 public class Character extends Sprite {
 
-	public static final int MOVE_UP = 1;
-	public static final int MOVE_RIGHT = 2;
-	public static final int MOVE_DOWN = 3;
-	public static final int MOVE_LEFT = 4;
-
 	protected Player player;
 	protected Control control;
 	protected double movementSpeed = 100;
@@ -158,14 +153,14 @@ public class Character extends Sprite {
 		}
 	}
 
-	public void update(int code) {
-		if (code == MOVE_UP) {
+	public void update(Movement code) {
+		if (code == Movement.UP) {
 			super.setVelocityY(-1);
-		} else if (code == MOVE_RIGHT) {
+		} else if (code == Movement.RIGHT) {
 			super.setVelocityX(1);
-		} else if (code == MOVE_DOWN) {
+		} else if (code == Movement.DOWN) {
 			super.setVelocityY(1);
-		} else if (code == MOVE_LEFT) {
+		} else if (code == Movement.LEFT) {
 			super.setVelocityX(-1);
 		}
 	}
