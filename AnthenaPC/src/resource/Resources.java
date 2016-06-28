@@ -5,6 +5,7 @@ import java.util.Random;
 
 import controls.Control;
 import entity.Attack;
+import entity.Character.State;
 import entity.CharacterSwordMan;
 import entity.Collectable;
 import javafx.scene.effect.ColorAdjust;
@@ -14,10 +15,14 @@ import javafx.scene.paint.Color;
 
 public class Resources {
 
+	public enum CharacterType {
+		SWORDMAN;
+	}
+
 	private static final Image[] GAME_MAPS = new Image[10];
 	private static final Image[] ANTS = new Image[2];
 
-	private static final Image[] CHARACTER_SET = new Image[1];
+	private static final Image[] SWORD_MAN = new Image[2];
 	private static final Image[] CHARACTER_SET_DEATH = new Image[1];
 	private static final Image[] DEATH = new Image[1];
 
@@ -105,7 +110,8 @@ public class Resources {
 	}
 
 	public void loadCharacterSprites() {
-		CHARACTER_SET[0] = new Image("sprite/characterSwordMan.png");
+		SWORD_MAN[0] = new Image("sprite/swordmanMoving.png");
+		SWORD_MAN[1] = new Image("sprite/swordmanIdle.png");
 		CHARACTER_SET_DEATH[0] = new Image("sprite/swordmandefeated.png");
 		DEATH[0] = new Image("sprite/swordmandeath.png");
 
@@ -121,10 +127,6 @@ public class Resources {
 
 	public static Image getCharacterImage(int index) {
 		return ANTS[index];
-	}
-
-	public static Image getcharacterSet(int index) {
-		return CHARACTER_SET[index];
 	}
 
 	public static Image getAttackSet(int index) {
@@ -177,6 +179,17 @@ public class Resources {
 
 	public static ColorAdjust getNextColorAdjust() {
 		return COLOR_ADJUST[colorAdjustCounter++ % COLOR_ADJUST.length];
+	}
+
+	public static Image getAnimationFrame(CharacterType type, State state) {
+		if (type == CharacterType.SWORDMAN) {
+			if (state == State.IDLE) {
+				return SWORD_MAN[1];
+			}else if(state == State.MOVING){
+				return SWORD_MAN[0];
+			}
+		}
+		return null;
 	}
 
 	public void shuffle(Object[] array) {

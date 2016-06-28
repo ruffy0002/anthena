@@ -41,7 +41,7 @@ public class Attack extends Sprite {
 			paintEffect = Resources.getNextColorAdjust();
 		}
 		timePast = 0;
-		super.setImage(Resources.getAttackSet(0));
+		super.setMovingFrames(Resources.getAttackSet(0));
 
 		perceptionRotate = 60;
 
@@ -89,7 +89,7 @@ public class Attack extends Sprite {
 
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
 		gc.setEffect(paintEffect);
-		gc.drawImage(image, animationFrameWidth * currentAnimationFrameX, animationFrameHeight * currentAnimationFrameY,
+		gc.drawImage(movingStateFrames, animationFrameWidth * currentAnimationFrameX, animationFrameHeight * currentAnimationFrameY,
 				animationFrameWidth, animationFrameHeight, getBoundaryX(), getBoundaryY(), width, height);
 		gc.setGlobalAlpha(1);
 		gc.restore();

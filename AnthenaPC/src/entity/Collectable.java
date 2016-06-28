@@ -53,7 +53,7 @@ public class Collectable extends Sprite {
 		super.setVelocityX(0);
 		super.setRotationAngle(0);
 		currentAnimationFrame = 0;
-		super.setImage(Resources.getCollectable(0));
+		super.setMovingFrames(Resources.getCollectable(0));
 		calculateBoundary();
 	}
 
@@ -68,7 +68,7 @@ public class Collectable extends Sprite {
 	public void render(GraphicsContext gc) {
 		gc.save();
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
-		gc.drawImage(image, FRAME_POSITION[currentAnimationFrame][0], FRAME_POSITION[currentAnimationFrame][1],
+		gc.drawImage(movingStateFrames, FRAME_POSITION[currentAnimationFrame][0], FRAME_POSITION[currentAnimationFrame][1],
 				FRAME_WIDTH, FRAME_HEIGHT, positionX, positionY, displayWidth, displayHeight);
 
 		gc.restore();

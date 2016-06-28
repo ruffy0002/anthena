@@ -20,7 +20,7 @@ import resource.Resources;
 public class Character extends Sprite {
 
 	public enum State {
-		IDLE, MOVVING, ATTACKING, DEFEATED, DEAD, IMMUNE;
+		IDLE, MOVING, ATTACKING, DEFEATED, DEAD, IMMUNE;
 	}
 
 	protected Player player;

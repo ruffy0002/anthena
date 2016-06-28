@@ -19,7 +19,7 @@ public class Ant extends Character {
 		super.setPositionY(0);
 		super.setVelocityX(0);
 		super.setRotationAngle(0);
-		super.setImage(Resources.getCharacterImage(0));
+		super.setMovingFrames(Resources.getCharacterImage(0));
 
 		animationLength = 3;
 		animationSpeed = 9;
@@ -34,7 +34,7 @@ public class Ant extends Character {
 		super.setPositionY(200);
 		super.setVelocityX(0);
 		super.setRotationAngle(0);
-		super.setImage(Resources.getCharacterImage(0));
+		super.setMovingFrames(Resources.getCharacterImage(0));
 	}
 
 	public void update(double time) {
@@ -78,7 +78,7 @@ public class Ant extends Character {
 		rotate(gc, rotationAngle, positionX + halfWidth, positionY + halfHeight);
 
 		gc.setGlobalBlendMode(BlendMode.DARKEN);
-		gc.drawImage(image, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth, animationFrameHeight,
+		gc.drawImage(movingStateFrames, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth, animationFrameHeight,
 				positionX, positionY, width, height);
 
 		gc.restore();

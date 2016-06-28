@@ -14,9 +14,10 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Shear;
 
-public class Sprite implements Comparable<Sprite>{
+public class Sprite implements Comparable<Sprite> {
 
-	protected Image image;
+	protected Image idleStateFrames;
+	protected Image movingStateFrames;
 
 	protected Shape mapBoundary;
 
@@ -75,8 +76,8 @@ public class Sprite implements Comparable<Sprite>{
 		r.setY(r.getY() + y);
 	}
 
-	public void setImage(Image image) {
-		this.image = image;
+	public void setMovingFrames(Image image) {
+		this.movingStateFrames = image;
 	}
 
 	public void setWidth(double width) {
@@ -92,8 +93,8 @@ public class Sprite implements Comparable<Sprite>{
 		boundaryY = height;
 	}
 
-	public Image getImage() {
-		return image;
+	public Image getMovingFrames() {
+		return movingStateFrames;
 	}
 
 	public int getAnimationLength() {
@@ -204,6 +205,14 @@ public class Sprite implements Comparable<Sprite>{
 		return height;
 	}
 
+	public Image getIdleStateFrames() {
+		return idleStateFrames;
+	}
+
+	public void setIdleStateFrames(Image idleStateFrames) {
+		this.idleStateFrames = idleStateFrames;
+	}
+
 	public void update(double time) {
 
 	}
@@ -227,8 +236,8 @@ public class Sprite implements Comparable<Sprite>{
 		gc.save();
 
 		gc.setGlobalBlendMode(BlendMode.DARKEN);
-		gc.drawImage(image, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth, animationFrameHeight,
-				positionX, positionY, width, height);
+		gc.drawImage(movingStateFrames, animationFrameWidth * currentAnimationFrame, 0, animationFrameWidth,
+				animationFrameHeight, positionX, positionY, width, height);
 
 		gc.restore();
 	}
@@ -273,7 +282,7 @@ public class Sprite implements Comparable<Sprite>{
 	public void setGameBoundary(Shape boundary) {
 		mapBoundary = boundary;
 	}
-	
+
 	@Override
 	public int compareTo(Sprite c1) {
 		if (c1.getZIndex() > this.getZIndex()) {
