@@ -8,6 +8,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.Bloom;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Shadow;
@@ -40,6 +41,8 @@ public class Character extends Sprite {
 	protected boolean isFlipped = false;
 	protected boolean isImmune = false;
 	protected double immuneTime = 3;
+	protected double immuneFlashSpeed = 1;
+	protected int bloomDirection = 1;
 	private double immuneTimeStore = 0;
 	protected boolean hasFinishDeathAnimation = false;
 
@@ -67,6 +70,7 @@ public class Character extends Sprite {
 	private static double heartHeight = 15;
 	DropShadow dropShadow;
 	Shadow shadow;
+	Bloom bloom;
 
 	public Character(Player p) {
 		currentState = State.IDLE;
@@ -77,6 +81,9 @@ public class Character extends Sprite {
 		dropShadow.setOffsetY(3.0);
 		dropShadow.setColor(Color.BLACK);
 		shadow = new Shadow(BlurType.GAUSSIAN, Color.BLACK, 3);
+		bloom = new Bloom();
+		bloom.setThreshold(0.3);
+		bloom.setInput(dropShadow);
 	}
 
 	public void init() {
@@ -116,11 +123,19 @@ public class Character extends Sprite {
 	}
 
 	public void update(double time) {
-		if (isImmune) {
+		if (isImmune && isAlive) {
 			immuneTimeStore -= time;
 			if (immuneTimeStore <= 0) {
 				isImmune = false;
 			}
+			double bloomE = immuneFlashSpeed * time * bloomDirection;
+			double bloomT = bloom.getThreshold() + bloomE;
+			if (bloomT > 0.8) {
+				bloomDirection = -1;
+			} else if(bloomT < 0){
+				bloomDirection = 1;
+			}
+			bloom.setThreshold(bloomT);
 		}
 	}
 
@@ -244,6 +259,5 @@ public class Character extends Sprite {
 	public double getPositionYFinal() {
 		return positionYFinal;
 	}
-	
-	
+
 }

@@ -184,7 +184,8 @@ public class CharacterSwordMan extends Character {
 					isFlipped = false;
 				}
 				movementDistance += totalMovementDistance;
-				currentAnimationFrame = Math.abs((int) ((movementDistance / animationSpeedMoving) % animationLengthMoving));
+				currentAnimationFrame = Math
+						.abs((int) ((movementDistance / animationSpeedMoving) % animationLengthMoving));
 				Rectangle r = (Rectangle) collisionZone;
 				previousBoundaryX = r.getX();
 				previousBoundaryY = r.getY();
@@ -203,7 +204,7 @@ public class CharacterSwordMan extends Character {
 					r.setY(previousBoundaryY);
 				}
 			}
-		}else{
+		} else {
 			currentState = State.IDLE;
 			currentAnimationFrame = 0;
 			movementDistance = 0;
@@ -241,7 +242,11 @@ public class CharacterSwordMan extends Character {
 		super.render(gc);
 		gc.save();
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
-		gc.setEffect(dropShadow);
+		if (isImmune) {
+			gc.setEffect(bloom);
+		} else {
+			gc.setEffect(dropShadow);
+		}
 		if (isAlive) {
 			if (currentState == State.IDLE) {
 				if (!isFlipped) {
