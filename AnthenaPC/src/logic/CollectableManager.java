@@ -32,7 +32,6 @@ public class CollectableManager {
 		spawnminY = map_boundary.getBoundsInLocal().getMinY();
 		spawnmaxY = map_boundary.getBoundsInLocal().getMaxY() - Collectable.DRAW_HEIGHT;
 		spawnZoneHeight = spawnmaxY - spawnminY;
-		System.out.println(spawnminY+" "+spawnmaxY+" " +Collectable.DRAW_HEIGHT);
 	}
 
 	public ArrayList<Collectable> getCollectable() {

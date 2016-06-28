@@ -179,6 +179,7 @@ public class CharacterSwordMan extends Character {
 		super.render(gc);
 		gc.save();
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
+		gc.setEffect(dropShadow);
 		if (isAlive) {
 			if(currentState == State.IDLE){
 				if (!isFlipped) {

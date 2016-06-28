@@ -8,8 +8,12 @@ import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Shadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -58,10 +62,18 @@ public class Character extends Sprite {
 	private static Image heart = Resources.getHeart();
 	private static double heartWidth = 15;
 	private static double heartHeight = 15;
+	DropShadow dropShadow;
+	Shadow shadow;
 
 	public Character(Player p) {
 		currentState = State.IDLE;
 		player = p;
+		dropShadow = new DropShadow();
+		dropShadow.setRadius(5.0);
+		dropShadow.setOffsetX(-5.0);
+		dropShadow.setOffsetY(3.0);
+		dropShadow.setColor(Color.BLACK);
+		shadow = new Shadow(BlurType.GAUSSIAN, Color.BLACK, 3);
 	}
 
 	public void init() {
@@ -121,6 +133,7 @@ public class Character extends Sprite {
 	public void renderName(GraphicsContext gc) {
 		gc.save();
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
+		gc.setEffect(dropShadow);
 		gc.setStroke(player.getColor());
 		gc.strokeText(player.getNameLabel().getText(), positionX + (width - player.getNameLabel().getMinWidth()) / 2,
 				positionY + height + 12);

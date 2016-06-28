@@ -3,6 +3,7 @@ package entity;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.Bloom;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import resource.Resources;
@@ -12,16 +13,20 @@ public class Collectable extends Sprite {
 	private static final double[][] FRAME_POSITION = new double[7][2];
 	private static final double FRAME_WIDTH = 100;
 	private static final double FRAME_HEIGHT = 170;
-	public static final double DRAW_WIDTH = 20;
+	public static final double DRAW_WIDTH = 50;
 	public static double DRAW_HEIGHT;
 	private static double animationLength = 7;
 	private static double animationSpeed = 40;
 	private static double frameSpeed = animationLength / animationSpeed;
 	private double timeElapse = 0;
 	private boolean isActive = true;
+	
+	private static Bloom bloom = new Bloom();
+	
 
 	public static void initMain() {
-
+		
+		bloom.setThreshold(0.3);
 		FRAME_POSITION[0][0] = 0;
 		FRAME_POSITION[0][1] = 0;
 		FRAME_POSITION[1][0] = FRAME_WIDTH;
@@ -67,7 +72,9 @@ public class Collectable extends Sprite {
 
 	public void render(GraphicsContext gc) {
 		gc.save();
+		
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
+		gc.setEffect(bloom);
 		gc.drawImage(movingStateFrames, FRAME_POSITION[currentAnimationFrame][0], FRAME_POSITION[currentAnimationFrame][1],
 				FRAME_WIDTH, FRAME_HEIGHT, positionX, positionY, displayWidth, displayHeight);
 
