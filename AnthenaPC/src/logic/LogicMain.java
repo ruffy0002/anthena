@@ -52,8 +52,8 @@ public class LogicMain {
 	public void hostGame() {
 		masterRoomThread = SocketInterface.broadcastRoom(this);
 	}
-
-	public void addAttack(float x, float y, Player player) {
+	
+	public void executeAttack(Player player,float x, float y) {
 		gameLoop.createAttack(x, y, player);
 	}
 

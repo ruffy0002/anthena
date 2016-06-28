@@ -149,10 +149,6 @@ public class Player {
 		return this.thread.checkConnection();
 	}
 
-	public void executeAttack(float x, float y) {
-		logicMain.addAttack(x, y, this);
-	}
-
 	public static ArrayList<Player> getAll_players_list() {
 		return all_players_list;
 	}
