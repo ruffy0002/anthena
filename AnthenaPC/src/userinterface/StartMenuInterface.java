@@ -8,12 +8,15 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 public class StartMenuInterface implements GameScene {
 
 	private static Scene scene;
+	private static StackPane _masterStackPane;
+	private static StackPane _fixStackPane;
 	private static int selector;
 	private static final int TOTAL_ITEMS_SELECTABLE = 3;
 	private static final int FONT_SIZE = 32;
@@ -32,11 +35,23 @@ public class StartMenuInterface implements GameScene {
 
 	public void updateSceneSize(ScreenInformation _screenInformation) {
 		this._screenInformation = _screenInformation;
-		border.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
+		_masterStackPane.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
+		_masterStackPane.setMinSize(_screenInformation.get_width(), _screenInformation.get_height());
+		_masterStackPane.setMaxSize(_screenInformation.get_width(), _screenInformation.get_height());
+		double sx = _screenInformation.get_width() / 800;
+		double sy = _screenInformation.get_height() / 600;
+		border.setScaleX(sx);
+		border.setScaleY(sy);
 	}
 
 	public void init(ScreenInformation _screenInformation) {
 		this._screenInformation = _screenInformation;
+		_masterStackPane = new StackPane();
+		_fixStackPane = new StackPane();
+		_fixStackPane.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
+		_fixStackPane.setMinSize(_screenInformation.get_width(), _screenInformation.get_height());
+		_fixStackPane.setMaxSize(_screenInformation.get_width(), _screenInformation.get_height());
+		
 		border = new BorderPane();
 		border.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
 		border.setStyle("-fx-background-color:black");
@@ -71,7 +86,9 @@ public class StartMenuInterface implements GameScene {
 
 		border.setCenter(vbox);
 
-		scene = new Scene(border);
+		_fixStackPane.getChildren().add(border);
+		_masterStackPane.getChildren().add(_fixStackPane);
+		scene = new Scene(_masterStackPane);
 	}
 
 	public void initControls(EventHandler<KeyEvent> event) {

@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
 import logic.LogicMain;
 
 public class GameInterface implements GameScene {
@@ -17,6 +18,8 @@ public class GameInterface implements GameScene {
 	private Canvas mainCanvas;
 	private Canvas backgroundCanvas;
 	private Scene scene;
+	private StackPane _masterStackPane;
+	private StackPane _fixedStackPane;
 	private Group root;
 
 	public static GameInterface getInstance(LogicMain logic, ScreenInformation _screenInformation) {
@@ -32,14 +35,22 @@ public class GameInterface implements GameScene {
 	}
 
 	public void init(ScreenInformation screenBounds) {
+		_masterStackPane = new StackPane();
+		_fixedStackPane = new StackPane();
+		_fixedStackPane.setPrefSize(screenBounds.get_width(), screenBounds.get_height());
+		_fixedStackPane.setMinSize(screenBounds.get_width(), screenBounds.get_height());
+		_fixedStackPane.setMaxSize(screenBounds.get_width(), screenBounds.get_height());
+		
 		root = new Group();
-		scene = new Scene(root);
+		scene = new Scene(_masterStackPane);
 		overlayCanvas = new Canvas(screenBounds.get_width(), screenBounds.get_height());
 		mainCanvas = new Canvas(screenBounds.get_width(), screenBounds.get_height());
 		backgroundCanvas = new Canvas(screenBounds.get_width(), screenBounds.get_height());
 		root.getChildren().add(backgroundCanvas);
 		root.getChildren().add(mainCanvas);
 		root.getChildren().add(overlayCanvas);
+		_fixedStackPane.getChildren().add(root);
+		_masterStackPane.getChildren().add(_fixedStackPane);
 	}
 
 	public void initControls(EventHandler<KeyEvent> event) {
@@ -54,13 +65,14 @@ public class GameInterface implements GameScene {
 	}
 
 	public void updateSceneSize(ScreenInformation screenInformation) {
-		overlayCanvas.setWidth(screenInformation.get_width());
-		overlayCanvas.setHeight(screenInformation.get_height());
-		mainCanvas.setWidth(screenInformation.get_width());
-		mainCanvas.setHeight(screenInformation.get_height());
-		backgroundCanvas.setWidth(screenInformation.get_width());
-		backgroundCanvas.setHeight(screenInformation.get_height());
-		logic.updateScale(_screenInformation);
+		this._screenInformation = screenInformation;
+		_masterStackPane.setPrefSize(screenInformation.get_width(), screenInformation.get_height());
+		_masterStackPane.setMinSize(screenInformation.get_width(), screenInformation.get_height());
+		_masterStackPane.setMaxSize(screenInformation.get_width(), screenInformation.get_height());
+		double sx = screenInformation.get_width() / 800;
+		double sy = screenInformation.get_height() / 600;
+		root.setScaleX(sx);
+		root.setScaleY(sy);
 	}
 
 	public Canvas getMainCanvas() {

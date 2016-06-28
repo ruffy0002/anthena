@@ -36,11 +36,9 @@ public class PrimaryInterface extends Application {
 	private Scene prevScene;
 
 	public PrimaryInterface() {
-
 		initScreenInformation();
 		resources = initResources();
 		logic = new LogicMain(resources);
-
 		scenes[0] = initStartScene();
 		scenes[1] = initSettingScene();
 		scenes[2] = initGameRoomScene(logic);
@@ -106,11 +104,6 @@ public class PrimaryInterface extends Application {
 						prevScene = stage.getScene();
 						stage.setScene(settingsInterface.getScene());
 						stage.sizeToScene();
-					} else {
-						settingsInterface.setActive(false);
-						stage.setScene(prevScene);
-						stage.sizeToScene();
-						prevScene = null;
 					}
 
 				} else {
@@ -128,16 +121,29 @@ public class PrimaryInterface extends Application {
 					} else if (gs instanceof SettingsInterface) {
 						if (result != -1) {
 							if (result == 1) {
+								stage.setFullScreen(false);
+								_screenInformation.set_width(400);
+								_screenInformation.set_height(300);
+							} else if (result == 2) {
+								stage.setFullScreen(false);
 								_screenInformation.set_width(800);
 								_screenInformation.set_height(600);
-							} else if (result == 2) {
+							} else if (result == 3) {
+								stage.setFullScreen(false);
 								_screenInformation.set_width(1200);
 								_screenInformation.set_height(900);
-							} else if (result == 3) {
+							} else if (result == 4) {
 								Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 								_screenInformation.set_width(bounds.getWidth());
 								_screenInformation.set_height(bounds.getHeight());
 								stage.setFullScreen(true);
+							} else if (result == 5) {
+								if (settingsInterface.isActive()) {
+									settingsInterface.setActive(false);
+									stage.setScene(prevScene);
+									stage.sizeToScene();
+									prevScene = null;
+								}
 							}
 
 							for (int i = 0; i < scenes.length; i++) {

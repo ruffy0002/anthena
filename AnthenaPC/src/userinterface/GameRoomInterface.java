@@ -27,10 +27,12 @@ public class GameRoomInterface implements GameScene {
 	private static Scene scene;
 	private LogicMain logic;
 	private BorderPane _mainComponent;
+	private StackPane _masterStackPane;
+	private StackPane _fixedStackPane;
 	private VBox leftVBox;
 	private VBox rightVBox;
 	private ScreenInformation _screenInformation;
-	private TreeMap<Integer,HBox> playersFace = new TreeMap<Integer,HBox>();
+	private TreeMap<Integer, HBox> playersFace = new TreeMap<Integer, HBox>();
 
 	public static GameRoomInterface getStartScene(LogicMain logic, ScreenInformation _screenInformation) {
 		GameRoomInterface gri = new GameRoomInterface(logic, _screenInformation);
@@ -44,7 +46,13 @@ public class GameRoomInterface implements GameScene {
 	}
 
 	public void init(ScreenInformation _screenInformation) {
-
+		_masterStackPane = new StackPane();
+		_fixedStackPane = new StackPane();
+		_fixedStackPane.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
+		_fixedStackPane.setMaxSize(_screenInformation.get_width(), _screenInformation.get_height());
+		_fixedStackPane.setMinSize(_screenInformation.get_width(), _screenInformation.get_height());
+		
+		
 		leftVBox = new VBox();
 		rightVBox = new VBox();
 
@@ -60,7 +68,9 @@ public class GameRoomInterface implements GameScene {
 
 		_mainComponent.setCenter(l);
 
-		scene = new Scene(_mainComponent);
+		_fixedStackPane.getChildren().add(_mainComponent);
+		_masterStackPane.getChildren().add(_fixedStackPane);
+		scene = new Scene(_masterStackPane);
 	}
 
 	public void initControls(EventHandler<KeyEvent> event) {
@@ -176,7 +186,7 @@ public class GameRoomInterface implements GameScene {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				if(playersFace.containsKey(player.getPlayer_id())){
+				if (playersFace.containsKey(player.getPlayer_id())) {
 					HBox temp = playersFace.get(player.getPlayer_id());
 					leftVBox.getChildren().remove(temp);
 					rightVBox.getChildren().remove(temp);
@@ -192,7 +202,7 @@ public class GameRoomInterface implements GameScene {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				if(playersFace.containsKey(player.getPlayer_id())){
+				if (playersFace.containsKey(player.getPlayer_id())) {
 					HBox temp = playersFace.get(player.getPlayer_id());
 					leftVBox.getChildren().remove(temp);
 					rightVBox.getChildren().remove(temp);
@@ -211,10 +221,16 @@ public class GameRoomInterface implements GameScene {
 			addAttacker(player);
 		}
 	}
-	
+
 	public void updateSceneSize(ScreenInformation _screenInformation) {
 		this._screenInformation = _screenInformation;
-		_mainComponent.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
+		_masterStackPane.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
+		_masterStackPane.setMinSize(_screenInformation.get_width(), _screenInformation.get_height());
+		_masterStackPane.setMaxSize(_screenInformation.get_width(), _screenInformation.get_height());
+		double sx = _screenInformation.get_width() / 800;
+		double sy = _screenInformation.get_height() / 600;
+		_mainComponent.setScaleX(sx);
+		_mainComponent.setScaleY(sy);
 	}
 
 }

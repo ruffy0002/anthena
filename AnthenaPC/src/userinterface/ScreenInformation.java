@@ -11,7 +11,6 @@ public class ScreenInformation {
 	private boolean _isFullScreen;
 
 	public ScreenInformation(double _width, double _height, boolean _isFullScreen) {
-		super();
 		this._width = _width;
 		this._height = _height;
 		this._isFullScreen = _isFullScreen;
