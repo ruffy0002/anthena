@@ -105,7 +105,7 @@ public class PlayerThread implements Runnable {
 		} else if (data.getType() == GamePacket.TYPE_RUNNER) {
 			System.out.println("Player " + _playerNo + " running to [X: " + data.getX() + ", Y: " + data.getY() + "]");
 			if (_logicMain != null) {
-				// Fill logic main portion here
+				_logicMain.updatePlayerPosition(_player, data.getX(), data.getY());
 			}
 		} else if (data.getType() == GamePacket.TYPE_POSITIONUPDATE) {
 			if (_logicMain != null) {

@@ -30,6 +30,9 @@ public class Character extends Sprite {
 	protected Player player;
 	protected State currentState;
 	protected Control control;
+
+	protected double positionXFinal;
+	protected double positionYFinal;
 	protected double movementSpeed = 100;
 	protected double rotationSpeed = 200;
 	protected double movementDistance = 0;
@@ -226,4 +229,21 @@ public class Character extends Sprite {
 		currentState = s;
 	}
 
+	public void setPositionXFinal(float x) {
+		positionXFinal = x;
+	}
+
+	public void setPositionYFinal(float y) {
+		positionYFinal = y;
+	}
+
+	public double getPositionXFinal() {
+		return positionXFinal;
+	}
+
+	public double getPositionYFinal() {
+		return positionYFinal;
+	}
+	
+	
 }

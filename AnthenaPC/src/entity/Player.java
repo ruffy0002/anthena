@@ -14,6 +14,7 @@ import logic.LogicMain;
 
 public class Player {
 
+	public boolean isMobile;
 	public static final int TYPE_RUNNER = 1;
 	public static final int TYPE_STOMPPER = 2;
 	
@@ -29,6 +30,7 @@ public class Player {
 
 	private PlayerThread thread;
 	protected Control control;
+	private Character character;
 	private String name;
 	private Color color;
 	private int score;
@@ -41,10 +43,11 @@ public class Player {
 	private ColorAdjust colorAdjust;
 
 	public Player(Control control, String name, Color color, ColorAdjust colorAdjust, PlayerThread thread,
-			LogicMain logicMain) {
+			LogicMain logicMain, Boolean isMobile) {
 		Player.all_players_list.add(this);
 		this.player_id = totalPlayer++;
 
+		this.isMobile = isMobile;
 		this.thread = thread;
 		this.logicMain = logicMain;
 		this.name = name;
@@ -118,9 +121,13 @@ public class Player {
 	}
 
 	public Character createSprite() {
-		CharacterSwordMan cm = new CharacterSwordMan(this);
-		cm.setControl(control);
-		return cm;
+		character = new CharacterSwordMan(this);
+		character.setControl(control);
+		return character;
+	}
+	
+	public Character getCharacter(){
+		return character;
 	}
 
 	public void addScore(int i) {

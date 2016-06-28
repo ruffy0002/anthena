@@ -87,7 +87,7 @@ public class LogicMain {
 	public Player addNewRunner() {
 		Control control = getNextControl();
 		if (control != null) {
-			Player player = new Player(control, getNextName(), getNextColor(),getNextColorAdjust(), null, this);
+			Player player = new Player(control, getNextName(), getNextColor(),getNextColorAdjust(), null, this,false);
 			gameLoop.addRunner(player);
 			return player;
 		}
@@ -95,15 +95,7 @@ public class LogicMain {
 	}
 
 	public Player addNewPlayer(PlayerThread pt) {
-		Player player = new Player(null, getNextName(), getNextColor(), getNextColorAdjust(), pt, this);
-		return player;
-	}
-
-
-	public Player addNewAttacker(PlayerThread pt) {
-		Player player = new Player(null, getNextName(), null,getNextColorAdjust(), pt, this);
-		gameLoop.addAttackers(player);
-		hostRoomInterface.addAttacker(player);
+		Player player = new Player(null, getNextName(), getNextColor(), getNextColorAdjust(), pt, this,true);
 		return player;
 	}
 
@@ -122,6 +114,11 @@ public class LogicMain {
 			Player.getAll_players_list().get(player_id).setPlayerType(type);
 			hostRoomInterface.addPlayer(Player.getAll_players_list().get(player_id));
 		}
+	}
+	
+	public void updatePlayerPosition(Player player, float x, float y){
+		player.getCharacter().setPositionXFinal(x);
+		player.getCharacter().setPositionYFinal(y);
 	}
 
 }

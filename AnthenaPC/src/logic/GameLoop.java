@@ -80,7 +80,7 @@ public class GameLoop extends AnimationTimer {
 			Character c = runners.get(i).createSprite();
 			c.setGameBoundary(map_oundary);
 			character.add(c);
-			if(runners.get(i).getControl() ==null){
+			if (runners.get(i).getControl() == null) {
 				mobileCharacter.add(c);
 			}
 		}
@@ -99,9 +99,10 @@ public class GameLoop extends AnimationTimer {
 	}
 
 	private void updateOverlay(double elapsedTime) {
+		rebuildOverlay();
 		overlayElapsedTimeStore += elapsedTime;
 		if (overlayElapsedTimeStore > overlayRefreshRate) {
-			rebuildOverlay();
+			// rebuildOverlay();
 			overlayElapsedTimeStore = 0;
 		}
 	}
@@ -128,7 +129,7 @@ public class GameLoop extends AnimationTimer {
 				}
 			}
 		}
-		
+
 	}
 
 	private void update(double elapsedTime) {
@@ -200,11 +201,13 @@ public class GameLoop extends AnimationTimer {
 	}
 
 	private double statusXPos = 0;
+	private double statusYPos = 0;
 	private double statusMargin = 5;
 
 	private void rebuildOverlay() {
 
 		statusXPos = 0;
+		statusYPos = 0;
 
 		GraphicsContext gc = overlayCanvas.getGraphicsContext2D();
 		gc.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
@@ -215,9 +218,10 @@ public class GameLoop extends AnimationTimer {
 
 			gc.setStroke(Color.RED);
 			if (runners.get(i).isConnected()) {
-				gc.setStroke(Color.GREEN);
+				gc.setStroke(Color.LIGHTGREEN);
 			}
-			gc.strokeText(runners.get(i).getNameLabel().getText(), statusXPos, 10);
+
+			gc.strokeText(runners.get(i).getNameLabel().getText() + " " + runners.get(i).getScore(), statusXPos, 10);
 			statusXPos += runners.get(i).getNameLabel().getMinWidth() + statusMargin;
 			gc.restore();
 		}
