@@ -52,15 +52,15 @@ public class LogicMain {
 	public void hostGame() {
 		masterRoomThread = SocketInterface.broadcastRoom(this);
 	}
-	
-	public void executeAttack(Player player,float x, float y) {
+
+	public void executeAttack(Player player, float x, float y) {
 		gameLoop.createAttack(x, y, player);
 	}
 
 	public Image getDefautCharacterProfile() {
 		return Resources.CHARACTER_ATTACK_PROFILE[0];
 	}
-	
+
 	public Image getDefautAttackProfile() {
 		return Resources.CHARACTER_ATTACK_PROFILE[1];
 	}
@@ -68,7 +68,7 @@ public class LogicMain {
 	public String getNextName() {
 		return Resources.getNextName();
 	}
-	
+
 	private ColorAdjust getNextColorAdjust() {
 		return Resources.getNextColorAdjust();
 	}
@@ -87,7 +87,7 @@ public class LogicMain {
 	public Player addNewRunner() {
 		Control control = getNextControl();
 		if (control != null) {
-			Player player = new Player(control, getNextName(), getNextColor(),getNextColorAdjust(), null, this,false);
+			Player player = new Player(control, getNextName(), getNextColor(), getNextColorAdjust(), null, this, false);
 			gameLoop.addRunner(player);
 			return player;
 		}
@@ -95,7 +95,7 @@ public class LogicMain {
 	}
 
 	public Player addNewPlayer(PlayerThread pt) {
-		Player player = new Player(null, getNextName(), getNextColor(), getNextColorAdjust(), pt, this,true);
+		Player player = new Player(null, getNextName(), getNextColor(), getNextColorAdjust(), pt, this, true);
 		return player;
 	}
 
@@ -115,10 +115,19 @@ public class LogicMain {
 			hostRoomInterface.addPlayer(Player.getAll_players_list().get(player_id));
 		}
 	}
-	
-	public void updatePlayerPosition(Player player, float x, float y){
+
+	public void updatePlayerPosition(Player player, float x, float y) {
 		player.getCharacter().setPositionXFinal(x);
 		player.getCharacter().setPositionYFinal(y);
+	}
+
+	public boolean isAllPlayerReady() {
+		for (int i = 0; i < Player.getAll_players_list().size(); i++) {
+			if (Player.getAll_players_list().get(i).getStatus() == Player.NOT_READY) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

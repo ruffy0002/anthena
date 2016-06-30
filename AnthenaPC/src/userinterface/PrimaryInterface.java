@@ -115,8 +115,10 @@ public class PrimaryInterface extends Application {
 						}
 					} else if (gs instanceof GameRoomInterface) {
 						if (result == 1) {
-							stage.setScene(scenes[3].getScene());
-							logic.startGameLoop();
+							if(logic.isAllPlayerReady()){
+								stage.setScene(scenes[3].getScene());
+								logic.startGameLoop();
+							}
 						}
 					} else if (gs instanceof SettingsInterface) {
 						if (result != -1) {
