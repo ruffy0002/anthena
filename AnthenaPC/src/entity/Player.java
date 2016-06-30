@@ -53,7 +53,7 @@ public class Player {
 		this.name = name;
 		this.control = control;
 		this.color = color;
-		this.status = NOT_READY;
+		this.status = READY;
 
 		health = 3;
 		nameLabel = new Label(name);
