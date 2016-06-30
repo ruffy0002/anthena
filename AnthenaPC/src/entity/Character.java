@@ -10,6 +10,8 @@ import javafx.scene.control.Label;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.Bloom;
 import javafx.scene.effect.BlurType;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.ColorInput;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Shadow;
 import javafx.scene.image.Image;
@@ -40,8 +42,8 @@ public class Character extends Sprite {
 	protected boolean isAlive = true;
 	protected boolean isFlipped = false;
 	protected boolean isImmune = false;
-	protected double immuneTime = 3;
-	protected double immuneFlashSpeed = 1;
+	protected double immuneTime = 2;
+	protected double immuneFlashSpeed = 3;
 	protected int bloomDirection = 1;
 	private double immuneTimeStore = 0;
 	protected boolean hasFinishDeathAnimation = false;
@@ -71,6 +73,7 @@ public class Character extends Sprite {
 	DropShadow dropShadow;
 	Shadow shadow;
 	Bloom bloom;
+	ColorAdjust ca;
 
 	public Character(Player p) {
 		currentState = State.IDLE;
@@ -80,10 +83,13 @@ public class Character extends Sprite {
 		dropShadow.setOffsetX(-5.0);
 		dropShadow.setOffsetY(3.0);
 		dropShadow.setColor(Color.BLACK);
-		shadow = new Shadow(BlurType.GAUSSIAN, Color.BLACK, 3);
+		shadow = new Shadow(BlurType.GAUSSIAN, Color.RED, 3);
 		bloom = new Bloom();
 		bloom.setThreshold(0.3);
-		bloom.setInput(dropShadow);
+		ca = new ColorAdjust();
+		ca.setHue(0.8);
+		ca.setSaturation(1.0);
+		bloom.setInput(ca);
 	}
 
 	public void init() {

@@ -100,8 +100,8 @@ public class PlayerThread implements Runnable {
 		if (data.getType() == GamePacket.TYPE_STOMPER) {
 			System.out.println("Player " + _playerNo + " stomps [X: " + data.getX() + ", Y: " + data.getY() + "]");
 			if (_logicMain != null) {
-				//_logicMain.executeAttack(_player,data.getX(), data.getY());
-				_logicMain.updatePlayerPosition(_player, data.getX(), data.getY());
+				_logicMain.executeAttack(_player,data.getX(), data.getY());
+				//_logicMain.updatePlayerPosition(_player, data.getX(), data.getY());
 			}
 		} else if (data.getType() == GamePacket.TYPE_RUNNER) {
 			System.out.println("Player " + _playerNo + " running to [X: " + data.getX() + ", Y: " + data.getY() + "]");

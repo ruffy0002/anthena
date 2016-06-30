@@ -16,7 +16,7 @@ public class Player {
 
 	public boolean isMobile;
 	public static final int TYPE_RUNNER = 1;
-	public static final int TYPE_STOMPPER = 2;
+	public static final int TYPE_STOMPPER = 0;
 	
 	public static final int NOT_READY = 0;
 	public static final int READY = 1;
