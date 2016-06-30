@@ -108,10 +108,18 @@ public class PlayerThread implements Runnable {
 				_logicMain.updatePlayerPosition(_player, data.getX(), data.getY());
 			}
 		} else if (data.getType() == GamePacket.TYPE_POSITIONUPDATE) {
-			if (_logicMain != null) {
-				// Fill logic main portion here
-			}
-		} else {
+            if (_logicMain != null) {
+                // Fill logic main portion here
+            }
+        } else if (data.getType() == GamePacket.TYPE_READY) {
+            if (_logicMain != null) {
+                // Fill logic main portion here
+            }
+        } else if (data.getType() == GamePacket.TYPE_UNREADY) {
+            if (_logicMain != null) {
+                // Fill logic main portion here
+            }
+        } else {
 			System.out.println("Data sent from client not recognized!");
 		}
 	}
