@@ -120,6 +120,10 @@ public class LogicMain {
 		player.getCharacter().setPositionXFinal(x);
 		player.getCharacter().setPositionYFinal(y);
 	}
+	
+	public void updatePlayerStatus(Player player){
+		hostRoomInterface.updatePlayerStatus(player);
+	}
 
 	public boolean isAllPlayerReady() {
 		for (int i = 0; i < Player.getAll_players_list().size(); i++) {
