@@ -121,6 +121,8 @@ public class PrimaryInterface extends Application {
 							if(logic.isAllPlayerReady()){
 								stage.setScene(scenes[3].getScene());
 								logic.startGameLoop();
+							}else{
+								hostRoomInterface.showNotReady();
 							}
 						}
 					} else if (gs instanceof SettingsInterface) {

@@ -3,6 +3,9 @@ package userinterface;
 import java.util.TreeMap;
 
 import entity.Player;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
@@ -20,19 +23,26 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 import logic.LogicMain;
 
 public class GameRoomInterface implements GameScene {
 
 	private static Scene scene;
 	private LogicMain logic;
-	private BorderPane _mainComponent;
+	private StackPane _mainComponent;
 	private StackPane _masterStackPane;
 	private StackPane _fixedStackPane;
+	private StackPane statusMessageFrame;
 	private VBox leftVBox;
 	private VBox rightVBox;
 	private ScreenInformation _screenInformation;
-	private TreeMap<Integer, HBox> playersFace = new TreeMap<Integer, HBox>();
+	private TreeMap<Integer, StackPane> playersFace = new TreeMap<Integer, StackPane>();
+
+	public static final Font FONT_LABEL_READY = new Font(PrimaryInterface.FONT_TITLE_LABLES, 40);
+	public static final Font FONT_LABEL_MSG = new Font(PrimaryInterface.FONT_TITLE_LABLES, 50);
 
 	public static GameRoomInterface getStartScene(LogicMain logic, ScreenInformation _screenInformation) {
 		GameRoomInterface gri = new GameRoomInterface(logic, _screenInformation);
@@ -51,50 +61,64 @@ public class GameRoomInterface implements GameScene {
 		_fixedStackPane.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
 		_fixedStackPane.setMaxSize(_screenInformation.get_width(), _screenInformation.get_height());
 		_fixedStackPane.setMinSize(_screenInformation.get_width(), _screenInformation.get_height());
-		
-		
+
 		leftVBox = new VBox();
 		leftVBox.setPrefWidth(240);
 		rightVBox = new VBox();
 		rightVBox.setPrefWidth(240);
-		
+
 		StackPane leftTeamInfo = new StackPane();
 		leftTeamInfo.setPrefSize(240, 40);
 		leftTeamInfo.setMaxSize(240, 40);
 		leftTeamInfo.setMinSize(240, 40);
 		leftTeamInfo.setStyle("-fx-background-color:rgba(50,200,50,0.8)");
-		
+
 		Label leftBoxDesc = new Label("Defense Team");
 		leftBoxDesc.setFont(PrimaryInterface.FONT_LABEL);
 		leftBoxDesc.setTextFill(Color.WHITE);
 		leftTeamInfo.getChildren().add(leftBoxDesc);
-		
+
 		leftVBox.getChildren().add(leftTeamInfo);
-		
+
 		StackPane rightTeamInfo = new StackPane();
 		rightTeamInfo.setPrefSize(240, 40);
 		rightTeamInfo.setMaxSize(240, 40);
 		rightTeamInfo.setMinSize(240, 40);
 		rightTeamInfo.setStyle("-fx-background-color:rgba(200,50,50,0.8)");
-		
+
 		Label rightBoxDesc = new Label("Attack Team");
 		rightBoxDesc.setFont(PrimaryInterface.FONT_LABEL);
 		rightBoxDesc.setTextFill(Color.WHITE);
 		rightTeamInfo.getChildren().add(rightBoxDesc);
-		
+
 		rightVBox.getChildren().add(rightTeamInfo);
 
-		_mainComponent = new BorderPane();
+		_mainComponent = new StackPane();
 		_mainComponent.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
-		_mainComponent.setStyle("-fx-background-color:black");
+
+		statusMessageFrame = new StackPane();
+		statusMessageFrame.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
+		statusMessageFrame.setOpacity(0);
+
+		Label msg = new Label("Not All Players Are Ready");
+		msg.setFont(FONT_LABEL_MSG);
+		msg.setStyle("-fx-text-fill:rgba(255,255,255,1); -fx-background-color:rgba(0,0,0,1)");
+		statusMessageFrame.getChildren().add(msg);
+
+		BorderPane _mainBroderPane = new BorderPane();
+		_mainBroderPane.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
+		_mainBroderPane.setStyle("-fx-background-color:black");
 
 		Label l = new Label("Choose Your Team");
 		l.setStyle("-fx-text-fill:white");
 
-		_mainComponent.setLeft(leftVBox);
-		_mainComponent.setRight(rightVBox);
+		_mainBroderPane.setLeft(leftVBox);
+		_mainBroderPane.setRight(rightVBox);
 
-		_mainComponent.setCenter(l);
+		_mainBroderPane.setCenter(l);
+
+		_mainComponent.getChildren().add(_mainBroderPane);
+		_mainComponent.getChildren().add(statusMessageFrame);
 
 		_fixedStackPane.getChildren().add(_mainComponent);
 		_masterStackPane.getChildren().add(_fixedStackPane);
@@ -126,20 +150,33 @@ public class GameRoomInterface implements GameScene {
 		return -1;
 	}
 
-	public HBox createNewRunnnerInterface(Player p) {
+	public StackPane createNewRunnnerInterface(Player p) {
 		double totalHeight = 80;
 		double totalWidth = 240;
+
+		StackPane masterSp = new StackPane();
+		masterSp.setPrefSize(totalWidth, totalHeight);
+
+		StackPane readyFrame = new StackPane();
+		readyFrame.setPrefSize(totalWidth, totalHeight);
+		readyFrame.setStyle("-fx-background-color:rgba(0,0,0,0.5)");
+
+		Label readyLabel = new Label("READY");
+		readyLabel.setStyle("-fx-text-fill:rgba(150,0,0,0.8)");
+		readyLabel.setFont(FONT_LABEL_READY);
+		readyLabel.setRotate(-20);
+		readyFrame.getChildren().add(readyLabel);
 
 		HBox mainBox = new HBox();
 		mainBox.setStyle("-fx-background-color:white");
 		mainBox.setPrefWidth(totalWidth);
 		mainBox.setPrefHeight(totalHeight);
 
-		StackPane sp = new StackPane();
-		sp.setMinHeight(totalHeight);
-		sp.setMaxHeight(totalHeight);
-		sp.setMinWidth(totalHeight);
-		sp.setMaxWidth(totalHeight);
+		StackPane imageStackPane = new StackPane();
+		imageStackPane.setMinHeight(totalHeight);
+		imageStackPane.setMaxHeight(totalHeight);
+		imageStackPane.setMinWidth(totalHeight);
+		imageStackPane.setMaxWidth(totalHeight);
 
 		int imageMarginAround = 5;
 
@@ -147,7 +184,7 @@ public class GameRoomInterface implements GameScene {
 		imageView.setImage(logic.getDefautCharacterProfile());
 		imageView.setFitWidth(totalHeight - 2 * imageMarginAround);
 		imageView.setFitHeight(totalHeight - 2 * imageMarginAround);
-		sp.getChildren().add(imageView);
+		imageStackPane.getChildren().add(imageView);
 
 		VBox informationBox = new VBox();
 		informationBox.setMinHeight(totalHeight);
@@ -162,15 +199,30 @@ public class GameRoomInterface implements GameScene {
 		Label type = new Label("SwordMan");
 		informationBox.getChildren().add(type);
 
-		mainBox.getChildren().add(sp);
+		mainBox.getChildren().add(imageStackPane);
 		mainBox.getChildren().add(informationBox);
 
-		return mainBox;
+		masterSp.getChildren().add(mainBox);
+		masterSp.getChildren().add(readyFrame);
+		return masterSp;
 	}
 
-	public HBox createNewAttackerInterface(Player p) {
+	public StackPane createNewAttackerInterface(Player p) {
 		double totalHeight = 80;
 		double totalWidth = 280;
+
+		StackPane masterSp = new StackPane();
+		masterSp.setPrefSize(totalWidth, totalHeight);
+
+		StackPane readyFrame = new StackPane();
+		readyFrame.setPrefSize(totalWidth, totalHeight);
+		readyFrame.setStyle("-fx-background-color:rgba(0,0,0,0.5)");
+
+		Label readyLabel = new Label("READY");
+		readyLabel.setStyle("-fx-text-fill:rgba(150,0,0,0.8)");
+		readyLabel.setFont(FONT_LABEL_READY);
+		readyLabel.setRotate(-20);
+		readyFrame.getChildren().add(readyLabel);
 
 		HBox mainBox = new HBox();
 		mainBox.setStyle("-fx-background-color:white");
@@ -207,7 +259,10 @@ public class GameRoomInterface implements GameScene {
 		mainBox.getChildren().add(sp);
 		mainBox.getChildren().add(informationBox);
 
-		return mainBox;
+		masterSp.getChildren().add(mainBox);
+		masterSp.getChildren().add(readyFrame);
+
+		return masterSp;
 	}
 
 	public void addAttacker(Player player) {
@@ -215,11 +270,11 @@ public class GameRoomInterface implements GameScene {
 			@Override
 			public void run() {
 				if (playersFace.containsKey(player.getPlayer_id())) {
-					HBox temp = playersFace.get(player.getPlayer_id());
+					StackPane temp = playersFace.get(player.getPlayer_id());
 					leftVBox.getChildren().remove(temp);
 					rightVBox.getChildren().remove(temp);
 				}
-				HBox temp = createNewAttackerInterface(player);
+				StackPane temp = createNewAttackerInterface(player);
 				playersFace.put(player.getPlayer_id(), temp);
 				rightVBox.getChildren().add(temp);
 			}
@@ -231,11 +286,11 @@ public class GameRoomInterface implements GameScene {
 			@Override
 			public void run() {
 				if (playersFace.containsKey(player.getPlayer_id())) {
-					HBox temp = playersFace.get(player.getPlayer_id());
+					StackPane temp = playersFace.get(player.getPlayer_id());
 					leftVBox.getChildren().remove(temp);
 					rightVBox.getChildren().remove(temp);
 				}
-				HBox temp = createNewRunnnerInterface(player);
+				StackPane temp = createNewRunnnerInterface(player);
 				playersFace.put(player.getPlayer_id(), temp);
 				leftVBox.getChildren().add(temp);
 			}
@@ -248,6 +303,24 @@ public class GameRoomInterface implements GameScene {
 		} else if (player.getPlayerType() == Player.TYPE_STOMPPER) {
 			addAttacker(player);
 		}
+		updatePlayerStatus(player);
+	}
+
+	public void updatePlayerStatus(Player player) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				if (playersFace.containsKey(player.getPlayer_id())) {
+					StackPane temp = playersFace.get(player.getPlayer_id());
+					StackPane temp2 = (StackPane) temp.getChildren().get(1);
+					if (player.getStatus() == Player.READY) {
+						temp2.setOpacity(1);
+					} else {
+						temp2.setOpacity(0);
+					}
+				}
+			}
+		});
 	}
 
 	public void updateSceneSize(ScreenInformation _screenInformation) {
@@ -259,6 +332,26 @@ public class GameRoomInterface implements GameScene {
 		double sy = _screenInformation.get_height() / 600;
 		_mainComponent.setScaleX(sx);
 		_mainComponent.setScaleY(sy);
+	}
+
+	private double msgOpacity = 1;
+	private Timeline timeline;
+
+	public void showNotReady() {
+		statusMessageFrame.setOpacity(1);
+		msgOpacity = 1;
+		if (timeline != null) {
+			timeline.stop();
+			timeline = null;
+		}
+		timeline = new Timeline(new KeyFrame(Duration.millis(14), ae -> doSomething()));
+		timeline.setCycleCount(100);
+		timeline.play();
+	}
+
+	private void doSomething() {
+		msgOpacity = msgOpacity - 0.01;
+		statusMessageFrame.setOpacity(msgOpacity);
 	}
 
 }
