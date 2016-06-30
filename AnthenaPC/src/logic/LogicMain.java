@@ -2,6 +2,8 @@ package logic;
 
 import java.util.ArrayList;
 
+import com.main.anthenaandroid.GamePacket;
+
 import connection.PlayerThread;
 import connection.SocketInterface;
 import connection.hostRoomThread;
