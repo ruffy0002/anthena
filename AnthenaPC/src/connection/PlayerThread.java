@@ -124,6 +124,11 @@ public class PlayerThread implements Runnable {
 		}
 	}
 
+	public void sendGameStart () {
+	    GamePacket gameStartPacket = new GamePacket(0,0,GamePacket.TYPE_GAMESTART);
+	    sendData(gameStartPacket);
+	}
+	
 	public boolean sendData(GamePacket obj) {
 		try {
 			dataOutputStream.writeObject(obj);

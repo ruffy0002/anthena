@@ -31,6 +31,17 @@ public class hostRoomThread implements Runnable {
 	}
 
 	/**
+	 * Sends game start packet to all connected clients
+	 */
+	public void sendStartGame () {
+	    for(int i = 0; i < PLAYER_NO; i++) {
+	        if(playerThreads[i] != null) {
+	            playerThreads[i].sendGameStart();
+	        }
+	    }
+	}
+	
+	/**
 	 * Checks if a player is connected
 	 * 
 	 * @param player - int corresponding to the player's number
