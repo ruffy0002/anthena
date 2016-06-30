@@ -77,8 +77,8 @@ public class AttackManager {
 	}
 
 	public void createAttack(float x, float y, Player player) {
-		double x1 = 800*x;
-		double y1 =600*y;
+		double x1 = 800 * x;
+		double y1 = 600 * y;
 		Attack att = new Attack(x1, y1, player);
 		if (inBounds(att)) {
 			attacks.add(att);

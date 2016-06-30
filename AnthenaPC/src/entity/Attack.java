@@ -36,7 +36,6 @@ public class Attack extends Sprite {
 		this.player = player;
 		if (player != null) {
 			paintEffect = player.getPaintEffect();
-			System.out.println("asd");
 		} else {
 			paintEffect = Resources.getNextColorAdjust();
 		}
