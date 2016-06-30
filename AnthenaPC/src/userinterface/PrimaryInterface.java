@@ -12,6 +12,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import logic.GameLoop;
@@ -30,6 +31,8 @@ public class PrimaryInterface extends Application {
 	public static ScreenInformation _screenInformation;
 
 	public static final String FONT_TITLE_LABLES = "lucida sans";
+	private static final int FONT_SIZE = 32;
+	public static final Font FONT_LABEL = new Font(PrimaryInterface.FONT_TITLE_LABLES, FONT_SIZE);
 	private GameScene scenes[] = new GameScene[4];
 	private SettingsInterface settingsInterface;
 	private GameRoomInterface hostRoomInterface;

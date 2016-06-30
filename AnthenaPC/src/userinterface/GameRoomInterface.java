@@ -54,13 +54,41 @@ public class GameRoomInterface implements GameScene {
 		
 		
 		leftVBox = new VBox();
+		leftVBox.setPrefWidth(240);
 		rightVBox = new VBox();
+		rightVBox.setPrefWidth(240);
+		
+		StackPane leftTeamInfo = new StackPane();
+		leftTeamInfo.setPrefSize(240, 40);
+		leftTeamInfo.setMaxSize(240, 40);
+		leftTeamInfo.setMinSize(240, 40);
+		leftTeamInfo.setStyle("-fx-background-color:rgba(50,200,50,0.8)");
+		
+		Label leftBoxDesc = new Label("Defense Team");
+		leftBoxDesc.setFont(PrimaryInterface.FONT_LABEL);
+		leftBoxDesc.setTextFill(Color.WHITE);
+		leftTeamInfo.getChildren().add(leftBoxDesc);
+		
+		leftVBox.getChildren().add(leftTeamInfo);
+		
+		StackPane rightTeamInfo = new StackPane();
+		rightTeamInfo.setPrefSize(240, 40);
+		rightTeamInfo.setMaxSize(240, 40);
+		rightTeamInfo.setMinSize(240, 40);
+		rightTeamInfo.setStyle("-fx-background-color:rgba(200,50,50,0.8)");
+		
+		Label rightBoxDesc = new Label("Attack Team");
+		rightBoxDesc.setFont(PrimaryInterface.FONT_LABEL);
+		rightBoxDesc.setTextFill(Color.WHITE);
+		rightTeamInfo.getChildren().add(rightBoxDesc);
+		
+		rightVBox.getChildren().add(rightTeamInfo);
 
 		_mainComponent = new BorderPane();
 		_mainComponent.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
 		_mainComponent.setStyle("-fx-background-color:black");
 
-		Label l = new Label("lol");
+		Label l = new Label("Choose Your Team");
 		l.setStyle("-fx-text-fill:white");
 
 		_mainComponent.setLeft(leftVBox);
