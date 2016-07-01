@@ -15,7 +15,7 @@ import logic.LogicMain;
 import com.main.anthenaandroid.BroadcastPacket;
 
 public class hostRoomThread implements Runnable {
-    private static final int PLAYER_NO = 4;
+    private static final int PLAYER_NO = 8;
     private static final int SOCKET_NOT_REPEATED = -1;
     
 	public int portNo;
