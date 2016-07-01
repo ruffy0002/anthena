@@ -1,5 +1,6 @@
 package userinterface;
 
+import entity.Player;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -8,6 +9,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import logic.LogicMain;
 
@@ -15,7 +18,7 @@ public class GameInterface implements GameScene {
 
 	private LogicMain logic;
 	private ScreenInformation _screenInformation;
-	private Canvas overlayCanvas;
+	private HBox overlayBox;
 	private Canvas mainCanvas;
 	private Canvas backgroundCanvas;
 	private Scene scene;
@@ -56,15 +59,24 @@ public class GameInterface implements GameScene {
 		
 		root = new Group();
 		scene = new Scene(_masterStackPane);
-		overlayCanvas = new Canvas(screenBounds.get_width(), screenBounds.get_height());
+		
+		buildOverlayBox(screenBounds);
+		
 		mainCanvas = new Canvas(screenBounds.get_width(), screenBounds.get_height());
 		backgroundCanvas = new Canvas(screenBounds.get_width(), screenBounds.get_height());
 		root.getChildren().add(backgroundCanvas);
 		root.getChildren().add(mainCanvas);
-		root.getChildren().add(overlayCanvas);
+		root.getChildren().add(overlayBox);
 		root.getChildren().add(_waitInformation);
 		_fixedStackPane.getChildren().add(root);
 		_masterStackPane.getChildren().add(_fixedStackPane);
+	}
+
+	private void buildOverlayBox(ScreenInformation screenBounds) {
+		overlayBox = new HBox();
+		overlayBox.setPrefSize(screenBounds.get_width(), screenBounds.get_height());
+		
+		
 	}
 
 	public void initControls(EventHandler<KeyEvent> event) {
@@ -97,12 +109,19 @@ public class GameInterface implements GameScene {
 		return backgroundCanvas;
 	}
 
-	public Canvas getOverlayCanvas() {
-		return overlayCanvas;
+	public HBox getOverlayBox() {
+		return overlayBox;
 	}
 	
 	public StackPane getWaitInformationPane(){
 		return _waitInformation;
+	}
+	
+	public static HBox createFace(Player p){
+		HBox h = new HBox();
+		Label l = p.getNameLabel();
+		h.getChildren().add(l);
+		return h;
 	}
 
 }

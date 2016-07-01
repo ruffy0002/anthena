@@ -26,7 +26,7 @@ public class Player {
 	private static ArrayList<Player> all_players_list = new ArrayList<Player>();
 
 	private int player_id;
-	private int playerType = -1;
+	private int playerType = TYPE_RUNNER;
 	private int status;
 
 	private PlayerThread thread;

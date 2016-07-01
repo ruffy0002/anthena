@@ -17,6 +17,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -38,7 +41,7 @@ public class GameLoop extends AnimationTimer {
 
 	private Canvas mainCanvas;
 	private Canvas backgroundCanvas;
-	private Canvas overlayCanvas;
+	private HBox overlayGridPane;
 
 	private GraphicsContext graphicContext;
 	private Controller controller;
@@ -59,7 +62,7 @@ public class GameLoop extends AnimationTimer {
 		this.controller = controller;
 		this.mainCanvas = gi.getMainCanvas();
 		this.backgroundCanvas = gi.getBackgroundCanvas();
-		this.overlayCanvas = gi.getOverlayCanvas();
+		this.overlayGridPane = gi.getOverlayBox();
 
 		drawMap();
 		graphicContext = mainCanvas.getGraphicsContext2D();
@@ -99,7 +102,7 @@ public class GameLoop extends AnimationTimer {
 	}
 
 	private void updateOverlay(double elapsedTime) {
-		rebuildOverlay();
+		//rebuildOverlay();
 		overlayElapsedTimeStore += elapsedTime;
 		if (overlayElapsedTimeStore > overlayRefreshRate) {
 			// rebuildOverlay();
@@ -205,39 +208,42 @@ public class GameLoop extends AnimationTimer {
 	private double statusMargin = 5;
 
 	private void rebuildOverlay() {
-
+		System.out.println("asd");
 		statusXPos = 0;
 		statusYPos = 0;
 
-		GraphicsContext gc = overlayCanvas.getGraphicsContext2D();
-		gc.clearRect(0, 0, overlayCanvas.getWidth(), overlayCanvas.getHeight());
-
-		for (int i = 0; i < runners.size(); i++) {
-			gc.save();
-			gc.setGlobalBlendMode(BlendMode.SRC_OVER);
-
-			gc.setStroke(Color.RED);
-			if (runners.get(i).isConnected()) {
-				gc.setStroke(Color.LIGHTGREEN);
+		for (int i = 0; i < Player.getAll_players_list().size(); i++) {
+			if (Player.getAll_players_list().get(i).getPlayerType() == Player.TYPE_RUNNER) {
+				overlayGridPane.getChildren().add(GameInterface.createFace(Player.getAll_players_list().get(i)));
+			} else if (Player.getAll_players_list().get(i).getPlayerType() == Player.TYPE_STOMPPER) {
+				overlayGridPane.getChildren().add(GameInterface.createFace(Player.getAll_players_list().get(i)));
 			}
-
-			gc.strokeText(runners.get(i).getNameLabel().getText() + " " + runners.get(i).getScore(), statusXPos, 10);
-			statusXPos += runners.get(i).getNameLabel().getMinWidth() + statusMargin;
-			gc.restore();
 		}
 
-		for (int i = 0; i < attackers.size(); i++) {
-			gc.save();
-			gc.setGlobalBlendMode(BlendMode.SRC_OVER);
-			gc.setStroke(Color.RED);
-			if (attackers.get(i).isConnected()) {
-				gc.setStroke(Color.GREEN);
-			}
-			gc.strokeText(attackers.get(i).getNameLabel().getText(), statusXPos, 10);
-			statusXPos += attackers.get(i).getNameLabel().getMinWidth() + statusMargin;
-			gc.restore();
-		}
 
+		/*
+		 * GraphicsContext gc = overlayCanvas.getGraphicsContext2D();
+		 * gc.clearRect(0, 0, overlayCanvas.getWidth(),
+		 * overlayCanvas.getHeight());
+		 * 
+		 * for (int i = 0; i < runners.size(); i++) { gc.save();
+		 * gc.setGlobalBlendMode(BlendMode.SRC_OVER);
+		 * 
+		 * gc.setStroke(Color.RED); if (runners.get(i).isConnected()) {
+		 * gc.setStroke(Color.LIGHTGREEN); }
+		 * 
+		 * gc.strokeText(runners.get(i).getNameLabel().getText() + " " +
+		 * runners.get(i).getScore(), statusXPos, 10); statusXPos +=
+		 * runners.get(i).getNameLabel().getMinWidth() + statusMargin;
+		 * gc.restore(); }
+		 * 
+		 * for (int i = 0; i < attackers.size(); i++) { gc.save();
+		 * gc.setGlobalBlendMode(BlendMode.SRC_OVER); gc.setStroke(Color.RED);
+		 * if (attackers.get(i).isConnected()) { gc.setStroke(Color.GREEN); }
+		 * gc.strokeText(attackers.get(i).getNameLabel().getText(), statusXPos,
+		 * 10); statusXPos += attackers.get(i).getNameLabel().getMinWidth() +
+		 * statusMargin; gc.restore(); }
+		 */
 	}
 
 	private void updateFrameRate(double elapsedTime) {
