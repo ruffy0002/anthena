@@ -127,7 +127,6 @@ public class LogicMain {
 		Control control = getNextControl();
 		if (control != null) {
 			Player player = new Player(control, getNextName(), getNextColor(), getNextColorAdjust(), null, this, false);
-			gameLoop.addRunner(player);
 			return player;
 		}
 		return null;

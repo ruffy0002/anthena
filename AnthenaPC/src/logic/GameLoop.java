@@ -208,7 +208,6 @@ public class GameLoop extends AnimationTimer {
 	private double statusMargin = 5;
 
 	private void rebuildOverlay() {
-		System.out.println("asd");
 		statusXPos = 0;
 		statusYPos = 0;
 
