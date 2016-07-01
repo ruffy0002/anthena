@@ -5,6 +5,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
@@ -20,6 +21,7 @@ public class GameInterface implements GameScene {
 	private Scene scene;
 	private StackPane _masterStackPane;
 	private StackPane _fixedStackPane;
+	private StackPane _waitInformation;
 	private Group root;
 
 	public static GameInterface getInstance(LogicMain logic, ScreenInformation _screenInformation) {
@@ -37,6 +39,17 @@ public class GameInterface implements GameScene {
 	public void init(ScreenInformation screenBounds) {
 		_masterStackPane = new StackPane();
 		_fixedStackPane = new StackPane();
+		_waitInformation = new StackPane();
+		
+		_waitInformation.setPrefSize(screenBounds.get_width(), screenBounds.get_height());
+		_waitInformation.setMinSize(screenBounds.get_width(), screenBounds.get_height());
+		_waitInformation.setMaxSize(screenBounds.get_width(), screenBounds.get_height());
+		_waitInformation.setStyle("-fx-background-color:rgba(0,0,0, 0.8)");
+		
+		Label labelWait = new Label("Waiting for all players....");
+		labelWait.setStyle("-fx-text-fill:rgba(255,255,255,0.9)");
+		_waitInformation.getChildren().add( labelWait);
+		
 		_fixedStackPane.setPrefSize(screenBounds.get_width(), screenBounds.get_height());
 		_fixedStackPane.setMinSize(screenBounds.get_width(), screenBounds.get_height());
 		_fixedStackPane.setMaxSize(screenBounds.get_width(), screenBounds.get_height());
@@ -49,6 +62,7 @@ public class GameInterface implements GameScene {
 		root.getChildren().add(backgroundCanvas);
 		root.getChildren().add(mainCanvas);
 		root.getChildren().add(overlayCanvas);
+		root.getChildren().add(_waitInformation);
 		_fixedStackPane.getChildren().add(root);
 		_masterStackPane.getChildren().add(_fixedStackPane);
 	}
@@ -85,6 +99,10 @@ public class GameInterface implements GameScene {
 
 	public Canvas getOverlayCanvas() {
 		return overlayCanvas;
+	}
+	
+	public StackPane getWaitInformationPane(){
+		return _waitInformation;
 	}
 
 }

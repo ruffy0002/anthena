@@ -158,6 +158,7 @@ public class GameRoomInterface implements GameScene {
 		masterSp.setPrefSize(totalWidth, totalHeight);
 
 		StackPane readyFrame = new StackPane();
+		readyFrame.setOpacity(0);
 		readyFrame.setPrefSize(totalWidth, totalHeight);
 		readyFrame.setStyle("-fx-background-color:rgba(0,0,0,0.5)");
 
@@ -215,6 +216,7 @@ public class GameRoomInterface implements GameScene {
 		masterSp.setPrefSize(totalWidth, totalHeight);
 
 		StackPane readyFrame = new StackPane();
+		readyFrame.setOpacity(0);
 		readyFrame.setPrefSize(totalWidth, totalHeight);
 		readyFrame.setStyle("-fx-background-color:rgba(0,0,0,0.5)");
 

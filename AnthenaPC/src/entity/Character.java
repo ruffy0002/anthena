@@ -250,12 +250,12 @@ public class Character extends Sprite {
 		currentState = s;
 	}
 
-	public void setPositionXFinal(float x) {
-		positionXFinal = x;
+	public void setPositionXFinal(double xPos) {
+		positionXFinal = xPos;
 	}
 
-	public void setPositionYFinal(float y) {
-		positionYFinal = y;
+	public void setPositionYFinal(double yPos) {
+		positionYFinal = yPos;
 	}
 
 	public double getPositionXFinal() {

@@ -20,6 +20,7 @@ public class Player {
 	
 	public static final int NOT_READY = 0;
 	public static final int READY = 1;
+	public static final int READY_TO_GO = 2;
 
 	private static int totalPlayer = 0;
 	private static ArrayList<Player> all_players_list = new ArrayList<Player>();
@@ -155,5 +156,9 @@ public class Player {
 
 	public ColorAdjust getPaintEffect() {
 		return colorAdjust;
+	}
+	
+	public void sendStandBy(){
+		thread.sendGameStart();
 	}
 }
