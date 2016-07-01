@@ -168,7 +168,7 @@ public class PrimaryInterface extends Application {
 
 	private GameScene initGameRoomScene(LogicMain logic) {
 		hostRoomInterface = GameRoomInterface.getStartScene(logic, _screenInformation);
-		logic.setHostRoomInterface(hostRoomInterface);
+		logic.setGameRoomInterface(hostRoomInterface);
 		hostRoomInterface.initControls(initControlsForStartScene(hostRoomInterface));
 		return hostRoomInterface;
 	}
@@ -176,7 +176,7 @@ public class PrimaryInterface extends Application {
 	private GameScene initGameScene() {
 		GameInterface gi = GameInterface.getInstance(logic, _screenInformation);
 		initControlsForGameScene(gi.getScene());
-		logic.initGameLoop(gi, controller, resources);
+		logic.initGameLoop(gi, controller, resources,gi);
 		return gi;
 	}
 

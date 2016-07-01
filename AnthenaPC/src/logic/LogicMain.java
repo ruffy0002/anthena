@@ -1,6 +1,8 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import com.main.anthenaandroid.GamePacket;
 
@@ -22,6 +24,7 @@ public class LogicMain {
 
 	private GameLoop gameLoop;
 	private Resources resources;
+	private GameInterface gameInterface;
 	private GameRoomInterface hostRoomInterface;
 	private hostRoomThread masterRoomThread;
 	private ArrayList<Player> playerList = new ArrayList<Player>();
@@ -35,20 +38,47 @@ public class LogicMain {
 		this.resources = resources;
 	}
 
-	public void initGameLoop(GameInterface gi, Controller controller, Resources resources) {
+	public void initGameLoop(GameInterface gi, Controller controller, Resources resources,
+			GameInterface gameInterface) {
+		this.gameInterface = gameInterface;
 		gameLoop = new GameLoop(gi, controller, resources);
 	}
 
 	public void startGameLoop() {
+		Queue<Player> tempQ = new LinkedList<Player>();
 		for (int i = 0; i < Player.getAll_players_list().size(); i++) {
 			if (Player.getAll_players_list().get(i).getPlayerType() == Player.TYPE_RUNNER) {
 				gameLoop.addRunner(Player.getAll_players_list().get(i));
 			} else if (Player.getAll_players_list().get(i).getPlayerType() == Player.TYPE_STOMPPER) {
 				gameLoop.addAttackers(Player.getAll_players_list().get(i));
 			}
+			if (Player.getAll_players_list().get(i).isMobile) {
+				Player.getAll_players_list().get(i).sendStandBy();
+				tempQ.offer(Player.getAll_players_list().get(i));
+			}
 		}
 		gameLoop.initGameLoop();
-		gameLoop.start();
+		waitCheckForPlayers(tempQ);
+	}
+
+	private void waitCheckForPlayers(Queue<Player> tempQ) {
+		Thread thread = new Thread() {
+			public void run() {
+				while (tempQ.size() > 0) {
+					Player p = tempQ.poll();
+					if (p.getStatus() != Player.READY_TO_GO) {
+						tempQ.offer(p);
+						try {
+							Thread.sleep(300);
+						} catch (InterruptedException e) {
+						}
+					}
+				}
+				gameInterface.getWaitInformationPane().setOpacity(0);
+				gameLoop.start();
+			}
+		};
+		thread.start();
 	}
 
 	public void hostGame() {
@@ -101,7 +131,7 @@ public class LogicMain {
 		return player;
 	}
 
-	public void setHostRoomInterface(GameRoomInterface hostRoomInterface) {
+	public void setGameRoomInterface(GameRoomInterface hostRoomInterface) {
 		this.hostRoomInterface = hostRoomInterface;
 	}
 
@@ -122,8 +152,8 @@ public class LogicMain {
 		player.getCharacter().setPositionXFinal(x);
 		player.getCharacter().setPositionYFinal(y);
 	}
-	
-	public void updatePlayerStatus(Player player){
+
+	public void updatePlayerStatus(Player player) {
 		hostRoomInterface.updatePlayerStatus(player);
 	}
 
