@@ -54,7 +54,7 @@ public class Player {
 		this.name = name;
 		this.control = control;
 		this.color = color;
-		this.status = READY;
+		this.status = NOT_READY;
 
 		health = 3;
 		nameLabel = new Label(name);
@@ -157,8 +157,5 @@ public class Player {
 	public ColorAdjust getPaintEffect() {
 		return colorAdjust;
 	}
-	
-	public void sendStandBy(){
-		thread.sendGameStart();
-	}
+
 }

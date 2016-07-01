@@ -147,7 +147,7 @@ public class PlayerThread implements Runnable {
             isStarted = false;
             if (_logicMain != null) {
                 // Fill logic main portion here
-            	_player.setStatus(Player.NOT_READY);
+            	_player.setStatus(Player.READY_TO_GO);
             	_logicMain.updatePlayerStatus(_player);
             }
         } else {

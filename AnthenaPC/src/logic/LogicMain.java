@@ -53,10 +53,11 @@ public class LogicMain {
 				gameLoop.addAttackers(Player.getAll_players_list().get(i));
 			}
 			if (Player.getAll_players_list().get(i).isMobile) {
-				Player.getAll_players_list().get(i).sendStandBy();
-				//tempQ.offer(Player.getAll_players_list().get(i));
+				//Player.getAll_players_list().get(i).sendStandBy();
+				tempQ.offer(Player.getAll_players_list().get(i));
 			}
 		}
+		masterRoomThread.sendStartGame();
 		gameLoop.initGameLoop();
 		waitCheckForPlayers(tempQ);
 	}
