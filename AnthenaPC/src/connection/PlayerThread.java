@@ -145,7 +145,8 @@ public class PlayerThread implements Runnable {
             	_logicMain.updatePlayerStatus(_player);
             }
         } else if (data.getType() == GamePacket.TYPE_GAMESTART) {
-            isStarted = false;
+            System.out.println("Player " + _playerNo + " loaded");
+            isStarted = true;
             if (_logicMain != null) {
                 // Fill logic main portion here
             	_player.setStatus(Player.READY_TO_GO);
