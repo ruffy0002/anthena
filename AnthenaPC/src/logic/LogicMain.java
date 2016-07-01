@@ -54,7 +54,7 @@ public class LogicMain {
 			}
 			if (Player.getAll_players_list().get(i).isMobile) {
 				Player.getAll_players_list().get(i).sendStandBy();
-				tempQ.offer(Player.getAll_players_list().get(i));
+				//tempQ.offer(Player.getAll_players_list().get(i));
 			}
 		}
 		gameLoop.initGameLoop();
@@ -149,8 +149,10 @@ public class LogicMain {
 	}
 
 	public void updatePlayerPosition(Player player, float x, float y) {
-		player.getCharacter().setPositionXFinal(x);
-		player.getCharacter().setPositionYFinal(y);
+		double xPos = 800*x;
+		double yPos = 600*y;
+		player.getCharacter().setPositionXFinal(xPos);
+		player.getCharacter().setPositionYFinal(yPos);
 	}
 
 	public void updatePlayerStatus(Player player) {
