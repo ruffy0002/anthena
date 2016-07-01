@@ -12,8 +12,10 @@ import connection.hostRoomThread;
 import controls.Control;
 import controls.Controller;
 import entity.Player;
+import javafx.application.Platform;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import resource.Resources;
 import userinterface.GameInterface;
@@ -53,7 +55,6 @@ public class LogicMain {
 				gameLoop.addAttackers(Player.getAll_players_list().get(i));
 			}
 			if (Player.getAll_players_list().get(i).isMobile) {
-				//Player.getAll_players_list().get(i).sendStandBy();
 				tempQ.offer(Player.getAll_players_list().get(i));
 			}
 		}
@@ -75,7 +76,12 @@ public class LogicMain {
 						}
 					}
 				}
-				gameInterface.getWaitInformationPane().setOpacity(0);
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						gameInterface.getWaitInformationPane().setOpacity(0);
+					}
+				});
 				gameLoop.start();
 			}
 		};
