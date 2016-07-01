@@ -158,9 +158,17 @@ public class PlayerThread implements Runnable {
 	}
 
 	public void sendGameStart () {
-	    System.out.println("Game start sent");
 	    GamePacket gameStartPacket = new GamePacket(0,0,GamePacket.TYPE_GAMESTART);
 	    sendData(gameStartPacket);
+	}
+	
+	/**
+	 * Used for vampire mode to change a runner to a stomper
+	 * @return
+	 */
+	public boolean sendPlayerTypeChange () {
+        GamePacket gameStartPacket = new GamePacket(0,0,GamePacket.TYPE_CHANGEPLAYERTYPE);
+        return sendData(gameStartPacket);
 	}
 	
 	public boolean sendData(GamePacket obj) {

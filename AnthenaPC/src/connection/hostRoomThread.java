@@ -34,7 +34,6 @@ public class hostRoomThread implements Runnable {
 	 * Sends game start packet to all connected clients
 	 */
 	public void sendStartGame () {
-	    System.out.println("Game start sent");
 	    for(int i = 0; i < PLAYER_NO; i++) {
 	        if(playerThreads[i] != null) {
 	            playerThreads[i].sendGameStart();
