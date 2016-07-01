@@ -34,11 +34,76 @@ public class hostRoomThread implements Runnable {
 	 * Sends game start packet to all connected clients
 	 */
 	public void sendStartGame () {
+	    System.out.println("Game start sent");
 	    for(int i = 0; i < PLAYER_NO; i++) {
 	        if(playerThreads[i] != null) {
 	            playerThreads[i].sendGameStart();
 	        }
 	    }
+	}
+	
+	/**
+     * Checks if a particular player is ready
+     * 
+     * @param playerNo
+     * @return 0 if not ready, 1 if ready, -1 if this player number does not exist
+     */
+    public int isPlayerReady(int playerNo) {
+        if(playerThreads[playerNo] != null) {
+            if( playerThreads[playerNo].checkReady() == false) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            return -1;
+        }
+    }
+    
+    /**
+     * Checks if a particular player has loaded into the game
+     * 
+     * @param playerNo
+     * @return 0 if player has not loaded into the game, 1 if player has loaded, -1 if this player number does not exist
+     */
+    public int hasPlayerLoadedIntoGame(int playerNo) {
+        if(playerThreads[playerNo] != null) {
+            if( playerThreads[playerNo].checkLoadedIntoGame() == false) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            return -1;
+        }
+    }
+	
+    /**
+     * Checks if all the players connected has loaded into the game
+     * 
+     * @return true if all have loaded, false otherwise
+     */
+    public boolean hasAllPlayersLoadedIntoGame () {
+        for(int i = 0; i < PLAYER_NO; i++) {
+            if(hasPlayerLoadedIntoGame(i) == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+	/**
+	 * Checks if all the players connected are readied up
+	 * 
+	 * @return true if all are ready, false otherwise
+	 */
+	public boolean arePlayersReady () {
+	    for(int i = 0; i < PLAYER_NO; i++) {
+	        if(isPlayerReady(i) == 0) {
+	            return false;
+	        }
+	    }
+	    return true;
 	}
 	
 	/**

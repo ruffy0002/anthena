@@ -33,7 +33,9 @@ public class PlayerThread implements Runnable {
 	private ObjectOutputStream dataOutputStream = null;
 
 	boolean connected = true;
-
+	boolean isReady = false;
+	boolean isStarted = false;
+	
 	public PlayerThread(InetAddress ipAddress, int playerNo, Socket socket, LogicMain logicMain) {
 		_ipAddress = ipAddress;
 		_playerNo = playerNo;
@@ -59,6 +61,24 @@ public class PlayerThread implements Runnable {
 	public boolean checkConnection() {
 		return connected;
 	}
+	
+	/**
+     * Checks if the player has sent a ready packet
+     * 
+     * @return true if the player is ready, false otherwise
+     */
+    public boolean checkReady() {
+        return isReady;
+    }
+    
+    /**
+     * Checks if the player has loaded into the game
+     * 
+     * @return true if the player has loaded, false otherwise
+     */
+    public boolean checkLoadedIntoGame() {
+        return isStarted;
+    }
 
 	public void setNewSocket(Socket socket) {
 		_socket = socket;
@@ -112,10 +132,17 @@ public class PlayerThread implements Runnable {
                 // Fill logic main portion here
             }
         } else if (data.getType() == GamePacket.TYPE_READY) {
+            isReady = true;
             if (_logicMain != null) {
                 // Fill logic main portion here
             }
         } else if (data.getType() == GamePacket.TYPE_UNREADY) {
+            isReady = false;
+            if (_logicMain != null) {
+                // Fill logic main portion here
+            }
+        } else if (data.getType() == GamePacket.TYPE_GAMESTART) {
+            isStarted = false;
             if (_logicMain != null) {
                 // Fill logic main portion here
             }
@@ -125,6 +152,7 @@ public class PlayerThread implements Runnable {
 	}
 
 	public void sendGameStart () {
+	    System.out.println("Game start sent");
 	    GamePacket gameStartPacket = new GamePacket(0,0,GamePacket.TYPE_GAMESTART);
 	    sendData(gameStartPacket);
 	}
