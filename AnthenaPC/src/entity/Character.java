@@ -27,7 +27,7 @@ import resource.Resources;
 public class Character extends Sprite {
 
 	public enum State {
-		IDLE, MOVING, ATTACKING, DEFEATED, DEAD, IMMUNE;
+		IDLE, MOVING, ATTACKING, DEFEATED, DEAD, IMMUNE, STUN;
 	}
 
 	protected Player player;
@@ -43,9 +43,11 @@ public class Character extends Sprite {
 	protected boolean isFlipped = false;
 	protected boolean isImmune = false;
 	protected double immuneTime = 2;
-	protected double immuneFlashSpeed = 3;
+	protected double immuneFlashSpeed = 0.1;
+	protected double immuneStunTime = 1;
+	protected double immuneOpacity = 1;
 	protected int bloomDirection = 1;
-	private double immuneTimeStore = 0;
+	protected double immuneTimeStore = 0;
 	protected boolean hasFinishDeathAnimation = false;
 
 	protected Image deathImage;
@@ -85,7 +87,7 @@ public class Character extends Sprite {
 		shadow = new Shadow(BlurType.GAUSSIAN, new Color(1, 0, 0, 0.3), 0.1);
 		bloom = new Bloom();
 		bloom.setThreshold(0.3);
-		bloom.setInput(shadow);
+		// bloom.setInput(shadow);
 	}
 
 	public void init() {
@@ -130,14 +132,10 @@ public class Character extends Sprite {
 			if (immuneTimeStore <= 0) {
 				isImmune = false;
 			}
-			double bloomE = immuneFlashSpeed * time * bloomDirection;
-			double bloomT = bloom.getThreshold() + bloomE;
-			if (bloomT > 0.8) {
-				bloomDirection = -1;
-			} else if(bloomT < 0){
-				bloomDirection = 1;
-			}
-			bloom.setThreshold(bloomT);
+			double tPast = immuneTime - immuneTimeStore;
+			int noTick = (int) (tPast / immuneFlashSpeed);
+			int val = noTick %2;
+			immuneOpacity = val;
 		}
 	}
 
@@ -260,7 +258,7 @@ public class Character extends Sprite {
 		return positionYFinal;
 	}
 
-	public Player getPlayer(){
+	public Player getPlayer() {
 		return player;
 	}
 }

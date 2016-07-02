@@ -253,10 +253,22 @@ public class CharacterSwordMan extends Character {
 	public void update(double time) {
 		super.update(time);
 		if (isAlive) {
-			if (!player.isMobile) {
-				updateRunnerPC(time);
+			if (isImmune) {
+				if (immuneTimeStore > (immuneTime - immuneStunTime)) {
+					currentState = State.STUN;
+				} else {
+					if (!player.isMobile) {
+						updateRunnerPC(time);
+					} else {
+						updateRunnerMobile(time);
+					}
+				}
 			} else {
-				updateRunnerMobile(time);
+				if (!player.isMobile) {
+					updateRunnerPC(time);
+				} else {
+					updateRunnerMobile(time);
+				}
 			}
 
 		} else {
@@ -281,11 +293,10 @@ public class CharacterSwordMan extends Character {
 		super.render(gc);
 		gc.save();
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
-		if (isImmune) {
-			gc.setEffect(bloom);
-		} else {
-			gc.setEffect(dropShadow);
+		if(isImmune){
+			gc.setGlobalAlpha(immuneOpacity);
 		}
+		gc.setEffect(dropShadow);
 		if (isAlive) {
 			if (currentState == State.IDLE) {
 				if (!isFlipped) {
@@ -301,8 +312,20 @@ public class CharacterSwordMan extends Character {
 							FRAME_POSITION_IDLE[currentFrameIdle][1], animationFrameWidth, animationFrameHeight,
 							positionX, positionY, width, height);
 				}
+			} else if (currentState == State.STUN) {
+				if (!isFlipped) {
+					gc.drawImage(defeatedImage, FRAME_POSITION_MOVING[0][0], FRAME_POSITION_MOVING[0][1],
+							animationFrameWidth, animationFrameHeight, positionX, positionY, displayWidth,
+							displayHeight);
+				} else {
+					Rotate r = new Rotate(180, positionX, positionY);
+					r.setAxis(Rotate.Y_AXIS);
+					gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+					gc.translate(-width, 0);
+					gc.drawImage(defeatedImage, FRAME_POSITION_MOVING[0][0], FRAME_POSITION_MOVING[0][1],
+							animationFrameWidth, animationFrameHeight, positionX, positionY, width, height);
+				}
 			} else {
-
 				if (!isFlipped) {
 					gc.drawImage(movingStateFrames, FRAME_POSITION_MOVING[currentAnimationFrame][0],
 							FRAME_POSITION_MOVING[currentAnimationFrame][1], animationFrameWidth, animationFrameHeight,
