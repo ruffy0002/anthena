@@ -112,6 +112,7 @@ public class Resources {
 	public void loadCharacterSprites() {
 		SWORD_MAN[0] = new Image("sprite/swordmanMoving.png");
 		SWORD_MAN[1] = new Image("sprite/swordmanIdle.png");
+		
 		CHARACTER_SET_DEATH[0] = new Image("sprite/swordmandefeated.png");
 		DEATH[0] = new Image("sprite/swordmandeath.png");
 

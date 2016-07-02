@@ -17,7 +17,7 @@ public class Player {
 	public boolean isMobile;
 	public static final int TYPE_RUNNER = 1;
 	public static final int TYPE_STOMPPER = 0;
-	
+
 	public static final int NOT_READY = 0;
 	public static final int READY = 1;
 	public static final int READY_TO_GO = 2;
@@ -126,8 +126,8 @@ public class Player {
 		character.setControl(control);
 		return character;
 	}
-	
-	public Character getCharacter(){
+
+	public Character getCharacter() {
 		return character;
 	}
 
@@ -156,6 +156,12 @@ public class Player {
 
 	public ColorAdjust getPaintEffect() {
 		return colorAdjust;
+	}
+
+	public void changeToStomper() {
+		if (thread != null) {
+			thread.sendPlayerTypeChange();
+		}
 	}
 
 }

@@ -148,10 +148,8 @@ public class LogicMain {
 	}
 
 	public void updatePlayerType(int player_id, int type) {
-		if (Player.getAll_players_list().get(player_id).getPlayerType() != type) {
 			Player.getAll_players_list().get(player_id).setPlayerType(type);
 			hostRoomInterface.addPlayer(Player.getAll_players_list().get(player_id));
-		}
 	}
 
 	public void updatePlayerPosition(Player player, float x, float y) {

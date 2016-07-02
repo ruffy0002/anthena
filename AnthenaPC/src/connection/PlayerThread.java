@@ -150,7 +150,7 @@ public class PlayerThread implements Runnable {
             if (_logicMain != null) {
                 // Fill logic main portion here
             	_player.setStatus(Player.READY_TO_GO);
-            	_logicMain.updatePlayerStatus(_player);
+            	//_logicMain.updatePlayerStatus(_player);
             }
         } else {
 			System.out.println("Data sent from client not recognized!");

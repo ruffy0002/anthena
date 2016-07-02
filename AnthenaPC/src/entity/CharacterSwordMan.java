@@ -12,10 +12,15 @@ import resource.Resources.CharacterType;
 public class CharacterSwordMan extends Character {
 
 	private static final double[][] FRAME_POSITION_MOVING = new double[14][2];
-	private static final double[][] FRAME_POSITION_IDLE = new double[1][2];
+	private static final double[][] FRAME_POSITION_IDLE = new double[11][2];
 
 	private static double animationLengthMoving = 14;
 	private static double animationSpeedMoving = 5;
+
+	private static int animationLengthIdle = 11;
+	private static double animationFrameSpeedIdle = 0.2;
+	private static double animationIdleTimeStore = 0;
+	private static int currentFrameIdle = 0;
 
 	public static void initMain() {
 
@@ -25,6 +30,26 @@ public class CharacterSwordMan extends Character {
 		// idle state
 		FRAME_POSITION_IDLE[0][0] = 0;
 		FRAME_POSITION_IDLE[0][1] = 0;
+		FRAME_POSITION_IDLE[1][0] = fWidth;
+		FRAME_POSITION_IDLE[1][1] = 0;
+		FRAME_POSITION_IDLE[2][0] = fWidth * 2;
+		FRAME_POSITION_IDLE[2][1] = 0;
+		FRAME_POSITION_IDLE[3][0] = fWidth * 3;
+		FRAME_POSITION_IDLE[3][1] = 0;
+		FRAME_POSITION_IDLE[4][0] = fWidth * 4;
+		FRAME_POSITION_IDLE[4][1] = 0;
+		FRAME_POSITION_IDLE[5][0] = fWidth * 5;
+		FRAME_POSITION_IDLE[5][1] = 0;
+		FRAME_POSITION_IDLE[6][0] = fWidth * 4;
+		FRAME_POSITION_IDLE[6][1] = 0;
+		FRAME_POSITION_IDLE[7][0] = fWidth * 3;
+		FRAME_POSITION_IDLE[7][1] = 0;
+		FRAME_POSITION_IDLE[8][0] = fWidth * 2;
+		FRAME_POSITION_IDLE[8][1] = 0;
+		FRAME_POSITION_IDLE[9][0] = fWidth;
+		FRAME_POSITION_IDLE[9][1] = 0;
+		FRAME_POSITION_IDLE[10][0] = 0;
+		FRAME_POSITION_IDLE[10][1] = 0;
 
 		// moving state
 		FRAME_POSITION_MOVING[0][0] = 0;
@@ -135,7 +160,14 @@ public class CharacterSwordMan extends Character {
 			currentState = State.IDLE;
 			currentAnimationFrame = 0;
 			movementDistance = 0;
+			animationIdleTimeStore += time;
+			if (animationIdleTimeStore > animationFrameSpeedIdle) {
+				currentFrameIdle = (currentFrameIdle + 1) % animationLengthIdle;
+				animationIdleTimeStore -= animationFrameSpeedIdle;
+			}
 		} else {
+			animationIdleTimeStore = 0;
+			currentFrameIdle = 0;
 			currentState = State.MOVING;
 			movementDistance += totalMovementDistance;
 			currentAnimationFrame = Math.abs((int) ((movementDistance / animationSpeedMoving) % animationLengthMoving));
@@ -170,6 +202,8 @@ public class CharacterSwordMan extends Character {
 
 		if (!(currentX == finalX && currentY == finalY)) {
 			currentState = State.MOVING;
+			animationIdleTimeStore = 0;
+			currentFrameIdle = 0;
 			double sld = Math.sqrt(Math.pow(currentX - finalX, 2) + Math.pow(currentY - finalY, 2));
 			if (sld < totalMovementDistance) {
 				positionX = finalX;
@@ -208,6 +242,11 @@ public class CharacterSwordMan extends Character {
 			currentState = State.IDLE;
 			currentAnimationFrame = 0;
 			movementDistance = 0;
+			animationIdleTimeStore += time;
+			if (animationIdleTimeStore > animationFrameSpeedIdle) {
+				currentFrameIdle = (currentFrameIdle + 1) % animationLengthIdle;
+				animationIdleTimeStore -= animationFrameSpeedIdle;
+			}
 		}
 	}
 
@@ -250,16 +289,17 @@ public class CharacterSwordMan extends Character {
 		if (isAlive) {
 			if (currentState == State.IDLE) {
 				if (!isFlipped) {
-					gc.drawImage(idleStateFrames, FRAME_POSITION_IDLE[0][0], FRAME_POSITION_IDLE[0][1],
-							animationFrameWidth, animationFrameHeight, positionX, positionY, displayWidth,
-							displayHeight);
+					gc.drawImage(idleStateFrames, FRAME_POSITION_IDLE[currentFrameIdle][0],
+							FRAME_POSITION_IDLE[currentFrameIdle][1], animationFrameWidth, animationFrameHeight,
+							positionX, positionY, displayWidth, displayHeight);
 				} else {
 					Rotate r = new Rotate(180, positionX, positionY);
 					r.setAxis(Rotate.Y_AXIS);
 					gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 					gc.translate(-width, 0);
-					gc.drawImage(idleStateFrames, FRAME_POSITION_IDLE[0][0], FRAME_POSITION_IDLE[0][1],
-							animationFrameWidth, animationFrameHeight, positionX, positionY, width, height);
+					gc.drawImage(idleStateFrames, FRAME_POSITION_IDLE[currentFrameIdle][0],
+							FRAME_POSITION_IDLE[currentFrameIdle][1], animationFrameWidth, animationFrameHeight,
+							positionX, positionY, width, height);
 				}
 			} else {
 

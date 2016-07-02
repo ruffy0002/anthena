@@ -266,4 +266,7 @@ public class Character extends Sprite {
 		return positionYFinal;
 	}
 
+	public Player getPlayer(){
+		return player;
+	}
 }

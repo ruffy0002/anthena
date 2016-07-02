@@ -58,7 +58,6 @@ public class GameLoop extends AnimationTimer {
 	public GameLoop(GameInterface gi, Controller controller, Resources resources) {
 
 		this.resources = resources;
-
 		this.controller = controller;
 		this.mainCanvas = gi.getMainCanvas();
 		this.backgroundCanvas = gi.getBackgroundCanvas();
@@ -156,6 +155,7 @@ public class GameLoop extends AnimationTimer {
 							if (hasCollided) {
 								character.get(kk).takeDamage();
 								if (!character.get(kk).isAlive()) {
+									character.get(kk).getPlayer().changeToStomper();
 									attackManager.getAttacks().get(k).addScore(100);
 								}
 							}
