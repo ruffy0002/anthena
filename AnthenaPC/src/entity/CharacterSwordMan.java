@@ -293,11 +293,11 @@ public class CharacterSwordMan extends Character {
 		super.render(gc);
 		gc.save();
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
-		if(isImmune){
-			gc.setGlobalAlpha(immuneOpacity);
-		}
 		gc.setEffect(dropShadow);
 		if (isAlive) {
+			if(isImmune){
+				gc.setGlobalAlpha(immuneOpacity);
+			}
 			if (currentState == State.IDLE) {
 				if (!isFlipped) {
 					gc.drawImage(idleStateFrames, FRAME_POSITION_IDLE[currentFrameIdle][0],
