@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.paint.Color;
 import logic.LogicMain;
+import userinterface.PanelSetFace;
 
 public class Player {
 
@@ -39,6 +40,7 @@ public class Player {
 
 	private LogicMain logicMain;
 	private Sprite sprite;
+	private PanelSetFace panelSet;
 	private int health;
 
 	private ColorAdjust colorAdjust;
@@ -133,6 +135,9 @@ public class Player {
 
 	public void addScore(int i) {
 		score += i;
+		if (panelSet != null) {
+			panelSet.updateScore(String.valueOf(score));
+		}
 	}
 
 	public int getScore() {
@@ -159,9 +164,26 @@ public class Player {
 	}
 
 	public void changeToStomper() {
+		playerType = TYPE_STOMPPER;
 		if (thread != null) {
 			thread.sendPlayerTypeChange();
 		}
+	}
+
+	public void setPanelSetFace(PanelSetFace panelSet) {
+		this.panelSet = panelSet;
+	}
+
+	public void setPanelDC() {
+		panelSet.changeToDC();
+	}
+
+	public void setPanelConnected() {
+		panelSet.changeToConnected();
+	}
+
+	public PanelSetFace getPanelSet() {
+		return panelSet;
 	}
 
 }

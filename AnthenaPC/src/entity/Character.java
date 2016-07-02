@@ -73,7 +73,6 @@ public class Character extends Sprite {
 	DropShadow dropShadow;
 	Shadow shadow;
 	Bloom bloom;
-	ColorAdjust ca;
 
 	public Character(Player p) {
 		currentState = State.IDLE;
@@ -83,13 +82,10 @@ public class Character extends Sprite {
 		dropShadow.setOffsetX(-5.0);
 		dropShadow.setOffsetY(3.0);
 		dropShadow.setColor(Color.BLACK);
-		shadow = new Shadow(BlurType.GAUSSIAN, Color.RED, 3);
+		shadow = new Shadow(BlurType.GAUSSIAN, new Color(1, 0, 0, 0.3), 0.1);
 		bloom = new Bloom();
 		bloom.setThreshold(0.3);
-		ca = new ColorAdjust();
-		ca.setHue(0.8);
-		ca.setSaturation(1.0);
-		bloom.setInput(ca);
+		bloom.setInput(shadow);
 	}
 
 	public void init() {
@@ -161,8 +157,6 @@ public class Character extends Sprite {
 		gc.setStroke(player.getColor());
 		gc.strokeText(player.getNameLabel().getText(), positionX + (width - player.getNameLabel().getMinWidth()) / 2,
 				positionY + height + 12);
-		gc.strokeText(String.valueOf(player.getScore()), positionX + (width - player.getNameLabel().getMinWidth()) / 2,
-				positionY + height + 24);
 		gc.restore();
 	}
 

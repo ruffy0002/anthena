@@ -23,7 +23,7 @@ public class AttackManager {
 	private double spawnmaxY;
 	private double spawnZoneHeight;
 
-	private double rateOfSpawn = 0.4;
+	private double rateOfSpawn = 1;
 	private double maxCount = 20;
 	private double elapsedTimeStore = 0;
 
