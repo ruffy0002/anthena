@@ -4,6 +4,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import javafx.util.Pair;
 import resource.Resources;
@@ -18,9 +19,9 @@ public class CharacterSwordMan extends Character {
 	private static double animationSpeedMoving = 5;
 
 	private static int animationLengthIdle = 11;
-	private static double animationFrameSpeedIdle = 0.2;
-	private static double animationIdleTimeStore = 0;
-	private static int currentFrameIdle = 0;
+	private static double animationFrameSpeedIdle = 0.4;
+	private double animationIdleTimeStore = 0;
+	private int currentFrameIdle = 0;
 
 	public static void initMain() {
 
@@ -131,8 +132,8 @@ public class CharacterSwordMan extends Character {
 	public void calculateBoundary() {
 		double boundaryWidth = width * 0.6;
 		double boundaryHeight = height * 0.3;
-		double boundaryX = positionX + (width - boundaryWidth) / 3;
-		double boundaryY = positionY + (height - boundaryHeight);
+		double boundaryX = (width - boundaryWidth) / 3;
+		double boundaryY = (height - boundaryHeight);
 		collisionZone = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
 	}
 
@@ -171,23 +172,11 @@ public class CharacterSwordMan extends Character {
 			currentState = State.MOVING;
 			movementDistance += totalMovementDistance;
 			currentAnimationFrame = Math.abs((int) ((movementDistance / animationSpeedMoving) % animationLengthMoving));
-			Rectangle r = (Rectangle) collisionZone;
-			previousBoundaryX = r.getX();
-			previousBoundaryY = r.getY();
-			r.setX(r.getX() + moveX);
-			r.setY(r.getY() + moveY);
 
-			Pair<Boolean, Boolean> xy = getCollidePair(mapBoundary);
-			if (!xy.getKey()) {
-				super.setPositionX(positionX + moveX);
-			} else {
-				r.setX(previousBoundaryX);
-			}
-			if (!xy.getValue()) {
-				super.setPositionY(positionY + moveY);
-			} else {
-				r.setY(previousBoundaryY);
-			}
+			Shape s = getCollisionZone(positionX + moveX, positionY + moveY);
+			Pair<Double, Double> colXcolY = getCollideXY(s, moveX, moveY);
+			super.setPositionX(positionX + colXcolY.getKey());
+			super.setPositionY(positionY + colXcolY.getValue());
 		}
 	}
 
@@ -220,23 +209,10 @@ public class CharacterSwordMan extends Character {
 				movementDistance += totalMovementDistance;
 				currentAnimationFrame = Math
 						.abs((int) ((movementDistance / animationSpeedMoving) % animationLengthMoving));
-				Rectangle r = (Rectangle) collisionZone;
-				previousBoundaryX = r.getX();
-				previousBoundaryY = r.getY();
-				r.setX(r.getX() + moveX);
-				r.setY(r.getY() + moveY);
-
-				Pair<Boolean, Boolean> xy = getCollidePair(mapBoundary);
-				if (!xy.getKey()) {
-					super.setPositionX(positionX + moveX);
-				} else {
-					r.setX(previousBoundaryX);
-				}
-				if (!xy.getValue()) {
-					super.setPositionY(positionY + moveY);
-				} else {
-					r.setY(previousBoundaryY);
-				}
+				Shape s = getCollisionZone(positionX + moveX, positionY + moveY);
+				Pair<Double, Double> colXcolY = getCollideXY(s, moveX, moveY);
+				super.setPositionX(positionX + colXcolY.getKey());
+				super.setPositionY(positionY + colXcolY.getValue());
 			}
 		} else {
 			currentState = State.IDLE;
@@ -295,7 +271,7 @@ public class CharacterSwordMan extends Character {
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
 		gc.setEffect(dropShadow);
 		if (isAlive) {
-			if(isImmune){
+			if (isImmune) {
 				gc.setGlobalAlpha(immuneOpacity);
 			}
 			if (currentState == State.IDLE) {
@@ -354,11 +330,25 @@ public class CharacterSwordMan extends Character {
 		gc.restore();
 
 		// draw collison box
-		/*
-		 * gc.save(); gc.setGlobalBlendMode(BlendMode.LIGHTEN);
-		 * gc.setFill(player.getColor()); Bounds b =
-		 * collisionZone.getLayoutBounds(); gc.fillRect(b.getMinX(),
-		 * b.getMinY(), b.getWidth(), b.getHeight()); gc.restore();
-		 */
+
+		gc.save();
+		gc.setGlobalBlendMode(BlendMode.LIGHTEN);
+		gc.setFill(player.getColor());
+		Bounds b = getCollisionZone().getLayoutBounds();
+		gc.fillRect(b.getMinX(), b.getMinY(), b.getWidth(), b.getHeight());
+		gc.restore();
+
+	}
+
+	public Shape getCollisionZone() {
+		Rectangle r = (Rectangle) collisionZone;
+		Shape s = new Rectangle(r.getX() + positionX, r.getY() + positionY, r.getWidth(), r.getHeight());
+		return s;
+	}
+
+	public Shape getCollisionZone(double x, double y) {
+		Rectangle r = (Rectangle) collisionZone;
+		Shape s = new Rectangle(r.getX() + x, r.getY() + y, r.getWidth(), r.getHeight());
+		return s;
 	}
 }

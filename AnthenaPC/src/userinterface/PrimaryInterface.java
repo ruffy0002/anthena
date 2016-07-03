@@ -15,6 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import logic.GameLoop;
 import logic.LogicMain;
 import resource.Resources;
@@ -37,6 +38,7 @@ public class PrimaryInterface extends Application {
 	private SettingsInterface settingsInterface;
 	private GameRoomInterface hostRoomInterface;
 	private Scene prevScene;
+	private boolean fullScreen = false;
 
 	public PrimaryInterface() {
 		initScreenInformation();
@@ -83,11 +85,10 @@ public class PrimaryInterface extends Application {
 
 		stage.setResizable(false);
 		stage.centerOnScreen();
-
 		stage.setScene(scenes[0].getScene());
 		stage.sizeToScene();
 		stage.show();
-		stage.setFullScreenExitKeyCombination(KeyCombination.keyCombination("Ctrl+k"));
+		stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 	}
 
 	private GameScene initStartScene() {
@@ -115,13 +116,20 @@ public class PrimaryInterface extends Application {
 						if (result == 1) {
 							logic.hostGame();
 							stage.setScene(scenes[2].getScene());
+							if(fullScreen){
+								stage.setFullScreen(true);
+							}
 						}
 					} else if (gs instanceof GameRoomInterface) {
 						if (result == 1) {
-							if(logic.isAllPlayerReady()){
+							if (logic.isAllPlayerReady()) {
 								stage.setScene(scenes[3].getScene());
+								stage.sizeToScene();
+								if(fullScreen){
+									stage.setFullScreen(true);
+								}
 								logic.startGameLoop();
-							}else{
+							} else {
 								hostRoomInterface.showNotReady();
 							}
 						}
@@ -144,11 +152,15 @@ public class PrimaryInterface extends Application {
 								_screenInformation.set_width(bounds.getWidth());
 								_screenInformation.set_height(bounds.getHeight());
 								stage.setFullScreen(true);
+								fullScreen = true;
 							} else if (result == 5) {
 								if (settingsInterface.isActive()) {
 									settingsInterface.setActive(false);
 									stage.setScene(prevScene);
 									stage.sizeToScene();
+									if(fullScreen){
+										stage.setFullScreen(true);
+									}
 									prevScene = null;
 								}
 							}
@@ -176,7 +188,7 @@ public class PrimaryInterface extends Application {
 	private GameScene initGameScene() {
 		GameInterface gi = GameInterface.getInstance(logic, _screenInformation);
 		initControlsForGameScene(gi.getScene());
-		logic.initGameLoop(gi, controller, resources,gi);
+		logic.initGameLoop(gi, controller, resources, gi);
 		return gi;
 	}
 

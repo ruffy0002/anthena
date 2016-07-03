@@ -6,6 +6,7 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.ColorInput;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
 import resource.Resources;
 
@@ -73,7 +74,15 @@ public class Attack extends Sprite {
 		double boundaryHeight = Math.sin(Math.toRadians(90 - perceptionRotate)) * (height);
 		double boundaryX = getBoundaryX();
 		double boundaryY = getBoundaryY() + (height - boundaryHeight) / 2;
-		collisionZone = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
+		// collisionZone = new Rectangle(boundaryX, boundaryY, boundaryWidth,
+		// boundaryHeight);
+		Ellipse es = new Ellipse();
+		es.setCenterX(boundaryX + width / 2);
+		es.setCenterY(boundaryY + boundaryHeight / 2);
+		es.setRadiusX(width / 2);
+		es.setRadiusY(boundaryHeight / 2);
+		collisionZone = es;
+
 	}
 
 	public boolean getReadyToClear() {
@@ -88,13 +97,14 @@ public class Attack extends Sprite {
 
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
 		gc.setEffect(paintEffect);
-		gc.drawImage(movingStateFrames, animationFrameWidth * currentAnimationFrameX, animationFrameHeight * currentAnimationFrameY,
-				animationFrameWidth, animationFrameHeight, getBoundaryX(), getBoundaryY(), width, height);
+		gc.drawImage(movingStateFrames, animationFrameWidth * currentAnimationFrameX,
+				animationFrameHeight * currentAnimationFrameY, animationFrameWidth, animationFrameHeight,
+				getBoundaryX(), getBoundaryY(), width, height);
 		gc.setGlobalAlpha(1);
 		gc.restore();
 
 		// draw collison
-		// drawCollision(gc);
+		//drawCollision(gc);
 	}
 
 	public void drawCollision(GraphicsContext gc) {

@@ -58,7 +58,7 @@ public class Player {
 		this.color = color;
 		this.status = NOT_READY;
 
-		health = 3;
+		health = 24;
 		nameLabel = new Label(name);
 		FontLoader fontLoader = Toolkit.getToolkit().getFontLoader();
 		double w = fontLoader.computeStringWidth(nameLabel.getText(), nameLabel.getFont());

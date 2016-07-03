@@ -70,8 +70,8 @@ public class Character extends Sprite {
 	protected int defeatAnimationRepeat;
 
 	private static Image heart = Resources.getHeart();
-	private static double heartWidth = 15;
-	private static double heartHeight = 15;
+	private static double heartWidth = 12;
+	private static double heartHeight = 12;
 	DropShadow dropShadow;
 	Shadow shadow;
 	Bloom bloom;
@@ -134,7 +134,7 @@ public class Character extends Sprite {
 			}
 			double tPast = immuneTime - immuneTimeStore;
 			int noTick = (int) (tPast / immuneFlashSpeed);
-			int val = noTick %2;
+			int val = noTick % 2;
 			immuneOpacity = val;
 		}
 	}
@@ -200,24 +200,35 @@ public class Character extends Sprite {
 		}
 	}
 
-	public Pair<Boolean, Boolean> getCollidePair(Shape bound) {
+	public Pair<Double, Double> getCollideXY(Shape s, double moveX, double moveY) {
 
-		Shape col = Rectangle.union(bound, collisionZone);
-		boolean xCollide = false;
-		boolean yCollide = false;
-		if (col.getLayoutBounds().getWidth() != bound.getLayoutBounds().getWidth()) {
-			xCollide = true;
+		double xCollide = moveX;
+		double yCollide = moveY;
+
+		Shape col = Shape.union(s, mapBoundary);
+		double extraX = col.getLayoutBounds().getWidth() - mapBoundary.getLayoutBounds().getWidth();
+		double extraY = col.getLayoutBounds().getHeight() - mapBoundary.getLayoutBounds().getHeight();
+		if (extraX != 0) {
+			if (xCollide < 0) {
+				xCollide += extraX;
+			} else {
+				xCollide -= extraX;
+			}
 		}
-		if (col.getLayoutBounds().getHeight() != bound.getLayoutBounds().getHeight()) {
-			yCollide = true;
+		if (extraY != 0) {
+			if (yCollide < 0) {
+				yCollide += extraY;
+			} else {
+				yCollide -= extraY;
+			}
 		}
 
-		Pair<Boolean, Boolean> colXcolY = new Pair<Boolean, Boolean>(xCollide, yCollide);
+		Pair<Double, Double> colXcolY = new Pair<Double, Double>(xCollide, yCollide);
 		return colXcolY;
 	}
 
 	public void increaseSpeed() {
-		movementSpeed += 10;
+		movementSpeed += 100;
 		player.addScore(10);
 	}
 
