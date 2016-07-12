@@ -95,6 +95,10 @@ public class LogicMain {
 	public void executeAttack(Player player, float x, float y) {
 		gameLoop.createAttack(x, y, player);
 	}
+	
+	public void addTrapToField(Player player, float x, float y){
+		gameLoop.addTrapToField(x, y, player);
+	}
 
 	public Image getDefautCharacterProfile() {
 		return Resources.CHARACTER_ATTACK_PROFILE[0];

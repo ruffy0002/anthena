@@ -35,7 +35,7 @@ public class PlayerThread implements Runnable {
 	boolean connected = true;
 	boolean isReady = false;
 	boolean isStarted = false;
-	
+
 	public PlayerThread(InetAddress ipAddress, int playerNo, Socket socket, LogicMain logicMain) {
 		_ipAddress = ipAddress;
 		_playerNo = playerNo;
@@ -61,24 +61,24 @@ public class PlayerThread implements Runnable {
 	public boolean checkConnection() {
 		return connected;
 	}
-	
+
 	/**
-     * Checks if the player has sent a ready packet
-     * 
-     * @return true if the player is ready, false otherwise
-     */
-    public boolean checkReady() {
-        return isReady;
-    }
-    
-    /**
-     * Checks if the player has loaded into the game
-     * 
-     * @return true if the player has loaded, false otherwise
-     */
-    public boolean checkLoadedIntoGame() {
-        return isStarted;
-    }
+	 * Checks if the player has sent a ready packet
+	 * 
+	 * @return true if the player is ready, false otherwise
+	 */
+	public boolean checkReady() {
+		return isReady;
+	}
+
+	/**
+	 * Checks if the player has loaded into the game
+	 * 
+	 * @return true if the player has loaded, false otherwise
+	 */
+	public boolean checkLoadedIntoGame() {
+		return isStarted;
+	}
 
 	public void setNewSocket(Socket socket) {
 		_socket = socket;
@@ -110,7 +110,7 @@ public class PlayerThread implements Runnable {
 		if (data.getX() == -1000 && data.getY() == -1000) {
 			// Initialisation data
 			System.out.println("type = " + data.getType());
-			_logicMain.updatePlayerType(_player.getPlayer_id(),data.getType());
+			_logicMain.updatePlayerType(_player.getPlayer_id(), data.getType());
 		} else {
 			sendDataToProgram(data);
 		}
@@ -120,7 +120,7 @@ public class PlayerThread implements Runnable {
 		if (data.getType() == GamePacket.TYPE_STOMPER) {
 			System.out.println("Player " + _playerNo + " stomps [X: " + data.getX() + ", Y: " + data.getY() + "]");
 			if (_logicMain != null) {
-				_logicMain.executeAttack(_player,data.getX(), data.getY());
+				_logicMain.executeAttack(_player, data.getX(), data.getY());
 			}
 		} else if (data.getType() == GamePacket.TYPE_RUNNER) {
 			System.out.println("Player " + _playerNo + " running to [X: " + data.getX() + ", Y: " + data.getY() + "]");
@@ -128,49 +128,50 @@ public class PlayerThread implements Runnable {
 				_logicMain.updatePlayerPosition(_player, data.getX(), data.getY());
 			}
 		} else if (data.getType() == GamePacket.TYPE_POSITIONUPDATE) {
-            if (_logicMain != null) {
-                // Fill logic main portion here
-            }
-        } else if (data.getType() == GamePacket.TYPE_READY) {
-            isReady = true;
-            if (_logicMain != null) {
-                // Fill logic main portion here
-            	_player.setStatus(Player.READY);
-            	_logicMain.updatePlayerStatus(_player);
-            }
-        } else if (data.getType() == GamePacket.TYPE_UNREADY) {
-            isReady = false;
-            if (_logicMain != null) {
-            	_player.setStatus(Player.NOT_READY);
-            	_logicMain.updatePlayerStatus(_player);
-            }
-        } else if (data.getType() == GamePacket.TYPE_GAMESTART) {
-            System.out.println("Player " + _playerNo + " loaded");
-            isStarted = true;
-            if (_logicMain != null) {
-                // Fill logic main portion here
-            	_player.setStatus(Player.READY_TO_GO);
-            	//_logicMain.updatePlayerStatus(_player);
-            }
-        } else {
+			if (_logicMain != null) {
+				// Fill logic main portion here
+			}
+		} else if (data.getType() == GamePacket.TYPE_READY) {
+			isReady = true;
+			if (_logicMain != null) {
+				// Fill logic main portion here
+				_player.setStatus(Player.READY);
+				_logicMain.updatePlayerStatus(_player);
+			}
+		} else if (data.getType() == GamePacket.TYPE_UNREADY) {
+			isReady = false;
+			if (_logicMain != null) {
+				_player.setStatus(Player.NOT_READY);
+				_logicMain.updatePlayerStatus(_player);
+			}
+		} else if (data.getType() == GamePacket.TYPE_GAMESTART) {
+			System.out.println("Player " + _playerNo + " loaded");
+			isStarted = true;
+			if (_logicMain != null) {
+				// Fill logic main portion here
+				_player.setStatus(Player.READY_TO_GO);
+				// _logicMain.updatePlayerStatus(_player);
+			}
+		} else {
 			System.out.println("Data sent from client not recognized!");
 		}
 	}
 
-	public void sendGameStart () {
-	    GamePacket gameStartPacket = new GamePacket(0,0,GamePacket.TYPE_GAMESTART);
-	    sendData(gameStartPacket);
+	public void sendGameStart() {
+		GamePacket gameStartPacket = new GamePacket(0, 0, GamePacket.TYPE_GAMESTART);
+		sendData(gameStartPacket);
 	}
-	
+
 	/**
 	 * Used for vampire mode to change a runner to a stomper
+	 * 
 	 * @return
 	 */
-	public boolean sendPlayerTypeChange () {
-        GamePacket gameStartPacket = new GamePacket(0,0,GamePacket.TYPE_CHANGEPLAYERTYPE);
-        return sendData(gameStartPacket);
+	public boolean sendPlayerTypeChange() {
+		GamePacket gameStartPacket = new GamePacket(0, 0, GamePacket.TYPE_CHANGEPLAYERTYPE);
+		return sendData(gameStartPacket);
 	}
-	
+
 	public boolean sendData(GamePacket obj) {
 		try {
 			dataOutputStream.writeObject(obj);

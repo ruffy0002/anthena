@@ -54,6 +54,7 @@ public class GameLoop extends AnimationTimer {
 	private Resources resources;
 	private CollectableManager collectableManager;
 	private AttackManager attackManager;
+	private TrapManager trapManager;
 	private Shape map_oundary;
 
 	public GameLoop(GameInterface gi, Controller controller, Resources resources) {
@@ -76,6 +77,7 @@ public class GameLoop extends AnimationTimer {
 
 		collectableManager = new CollectableManager(map_oundary);
 		attackManager = new AttackManager(map_oundary);
+		trapManager = new TrapManager(map_oundary);
 	}
 
 	public void initGameLoop() {
@@ -124,8 +126,13 @@ public class GameLoop extends AnimationTimer {
 		for (int i = 0; i < temp.size(); i++) {
 			KeyCode code = temp.get(i);
 			if (code.compareTo(KeyCode.DIGIT1) == 0) {
-				createAttack(100, 100, null);
+				createAttack(0.5f, 0.5f, null);
 			}
+
+			if (code.compareTo(KeyCode.DIGIT2) == 0) {
+				addTrapToField(0.5f, 0.5f, null);
+			}
+
 			for (int k = 0; k < character.size(); k++) {
 				if (character.get(k).getControl() != null) {
 					character.get(k).update(code);
@@ -167,6 +174,15 @@ public class GameLoop extends AnimationTimer {
 			}
 		}
 
+		// check collison for trap
+		for (int k = 0; k < trapManager.getTraps().size(); k++) {
+			for (int kk = 0; kk < character.size(); kk++) {
+				if(!trapManager.getTraps().get(k).belongsToMe(character.get(kk).getPlayer())){
+					System.out.println("collided on " +trapManager.getTraps().get(k).getPlayer().getName() +" trap");
+				}
+			}
+		}
+
 		// check colliosn for collectable if not add to draw q
 		for (int k = 0; k < collectableManager.getCollectable().size(); k++) {
 			for (int kk = 0; kk < character.size(); kk++) {
@@ -191,6 +207,7 @@ public class GameLoop extends AnimationTimer {
 		// drawBoundaryFrame(); // debug
 
 		attackManager.draw(graphicContext);
+		trapManager.draw(graphicContext);
 
 		while (!spriteDrawPQ.isEmpty()) {
 			spriteDrawPQ.poll().render(graphicContext);
@@ -210,12 +227,12 @@ public class GameLoop extends AnimationTimer {
 			gameInterface.createFace(Player.getAll_players_list().get(i));
 		}
 	}
-	
+
 	private void checkConnectivity() {
 		for (int i = 0; i < Player.getAll_players_list().size(); i++) {
-			if(Player.getAll_players_list().get(i).isConnected()){
+			if (Player.getAll_players_list().get(i).isConnected()) {
 				Player.getAll_players_list().get(i).setPanelConnected();
-			}else{
+			} else {
 				Player.getAll_players_list().get(i).setPanelDC();
 			}
 		}
@@ -248,6 +265,10 @@ public class GameLoop extends AnimationTimer {
 
 	public void createAttack(float x, float y, Player player) {
 		attackManager.createAttack(x, y, player);
+	}
+
+	public void addTrapToField(float x, float y, Player player) {
+		trapManager.createTrap(x, y, player);
 	}
 
 	public void addRunner(Player p) {

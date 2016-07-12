@@ -228,7 +228,7 @@ public class Character extends Sprite {
 	}
 
 	public void increaseSpeed() {
-		movementSpeed += 100;
+		movementSpeed += 10;
 		player.addScore(10);
 	}
 

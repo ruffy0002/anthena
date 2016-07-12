@@ -8,6 +8,7 @@ import entity.Attack;
 import entity.Character.State;
 import entity.CharacterSwordMan;
 import entity.Collectable;
+import entity.Trap;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -55,6 +56,7 @@ public class Resources {
 		CharacterSwordMan.initMain();
 		Collectable.initMain();
 		Attack.initMain();
+		Trap.initMain();
 	}
 
 	private void loadETC() {

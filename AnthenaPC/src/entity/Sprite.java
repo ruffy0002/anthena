@@ -64,10 +64,6 @@ public class Sprite implements Comparable<Sprite> {
 		return collisionZone;
 	}
 
-	public void setCollisionZone(Shape collisionZone) {
-		this.collisionZone = collisionZone;
-	}
-
 	public void setCollisonZoneXY(double x, double y) {
 		Rectangle r = (Rectangle) collisionZone;
 		previousBoundaryX = r.getX();
