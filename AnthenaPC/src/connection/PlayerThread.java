@@ -36,6 +36,8 @@ public class PlayerThread implements Runnable {
 	boolean isReady = false;
 	boolean isStarted = false;
 	
+	private int packetsReceived = 0;
+	
 	public PlayerThread(InetAddress ipAddress, int playerNo, Socket socket, LogicMain logicMain) {
 		_ipAddress = ipAddress;
 		_playerNo = playerNo;
@@ -118,12 +120,14 @@ public class PlayerThread implements Runnable {
 
 	private void sendDataToProgram(GamePacket data) {
 		if (data.getType() == GamePacket.TYPE_STOMPER) {
-			System.out.println("Player " + _playerNo + " stomps [X: " + data.getX() + ", Y: " + data.getY() + "]");
+		    packetsReceived++;
+			System.out.println("(" + packetsReceived + ")Player " + _playerNo + " stomps [X: " + data.getX() + ", Y: " + data.getY() + "]");
 			if (_logicMain != null) {
 				_logicMain.executeAttack(_player,data.getX(), data.getY());
 			}
 		} else if (data.getType() == GamePacket.TYPE_RUNNER) {
-			System.out.println("Player " + _playerNo + " running to [X: " + data.getX() + ", Y: " + data.getY() + "]");
+		    packetsReceived++;
+			System.out.println("(" + packetsReceived + ")Player " + _playerNo + " running to [X: " + data.getX() + ", Y: " + data.getY() + "]");
 			if (_logicMain != null) {
 				_logicMain.updatePlayerPosition(_player, data.getX(), data.getY());
 			}
