@@ -81,6 +81,7 @@ public class Character extends Sprite {
 	protected double skillTimeStore = 0;
 
 	public Character(Player p) {
+		isFixed = false;
 		currentState = State.IDLE;
 		player = p;
 		dropShadow = new DropShadow();

@@ -16,6 +16,7 @@ import javafx.scene.transform.Shear;
 
 public class Sprite implements Comparable<Sprite> {
 
+	protected boolean isFixed = true;
 	protected Image idleStateFrames;
 	protected Image movingStateFrames;
 
@@ -271,8 +272,11 @@ public class Sprite implements Comparable<Sprite> {
 	}
 
 	public double getZIndex() {
-		Rectangle r = (Rectangle) collisionZone;
-		return collisionZone.getBoundsInLocal().getMaxY();
+		if (isFixed) {
+			return collisionZone.getBoundsInLocal().getMaxY();
+		} else {
+			return collisionZone.getBoundsInLocal().getMaxY() + positionY;
+		}
 	}
 
 	public void setGameBoundary(Shape boundary) {
