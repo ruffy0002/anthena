@@ -13,6 +13,7 @@ import com.main.anthenaandroid.GamePacket;
 import logic.LogicMain;
 
 import com.main.anthenaandroid.BroadcastPacket;
+import com.main.anthenaandroid.GameMessagePacket;
 
 public class hostRoomThread implements Runnable {
     private static final int PLAYER_NO = 8;
@@ -126,12 +127,20 @@ public class hostRoomThread implements Runnable {
 	}
 	
 	public boolean sendData (GamePacket data, int player) {
-	    if(playerThreads[player] != null) {
+        if(playerThreads[player] != null) {
             return playerThreads[player].sendData(data);
-	    } else {
-	        return false;
-	    }
-	}
+        } else {
+            return false;
+        }
+    }
+	
+	public boolean sendGameMessage (GameMessagePacket data, int player) {
+        if(playerThreads[player] != null) {
+            return playerThreads[player].sendGameMessage(data);
+        } else {
+            return false;
+        }
+    }
 	
 	public void run() {
 		listenAtPort();

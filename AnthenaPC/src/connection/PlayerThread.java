@@ -14,6 +14,7 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 
 import com.main.anthenaandroid.BroadcastPacket;
+import com.main.anthenaandroid.GameMessagePacket;
 import com.main.anthenaandroid.GamePacket;
 import com.main.anthenaandroid.PingPacket;
 
@@ -183,7 +184,16 @@ public class PlayerThread implements Runnable {
 		return sendData(gameStartPacket);
 	}
 
-	public boolean sendData(GamePacket obj) {
+	/**
+	 * Sends a message to the player's mobile screen
+	 * @param packet
+	 * @return
+	 */
+	public boolean sendGameMessage(GameMessagePacket packet) {
+	    return sendData(packet);
+	}
+	
+	public boolean sendData(Object obj) {
 		try {
 			dataOutputStream.writeObject(obj);
 			return true;
