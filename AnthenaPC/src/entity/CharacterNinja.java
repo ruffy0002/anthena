@@ -1,5 +1,7 @@
 package entity;
 
+import java.util.Random;
+
 import entity.Character.State;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
@@ -11,8 +13,8 @@ import javafx.util.Pair;
 import resource.Resources;
 import resource.Resources.CharacterType;
 
-public class CharacterNinja extends Character{
-	
+public class CharacterNinja extends Character {
+
 	private static final double[][] FRAME_POSITION_MOVING = new double[14][2];
 	private static final double[][] FRAME_POSITION_IDLE = new double[11][2];
 
@@ -23,6 +25,12 @@ public class CharacterNinja extends Character{
 	private static double animationFrameSpeedIdle = 0.4;
 	private double animationIdleTimeStore = 0;
 	private int currentFrameIdle = 0;
+
+	private double[][] kagebushinCurrPos = new double[4][2];
+	private double[][] kagebushinGoToPos = new double[4][2];
+	private boolean isKageActive = false;
+	private double kageTimeStore = 0;
+	private double kageDuration = 3;
 
 	public static void initMain() {
 
@@ -86,12 +94,12 @@ public class CharacterNinja extends Character{
 		FRAME_POSITION_MOVING[13][1] = 0;
 
 	}
-	
+
 	public CharacterNinja(Player p) {
 		super(p);
 		init();
 	}
-	
+
 	public void init() {
 		super.init();
 
@@ -129,7 +137,7 @@ public class CharacterNinja extends Character{
 		super.setDefeatedImage(Resources.getDefeatedImage(0));
 		calculateBoundary();
 	}
-	
+
 	public void calculateBoundary() {
 		double boundaryWidth = width * 0.6;
 		double boundaryHeight = height * 0.3;
@@ -139,45 +147,62 @@ public class CharacterNinja extends Character{
 	}
 
 	public void updateRunnerPC(double time) {
-		double totalMovementDistance = movementSpeed * time;
-		double moveX = 0;
-		double moveY = 0;
-
-		if (velocityX != 0 && velocityY != 0) {
-			double tempShort = Math.sqrt(Math.pow(totalMovementDistance, 2) / 2);
-			moveX = tempShort * velocityX;
-			moveY = tempShort * velocityY;
-		} else {
-			moveX = totalMovementDistance * velocityX;
-			moveY = totalMovementDistance * velocityY;
-		}
-
-		if (moveX < 0) {
-			isFlipped = true;
-		} else if (moveX > 0) {
-			isFlipped = false;
-		}
-
-		if (moveX == 0 && moveY == 0) {
-			currentState = State.IDLE;
-			currentAnimationFrame = 0;
-			movementDistance = 0;
-			animationIdleTimeStore += time;
-			if (animationIdleTimeStore > animationFrameSpeedIdle) {
-				currentFrameIdle = (currentFrameIdle + 1) % animationLengthIdle;
-				animationIdleTimeStore -= animationFrameSpeedIdle;
+		if (executingSkill) {
+			skillTimeStore += time;
+			if (skillTimeStore > skillDuration) {
+				executeSkill();
+				executingSkill = false;
+				skillTimeStore = 0;
 			}
 		} else {
-			animationIdleTimeStore = 0;
-			currentFrameIdle = 0;
-			currentState = State.MOVING;
-			movementDistance += totalMovementDistance;
-			currentAnimationFrame = Math.abs((int) ((movementDistance / animationSpeedMoving) % animationLengthMoving));
+			double totalMovementDistance = movementSpeed * time;
+			double moveX = 0;
+			double moveY = 0;
 
-			Shape s = getCollisionZone(positionX + moveX, positionY + moveY);
-			Pair<Double, Double> colXcolY = getCollideXY(s, moveX, moveY);
-			super.setPositionX(positionX + colXcolY.getKey());
-			super.setPositionY(positionY + colXcolY.getValue());
+			if (velocityX != 0 && velocityY != 0) {
+				double tempShort = Math.sqrt(Math.pow(totalMovementDistance, 2) / 2);
+				moveX = tempShort * velocityX;
+				moveY = tempShort * velocityY;
+			} else {
+				moveX = totalMovementDistance * velocityX;
+				moveY = totalMovementDistance * velocityY;
+			}
+
+			if (moveX < 0) {
+				isFlipped = true;
+			} else if (moveX > 0) {
+				isFlipped = false;
+			}
+
+			if (moveX == 0 && moveY == 0) {
+				currentState = State.IDLE;
+				currentAnimationFrame = 0;
+				movementDistance = 0;
+				animationIdleTimeStore += time;
+				if (animationIdleTimeStore > animationFrameSpeedIdle) {
+					currentFrameIdle = (currentFrameIdle + 1) % animationLengthIdle;
+					animationIdleTimeStore -= animationFrameSpeedIdle;
+				}
+			} else {
+				animationIdleTimeStore = 0;
+				currentFrameIdle = 0;
+				currentState = State.MOVING;
+				movementDistance += totalMovementDistance;
+				currentAnimationFrame = Math
+						.abs((int) ((movementDistance / animationSpeedMoving) % animationLengthMoving));
+
+				Shape s = getCollisionZone(positionX + moveX, positionY + moveY);
+				Pair<Double, Double> colXcolY = getCollideXY(s, moveX, moveY);
+				super.setPositionX(positionX + colXcolY.getKey());
+				super.setPositionY(positionY + colXcolY.getValue());
+			}
+
+			// AI stuff to move kage
+			if (isKageActive) {
+				for (int i = 0; i < kagebushinCurrPos.length; i++) {
+
+				}
+			}
 		}
 	}
 
@@ -272,6 +297,15 @@ public class CharacterNinja extends Character{
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
 		gc.setEffect(dropShadow);
 		if (isAlive) {
+
+			if (isKageActive) {
+				for (int i = 0; i < kagebushinCurrPos.length; i++) {
+					gc.drawImage(idleStateFrames, FRAME_POSITION_IDLE[currentFrameIdle][0],
+							FRAME_POSITION_IDLE[currentFrameIdle][1], animationFrameWidth, animationFrameHeight,
+							kagebushinCurrPos[i][0], kagebushinCurrPos[i][1], displayWidth, displayHeight);
+				}
+			}
+
 			if (isImmune) {
 				gc.setGlobalAlpha(immuneOpacity);
 			}
@@ -340,7 +374,7 @@ public class CharacterNinja extends Character{
 		gc.restore();
 
 	}
-	
+
 	public Shape getCollisionZone() {
 		Rectangle r = (Rectangle) collisionZone;
 		Shape s = new Rectangle(r.getX() + positionX, r.getY() + positionY, r.getWidth(), r.getHeight());
@@ -353,8 +387,17 @@ public class CharacterNinja extends Character{
 		return s;
 	}
 
-	public void executeSkill(){
+	public void executeSkill() {
 		super.executeSkill();
+		isKageActive = true;
+		Random r = new Random();
+		for (int i = 0; i < kagebushinCurrPos.length; i++) {
+			kagebushinCurrPos[i][0] = positionX;
+			kagebushinCurrPos[i][1] = positionY;
+			kagebushinGoToPos[i][0] = positionX + (r.nextDouble() - 0.5) * 30;
+			kagebushinGoToPos[i][1] = positionY + (r.nextDouble() - 0.5) * 30;
+		}
+
 	}
 
 }

@@ -70,7 +70,7 @@ public class GameLoop extends AnimationTimer {
 		graphicContext = mainCanvas.getGraphicsContext2D();
 
 		double boundaryWidth = mainCanvas.getWidth();
-		double boundaryHeight = mainCanvas.getHeight() - 140;
+		double boundaryHeight = mainCanvas.getHeight() - (mainCanvas.getHeight() * 0.23);
 		double boundaryX = (mainCanvas.getWidth() - boundaryWidth) / 2;
 		double boundaryY = (mainCanvas.getHeight() - boundaryHeight);
 		map_oundary = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
@@ -177,8 +177,8 @@ public class GameLoop extends AnimationTimer {
 		// check collison for trap
 		for (int k = 0; k < trapManager.getTraps().size(); k++) {
 			for (int kk = 0; kk < character.size(); kk++) {
-				if(!trapManager.getTraps().get(k).belongsToMe(character.get(kk).getPlayer())){
-					System.out.println("collided on " +trapManager.getTraps().get(k).getPlayer().getName() +" trap");
+				if (!trapManager.getTraps().get(k).belongsToMe(character.get(kk).getPlayer())) {
+					System.out.println("collided on " + trapManager.getTraps().get(k).getPlayer().getName() + " trap");
 				}
 			}
 		}

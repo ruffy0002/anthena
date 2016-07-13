@@ -5,6 +5,7 @@ import java.util.Random;
 
 import controls.Control;
 import entity.Attack;
+import entity.CharacterNinja;
 import entity.Character.State;
 import entity.CharacterSwordMan;
 import entity.Collectable;
@@ -54,6 +55,7 @@ public class Resources {
 		loadColors();
 		loadETC();
 		CharacterSwordMan.initMain();
+		CharacterNinja.initMain();
 		Collectable.initMain();
 		Attack.initMain();
 		Trap.initMain();

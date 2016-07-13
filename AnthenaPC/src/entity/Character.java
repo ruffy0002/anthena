@@ -76,6 +76,10 @@ public class Character extends Sprite {
 	Shadow shadow;
 	Bloom bloom;
 
+	protected boolean executingSkill = false;
+	protected double skillDuration = 2;
+	protected double skillTimeStore = 0;
+
 	public Character(Player p) {
 		currentState = State.IDLE;
 		player = p;
@@ -185,6 +189,12 @@ public class Character extends Sprite {
 			if (code.equals(control.getRight())) {
 				super.setVelocityX(1);
 			}
+
+			if (code.equals(control.getSkill1())) {
+				if (!executingSkill) {
+					executingSkill = true;
+				}
+			}
 		}
 	}
 
@@ -272,8 +282,8 @@ public class Character extends Sprite {
 	public Player getPlayer() {
 		return player;
 	}
-	
-	public void executeSkill(){
-		
+
+	public void executeSkill() {
+
 	}
 }

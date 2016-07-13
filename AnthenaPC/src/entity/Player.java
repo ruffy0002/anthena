@@ -58,7 +58,7 @@ public class Player {
 		this.color = color;
 		this.status = NOT_READY;
 
-		health = 24;
+		health = 3;
 		nameLabel = new Label(name);
 		FontLoader fontLoader = Toolkit.getToolkit().getFontLoader();
 		double w = fontLoader.computeStringWidth(nameLabel.getText(), nameLabel.getFont());
@@ -124,7 +124,7 @@ public class Player {
 	}
 
 	public Character createSprite() {
-		character = new CharacterSwordMan(this);
+		character = new CharacterNinja(this);
 		character.setControl(control);
 		return character;
 	}
