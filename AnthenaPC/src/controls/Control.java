@@ -8,12 +8,21 @@ public class Control {
 	private KeyCode down;
 	private KeyCode left;
 	private KeyCode right;
+	private KeyCode skill1;
 
 	public Control(KeyCode left, KeyCode up, KeyCode right, KeyCode down) {
 		this.up = up;
 		this.down = down;
 		this.left = left;
 		this.right = right;
+	}
+	
+	public Control(KeyCode left, KeyCode up, KeyCode right, KeyCode down, KeyCode skill1) {
+		this.up = up;
+		this.down = down;
+		this.left = left;
+		this.right = right;
+		this.skill1 = skill1;
 	}
 
 	public KeyCode getUp() {
@@ -48,6 +57,14 @@ public class Control {
 		this.right = right;
 	}
 
+	public KeyCode getSkill1() {
+		return skill1;
+	}
+
+	public void setSkill1(KeyCode skill1) {
+		this.skill1 = skill1;
+	}
+
 	public boolean contains(KeyCode code) {
 		if (this.up.compareTo(code) == 0)
 			return true;
@@ -57,7 +74,8 @@ public class Control {
 			return true;
 		if (this.right.compareTo(code) == 0)
 			return true;
-
+		if(this.skill1.compareTo(code) == 0)
+			return true;
 		return false;
 	}
 

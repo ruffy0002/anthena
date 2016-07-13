@@ -272,4 +272,8 @@ public class Character extends Sprite {
 	public Player getPlayer() {
 		return player;
 	}
+	
+	public void executeSkill(){
+		
+	}
 }

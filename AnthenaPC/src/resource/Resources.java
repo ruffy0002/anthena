@@ -65,13 +65,13 @@ public class Resources {
 
 	private void loadControls() {
 		// will change to setting bindings.
-		Control c1 = new Control(KeyCode.LEFT, KeyCode.UP, KeyCode.RIGHT, KeyCode.DOWN);
+		Control c1 = new Control(KeyCode.LEFT, KeyCode.UP, KeyCode.RIGHT, KeyCode.DOWN, KeyCode.SPACE);
 		controls.add(c1);
-		Control c2 = new Control(KeyCode.A, KeyCode.W, KeyCode.D, KeyCode.S);
+		Control c2 = new Control(KeyCode.A, KeyCode.W, KeyCode.D, KeyCode.S, KeyCode.Q);
 		controls.add(c2);
-		Control c3 = new Control(KeyCode.G, KeyCode.Y, KeyCode.J, KeyCode.H);
+		Control c3 = new Control(KeyCode.G, KeyCode.Y, KeyCode.J, KeyCode.H, KeyCode.T);
 		controls.add(c3);
-		Control c4 = new Control(KeyCode.L, KeyCode.P, KeyCode.QUOTE, KeyCode.SEMICOLON);
+		Control c4 = new Control(KeyCode.L, KeyCode.P, KeyCode.QUOTE, KeyCode.SEMICOLON, KeyCode.O);
 		controls.add(c4);
 	}
 
@@ -114,7 +114,7 @@ public class Resources {
 	public void loadCharacterSprites() {
 		SWORD_MAN[0] = new Image("sprite/swordmanMoving.png");
 		SWORD_MAN[1] = new Image("sprite/swordmanIdle.png");
-		
+
 		CHARACTER_SET_DEATH[0] = new Image("sprite/swordmandefeated.png");
 		DEATH[0] = new Image("sprite/swordmandeath.png");
 
@@ -188,7 +188,7 @@ public class Resources {
 		if (type == CharacterType.SWORDMAN) {
 			if (state == State.IDLE) {
 				return SWORD_MAN[1];
-			}else if(state == State.MOVING){
+			} else if (state == State.MOVING) {
 				return SWORD_MAN[0];
 			}
 		}
