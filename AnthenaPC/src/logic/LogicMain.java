@@ -95,6 +95,10 @@ public class LogicMain {
 	public void executeAttack(Player player, float x, float y) {
 		gameLoop.createAttack(x, y, player);
 	}
+	
+	public void addTrapToField(Player player, float x, float y){
+		gameLoop.addTrapToField(x, y, player);
+	}
 
 	public Image getDefautCharacterProfile() {
 		return Resources.CHARACTER_ATTACK_PROFILE[0];
@@ -148,10 +152,8 @@ public class LogicMain {
 	}
 
 	public void updatePlayerType(int player_id, int type) {
-		if (Player.getAll_players_list().get(player_id).getPlayerType() != type) {
 			Player.getAll_players_list().get(player_id).setPlayerType(type);
 			hostRoomInterface.addPlayer(Player.getAll_players_list().get(player_id));
-		}
 	}
 
 	public void updatePlayerPosition(Player player, float x, float y) {

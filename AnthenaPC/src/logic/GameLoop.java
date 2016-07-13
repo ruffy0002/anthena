@@ -36,9 +36,10 @@ public class GameLoop extends AnimationTimer {
 	private int frameRateCounter = 0;
 	private double deltaSum = 0;
 
-	private double overlayRefreshRate = 5; // every 5 seconds;
+	private double overlayRefreshRate = 2; // every 5 seconds;
 	private double overlayElapsedTimeStore = 0;
 
+	private GameInterface gameInterface;
 	private Canvas mainCanvas;
 	private Canvas backgroundCanvas;
 	private HBox overlayGridPane;
@@ -53,12 +54,13 @@ public class GameLoop extends AnimationTimer {
 	private Resources resources;
 	private CollectableManager collectableManager;
 	private AttackManager attackManager;
+	private TrapManager trapManager;
 	private Shape map_oundary;
 
 	public GameLoop(GameInterface gi, Controller controller, Resources resources) {
 
+		this.gameInterface = gi;
 		this.resources = resources;
-
 		this.controller = controller;
 		this.mainCanvas = gi.getMainCanvas();
 		this.backgroundCanvas = gi.getBackgroundCanvas();
@@ -75,6 +77,7 @@ public class GameLoop extends AnimationTimer {
 
 		collectableManager = new CollectableManager(map_oundary);
 		attackManager = new AttackManager(map_oundary);
+		trapManager = new TrapManager(map_oundary);
 	}
 
 	public void initGameLoop() {
@@ -102,10 +105,9 @@ public class GameLoop extends AnimationTimer {
 	}
 
 	private void updateOverlay(double elapsedTime) {
-		//rebuildOverlay();
 		overlayElapsedTimeStore += elapsedTime;
 		if (overlayElapsedTimeStore > overlayRefreshRate) {
-			// rebuildOverlay();
+			checkConnectivity();
 			overlayElapsedTimeStore = 0;
 		}
 	}
@@ -124,8 +126,13 @@ public class GameLoop extends AnimationTimer {
 		for (int i = 0; i < temp.size(); i++) {
 			KeyCode code = temp.get(i);
 			if (code.compareTo(KeyCode.DIGIT1) == 0) {
-				createAttack(100, 100, null);
+				createAttack(0.5f, 0.5f, null);
 			}
+
+			if (code.compareTo(KeyCode.DIGIT2) == 0) {
+				addTrapToField(0.5f, 0.5f, null);
+			}
+
 			for (int k = 0; k < character.size(); k++) {
 				if (character.get(k).getControl() != null) {
 					character.get(k).update(code);
@@ -156,11 +163,22 @@ public class GameLoop extends AnimationTimer {
 							if (hasCollided) {
 								character.get(kk).takeDamage();
 								if (!character.get(kk).isAlive()) {
+									character.get(kk).getPlayer().changeToStomper();
+									gameInterface.convertRunnerToStomper(character.get(kk).getPlayer());
 									attackManager.getAttacks().get(k).addScore(100);
 								}
 							}
 						}
 					}
+				}
+			}
+		}
+
+		// check collison for trap
+		for (int k = 0; k < trapManager.getTraps().size(); k++) {
+			for (int kk = 0; kk < character.size(); kk++) {
+				if(!trapManager.getTraps().get(k).belongsToMe(character.get(kk).getPlayer())){
+					System.out.println("collided on " +trapManager.getTraps().get(k).getPlayer().getName() +" trap");
 				}
 			}
 		}
@@ -189,6 +207,7 @@ public class GameLoop extends AnimationTimer {
 		// drawBoundaryFrame(); // debug
 
 		attackManager.draw(graphicContext);
+		trapManager.draw(graphicContext);
 
 		while (!spriteDrawPQ.isEmpty()) {
 			spriteDrawPQ.poll().render(graphicContext);
@@ -203,46 +222,20 @@ public class GameLoop extends AnimationTimer {
 				resources.getGameMap(0).getHeight(), 0, 0, backgroundCanvas.getWidth(), backgroundCanvas.getHeight());
 	}
 
-	private double statusXPos = 0;
-	private double statusYPos = 0;
-	private double statusMargin = 5;
-
 	private void rebuildOverlay() {
-		statusXPos = 0;
-		statusYPos = 0;
-
 		for (int i = 0; i < Player.getAll_players_list().size(); i++) {
-			if (Player.getAll_players_list().get(i).getPlayerType() == Player.TYPE_RUNNER) {
-				overlayGridPane.getChildren().add(GameInterface.createFace(Player.getAll_players_list().get(i)));
-			} else if (Player.getAll_players_list().get(i).getPlayerType() == Player.TYPE_STOMPPER) {
-				overlayGridPane.getChildren().add(GameInterface.createFace(Player.getAll_players_list().get(i)));
+			gameInterface.createFace(Player.getAll_players_list().get(i));
+		}
+	}
+
+	private void checkConnectivity() {
+		for (int i = 0; i < Player.getAll_players_list().size(); i++) {
+			if (Player.getAll_players_list().get(i).isConnected()) {
+				Player.getAll_players_list().get(i).setPanelConnected();
+			} else {
+				Player.getAll_players_list().get(i).setPanelDC();
 			}
 		}
-
-
-		/*
-		 * GraphicsContext gc = overlayCanvas.getGraphicsContext2D();
-		 * gc.clearRect(0, 0, overlayCanvas.getWidth(),
-		 * overlayCanvas.getHeight());
-		 * 
-		 * for (int i = 0; i < runners.size(); i++) { gc.save();
-		 * gc.setGlobalBlendMode(BlendMode.SRC_OVER);
-		 * 
-		 * gc.setStroke(Color.RED); if (runners.get(i).isConnected()) {
-		 * gc.setStroke(Color.LIGHTGREEN); }
-		 * 
-		 * gc.strokeText(runners.get(i).getNameLabel().getText() + " " +
-		 * runners.get(i).getScore(), statusXPos, 10); statusXPos +=
-		 * runners.get(i).getNameLabel().getMinWidth() + statusMargin;
-		 * gc.restore(); }
-		 * 
-		 * for (int i = 0; i < attackers.size(); i++) { gc.save();
-		 * gc.setGlobalBlendMode(BlendMode.SRC_OVER); gc.setStroke(Color.RED);
-		 * if (attackers.get(i).isConnected()) { gc.setStroke(Color.GREEN); }
-		 * gc.strokeText(attackers.get(i).getNameLabel().getText(), statusXPos,
-		 * 10); statusXPos += attackers.get(i).getNameLabel().getMinWidth() +
-		 * statusMargin; gc.restore(); }
-		 */
 	}
 
 	private void updateFrameRate(double elapsedTime) {
@@ -272,6 +265,10 @@ public class GameLoop extends AnimationTimer {
 
 	public void createAttack(float x, float y, Player player) {
 		attackManager.createAttack(x, y, player);
+	}
+
+	public void addTrapToField(float x, float y, Player player) {
+		trapManager.createTrap(x, y, player);
 	}
 
 	public void addRunner(Player p) {

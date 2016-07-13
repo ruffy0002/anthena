@@ -4,6 +4,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.transform.Rotate;
 import javafx.util.Pair;
 import resource.Resources;
@@ -12,10 +13,15 @@ import resource.Resources.CharacterType;
 public class CharacterSwordMan extends Character {
 
 	private static final double[][] FRAME_POSITION_MOVING = new double[14][2];
-	private static final double[][] FRAME_POSITION_IDLE = new double[1][2];
+	private static final double[][] FRAME_POSITION_IDLE = new double[11][2];
 
 	private static double animationLengthMoving = 14;
 	private static double animationSpeedMoving = 5;
+
+	private static int animationLengthIdle = 11;
+	private static double animationFrameSpeedIdle = 0.4;
+	private double animationIdleTimeStore = 0;
+	private int currentFrameIdle = 0;
 
 	public static void initMain() {
 
@@ -25,6 +31,26 @@ public class CharacterSwordMan extends Character {
 		// idle state
 		FRAME_POSITION_IDLE[0][0] = 0;
 		FRAME_POSITION_IDLE[0][1] = 0;
+		FRAME_POSITION_IDLE[1][0] = fWidth;
+		FRAME_POSITION_IDLE[1][1] = 0;
+		FRAME_POSITION_IDLE[2][0] = fWidth * 2;
+		FRAME_POSITION_IDLE[2][1] = 0;
+		FRAME_POSITION_IDLE[3][0] = fWidth * 3;
+		FRAME_POSITION_IDLE[3][1] = 0;
+		FRAME_POSITION_IDLE[4][0] = fWidth * 4;
+		FRAME_POSITION_IDLE[4][1] = 0;
+		FRAME_POSITION_IDLE[5][0] = fWidth * 5;
+		FRAME_POSITION_IDLE[5][1] = 0;
+		FRAME_POSITION_IDLE[6][0] = fWidth * 4;
+		FRAME_POSITION_IDLE[6][1] = 0;
+		FRAME_POSITION_IDLE[7][0] = fWidth * 3;
+		FRAME_POSITION_IDLE[7][1] = 0;
+		FRAME_POSITION_IDLE[8][0] = fWidth * 2;
+		FRAME_POSITION_IDLE[8][1] = 0;
+		FRAME_POSITION_IDLE[9][0] = fWidth;
+		FRAME_POSITION_IDLE[9][1] = 0;
+		FRAME_POSITION_IDLE[10][0] = 0;
+		FRAME_POSITION_IDLE[10][1] = 0;
 
 		// moving state
 		FRAME_POSITION_MOVING[0][0] = 0;
@@ -106,8 +132,8 @@ public class CharacterSwordMan extends Character {
 	public void calculateBoundary() {
 		double boundaryWidth = width * 0.6;
 		double boundaryHeight = height * 0.3;
-		double boundaryX = positionX + (width - boundaryWidth) / 3;
-		double boundaryY = positionY + (height - boundaryHeight);
+		double boundaryX = (width - boundaryWidth) / 3;
+		double boundaryY = (height - boundaryHeight);
 		collisionZone = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
 	}
 
@@ -135,27 +161,22 @@ public class CharacterSwordMan extends Character {
 			currentState = State.IDLE;
 			currentAnimationFrame = 0;
 			movementDistance = 0;
+			animationIdleTimeStore += time;
+			if (animationIdleTimeStore > animationFrameSpeedIdle) {
+				currentFrameIdle = (currentFrameIdle + 1) % animationLengthIdle;
+				animationIdleTimeStore -= animationFrameSpeedIdle;
+			}
 		} else {
+			animationIdleTimeStore = 0;
+			currentFrameIdle = 0;
 			currentState = State.MOVING;
 			movementDistance += totalMovementDistance;
 			currentAnimationFrame = Math.abs((int) ((movementDistance / animationSpeedMoving) % animationLengthMoving));
-			Rectangle r = (Rectangle) collisionZone;
-			previousBoundaryX = r.getX();
-			previousBoundaryY = r.getY();
-			r.setX(r.getX() + moveX);
-			r.setY(r.getY() + moveY);
 
-			Pair<Boolean, Boolean> xy = getCollidePair(mapBoundary);
-			if (!xy.getKey()) {
-				super.setPositionX(positionX + moveX);
-			} else {
-				r.setX(previousBoundaryX);
-			}
-			if (!xy.getValue()) {
-				super.setPositionY(positionY + moveY);
-			} else {
-				r.setY(previousBoundaryY);
-			}
+			Shape s = getCollisionZone(positionX + moveX, positionY + moveY);
+			Pair<Double, Double> colXcolY = getCollideXY(s, moveX, moveY);
+			super.setPositionX(positionX + colXcolY.getKey());
+			super.setPositionY(positionY + colXcolY.getValue());
 		}
 	}
 
@@ -170,6 +191,8 @@ public class CharacterSwordMan extends Character {
 
 		if (!(currentX == finalX && currentY == finalY)) {
 			currentState = State.MOVING;
+			animationIdleTimeStore = 0;
+			currentFrameIdle = 0;
 			double sld = Math.sqrt(Math.pow(currentX - finalX, 2) + Math.pow(currentY - finalY, 2));
 			if (sld < totalMovementDistance) {
 				positionX = finalX;
@@ -186,38 +209,42 @@ public class CharacterSwordMan extends Character {
 				movementDistance += totalMovementDistance;
 				currentAnimationFrame = Math
 						.abs((int) ((movementDistance / animationSpeedMoving) % animationLengthMoving));
-				Rectangle r = (Rectangle) collisionZone;
-				previousBoundaryX = r.getX();
-				previousBoundaryY = r.getY();
-				r.setX(r.getX() + moveX);
-				r.setY(r.getY() + moveY);
-
-				Pair<Boolean, Boolean> xy = getCollidePair(mapBoundary);
-				if (!xy.getKey()) {
-					super.setPositionX(positionX + moveX);
-				} else {
-					r.setX(previousBoundaryX);
-				}
-				if (!xy.getValue()) {
-					super.setPositionY(positionY + moveY);
-				} else {
-					r.setY(previousBoundaryY);
-				}
+				Shape s = getCollisionZone(positionX + moveX, positionY + moveY);
+				Pair<Double, Double> colXcolY = getCollideXY(s, moveX, moveY);
+				super.setPositionX(positionX + colXcolY.getKey());
+				super.setPositionY(positionY + colXcolY.getValue());
 			}
 		} else {
 			currentState = State.IDLE;
 			currentAnimationFrame = 0;
 			movementDistance = 0;
+			animationIdleTimeStore += time;
+			if (animationIdleTimeStore > animationFrameSpeedIdle) {
+				currentFrameIdle = (currentFrameIdle + 1) % animationLengthIdle;
+				animationIdleTimeStore -= animationFrameSpeedIdle;
+			}
 		}
 	}
 
 	public void update(double time) {
 		super.update(time);
 		if (isAlive) {
-			if (!player.isMobile) {
-				updateRunnerPC(time);
+			if (isImmune) {
+				if (immuneTimeStore > (immuneTime - immuneStunTime)) {
+					currentState = State.STUN;
+				} else {
+					if (!player.isMobile) {
+						updateRunnerPC(time);
+					} else {
+						updateRunnerMobile(time);
+					}
+				}
 			} else {
-				updateRunnerMobile(time);
+				if (!player.isMobile) {
+					updateRunnerPC(time);
+				} else {
+					updateRunnerMobile(time);
+				}
 			}
 
 		} else {
@@ -242,15 +269,28 @@ public class CharacterSwordMan extends Character {
 		super.render(gc);
 		gc.save();
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
-		if (isImmune) {
-			gc.setEffect(bloom);
-		} else {
-			gc.setEffect(dropShadow);
-		}
+		gc.setEffect(dropShadow);
 		if (isAlive) {
+			if (isImmune) {
+				gc.setGlobalAlpha(immuneOpacity);
+			}
 			if (currentState == State.IDLE) {
 				if (!isFlipped) {
-					gc.drawImage(idleStateFrames, FRAME_POSITION_IDLE[0][0], FRAME_POSITION_IDLE[0][1],
+					gc.drawImage(idleStateFrames, FRAME_POSITION_IDLE[currentFrameIdle][0],
+							FRAME_POSITION_IDLE[currentFrameIdle][1], animationFrameWidth, animationFrameHeight,
+							positionX, positionY, displayWidth, displayHeight);
+				} else {
+					Rotate r = new Rotate(180, positionX, positionY);
+					r.setAxis(Rotate.Y_AXIS);
+					gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+					gc.translate(-width, 0);
+					gc.drawImage(idleStateFrames, FRAME_POSITION_IDLE[currentFrameIdle][0],
+							FRAME_POSITION_IDLE[currentFrameIdle][1], animationFrameWidth, animationFrameHeight,
+							positionX, positionY, width, height);
+				}
+			} else if (currentState == State.STUN) {
+				if (!isFlipped) {
+					gc.drawImage(defeatedImage, FRAME_POSITION_MOVING[0][0], FRAME_POSITION_MOVING[0][1],
 							animationFrameWidth, animationFrameHeight, positionX, positionY, displayWidth,
 							displayHeight);
 				} else {
@@ -258,11 +298,10 @@ public class CharacterSwordMan extends Character {
 					r.setAxis(Rotate.Y_AXIS);
 					gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 					gc.translate(-width, 0);
-					gc.drawImage(idleStateFrames, FRAME_POSITION_IDLE[0][0], FRAME_POSITION_IDLE[0][1],
+					gc.drawImage(defeatedImage, FRAME_POSITION_MOVING[0][0], FRAME_POSITION_MOVING[0][1],
 							animationFrameWidth, animationFrameHeight, positionX, positionY, width, height);
 				}
 			} else {
-
 				if (!isFlipped) {
 					gc.drawImage(movingStateFrames, FRAME_POSITION_MOVING[currentAnimationFrame][0],
 							FRAME_POSITION_MOVING[currentAnimationFrame][1], animationFrameWidth, animationFrameHeight,
@@ -291,11 +330,25 @@ public class CharacterSwordMan extends Character {
 		gc.restore();
 
 		// draw collison box
-		/*
-		 * gc.save(); gc.setGlobalBlendMode(BlendMode.LIGHTEN);
-		 * gc.setFill(player.getColor()); Bounds b =
-		 * collisionZone.getLayoutBounds(); gc.fillRect(b.getMinX(),
-		 * b.getMinY(), b.getWidth(), b.getHeight()); gc.restore();
-		 */
+
+		gc.save();
+		gc.setGlobalBlendMode(BlendMode.LIGHTEN);
+		gc.setFill(player.getColor());
+		Bounds b = getCollisionZone().getLayoutBounds();
+		gc.fillRect(b.getMinX(), b.getMinY(), b.getWidth(), b.getHeight());
+		gc.restore();
+
+	}
+
+	public Shape getCollisionZone() {
+		Rectangle r = (Rectangle) collisionZone;
+		Shape s = new Rectangle(r.getX() + positionX, r.getY() + positionY, r.getWidth(), r.getHeight());
+		return s;
+	}
+
+	public Shape getCollisionZone(double x, double y) {
+		Rectangle r = (Rectangle) collisionZone;
+		Shape s = new Rectangle(r.getX() + x, r.getY() + y, r.getWidth(), r.getHeight());
+		return s;
 	}
 }

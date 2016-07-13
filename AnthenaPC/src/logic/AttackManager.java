@@ -11,7 +11,7 @@ import javafx.scene.shape.Shape;
 
 public class AttackManager {
 
-	private int mode = 1;
+	private int mode = 0;
 	private ArrayList<Attack> attacks = new ArrayList<Attack>();
 	private Shape map_boundary;
 
@@ -23,7 +23,7 @@ public class AttackManager {
 	private double spawnmaxY;
 	private double spawnZoneHeight;
 
-	private double rateOfSpawn = 0.4;
+	private double rateOfSpawn = 1;
 	private double maxCount = 20;
 	private double elapsedTimeStore = 0;
 

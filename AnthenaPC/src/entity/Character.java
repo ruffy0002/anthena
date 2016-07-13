@@ -27,7 +27,7 @@ import resource.Resources;
 public class Character extends Sprite {
 
 	public enum State {
-		IDLE, MOVING, ATTACKING, DEFEATED, DEAD, IMMUNE;
+		IDLE, MOVING, ATTACKING, DEFEATED, DEAD, IMMUNE, STUN;
 	}
 
 	protected Player player;
@@ -43,9 +43,11 @@ public class Character extends Sprite {
 	protected boolean isFlipped = false;
 	protected boolean isImmune = false;
 	protected double immuneTime = 2;
-	protected double immuneFlashSpeed = 3;
+	protected double immuneFlashSpeed = 0.1;
+	protected double immuneStunTime = 1;
+	protected double immuneOpacity = 1;
 	protected int bloomDirection = 1;
-	private double immuneTimeStore = 0;
+	protected double immuneTimeStore = 0;
 	protected boolean hasFinishDeathAnimation = false;
 
 	protected Image deathImage;
@@ -68,12 +70,11 @@ public class Character extends Sprite {
 	protected int defeatAnimationRepeat;
 
 	private static Image heart = Resources.getHeart();
-	private static double heartWidth = 15;
-	private static double heartHeight = 15;
+	private static double heartWidth = 12;
+	private static double heartHeight = 12;
 	DropShadow dropShadow;
 	Shadow shadow;
 	Bloom bloom;
-	ColorAdjust ca;
 
 	public Character(Player p) {
 		currentState = State.IDLE;
@@ -83,13 +84,10 @@ public class Character extends Sprite {
 		dropShadow.setOffsetX(-5.0);
 		dropShadow.setOffsetY(3.0);
 		dropShadow.setColor(Color.BLACK);
-		shadow = new Shadow(BlurType.GAUSSIAN, Color.RED, 3);
+		shadow = new Shadow(BlurType.GAUSSIAN, new Color(1, 0, 0, 0.3), 0.1);
 		bloom = new Bloom();
 		bloom.setThreshold(0.3);
-		ca = new ColorAdjust();
-		ca.setHue(0.8);
-		ca.setSaturation(1.0);
-		bloom.setInput(ca);
+		// bloom.setInput(shadow);
 	}
 
 	public void init() {
@@ -134,14 +132,10 @@ public class Character extends Sprite {
 			if (immuneTimeStore <= 0) {
 				isImmune = false;
 			}
-			double bloomE = immuneFlashSpeed * time * bloomDirection;
-			double bloomT = bloom.getThreshold() + bloomE;
-			if (bloomT > 0.8) {
-				bloomDirection = -1;
-			} else if(bloomT < 0){
-				bloomDirection = 1;
-			}
-			bloom.setThreshold(bloomT);
+			double tPast = immuneTime - immuneTimeStore;
+			int noTick = (int) (tPast / immuneFlashSpeed);
+			int val = noTick % 2;
+			immuneOpacity = val;
 		}
 	}
 
@@ -161,8 +155,6 @@ public class Character extends Sprite {
 		gc.setStroke(player.getColor());
 		gc.strokeText(player.getNameLabel().getText(), positionX + (width - player.getNameLabel().getMinWidth()) / 2,
 				positionY + height + 12);
-		gc.strokeText(String.valueOf(player.getScore()), positionX + (width - player.getNameLabel().getMinWidth()) / 2,
-				positionY + height + 24);
 		gc.restore();
 	}
 
@@ -208,19 +200,30 @@ public class Character extends Sprite {
 		}
 	}
 
-	public Pair<Boolean, Boolean> getCollidePair(Shape bound) {
+	public Pair<Double, Double> getCollideXY(Shape s, double moveX, double moveY) {
 
-		Shape col = Rectangle.union(bound, collisionZone);
-		boolean xCollide = false;
-		boolean yCollide = false;
-		if (col.getLayoutBounds().getWidth() != bound.getLayoutBounds().getWidth()) {
-			xCollide = true;
+		double xCollide = moveX;
+		double yCollide = moveY;
+
+		Shape col = Shape.union(s, mapBoundary);
+		double extraX = col.getLayoutBounds().getWidth() - mapBoundary.getLayoutBounds().getWidth();
+		double extraY = col.getLayoutBounds().getHeight() - mapBoundary.getLayoutBounds().getHeight();
+		if (extraX != 0) {
+			if (xCollide < 0) {
+				xCollide += extraX;
+			} else {
+				xCollide -= extraX;
+			}
 		}
-		if (col.getLayoutBounds().getHeight() != bound.getLayoutBounds().getHeight()) {
-			yCollide = true;
+		if (extraY != 0) {
+			if (yCollide < 0) {
+				yCollide += extraY;
+			} else {
+				yCollide -= extraY;
+			}
 		}
 
-		Pair<Boolean, Boolean> colXcolY = new Pair<Boolean, Boolean>(xCollide, yCollide);
+		Pair<Double, Double> colXcolY = new Pair<Double, Double>(xCollide, yCollide);
 		return colXcolY;
 	}
 
@@ -266,4 +269,7 @@ public class Character extends Sprite {
 		return positionYFinal;
 	}
 
+	public Player getPlayer() {
+		return player;
+	}
 }

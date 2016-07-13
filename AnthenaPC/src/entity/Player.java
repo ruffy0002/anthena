@@ -11,13 +11,14 @@ import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.paint.Color;
 import logic.LogicMain;
+import userinterface.PanelSetFace;
 
 public class Player {
 
 	public boolean isMobile;
 	public static final int TYPE_RUNNER = 1;
 	public static final int TYPE_STOMPPER = 0;
-	
+
 	public static final int NOT_READY = 0;
 	public static final int READY = 1;
 	public static final int READY_TO_GO = 2;
@@ -39,6 +40,7 @@ public class Player {
 
 	private LogicMain logicMain;
 	private Sprite sprite;
+	private PanelSetFace panelSet;
 	private int health;
 
 	private ColorAdjust colorAdjust;
@@ -56,7 +58,7 @@ public class Player {
 		this.color = color;
 		this.status = NOT_READY;
 
-		health = 3;
+		health = 24;
 		nameLabel = new Label(name);
 		FontLoader fontLoader = Toolkit.getToolkit().getFontLoader();
 		double w = fontLoader.computeStringWidth(nameLabel.getText(), nameLabel.getFont());
@@ -126,13 +128,16 @@ public class Player {
 		character.setControl(control);
 		return character;
 	}
-	
-	public Character getCharacter(){
+
+	public Character getCharacter() {
 		return character;
 	}
 
 	public void addScore(int i) {
 		score += i;
+		if (panelSet != null) {
+			panelSet.updateScore(String.valueOf(score));
+		}
 	}
 
 	public int getScore() {
@@ -156,6 +161,29 @@ public class Player {
 
 	public ColorAdjust getPaintEffect() {
 		return colorAdjust;
+	}
+
+	public void changeToStomper() {
+		playerType = TYPE_STOMPPER;
+		if (thread != null) {
+			thread.sendPlayerTypeChange();
+		}
+	}
+
+	public void setPanelSetFace(PanelSetFace panelSet) {
+		this.panelSet = panelSet;
+	}
+
+	public void setPanelDC() {
+		panelSet.changeToDC();
+	}
+
+	public void setPanelConnected() {
+		panelSet.changeToConnected();
+	}
+
+	public PanelSetFace getPanelSet() {
+		return panelSet;
 	}
 
 }

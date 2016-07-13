@@ -137,8 +137,8 @@ public class GameRoomInterface implements GameScene {
 	public int updateControl(KeyCode key) {
 		if (key.compareTo(KeyCode.SPACE) == 0) {
 			Player p = logic.addNewRunner();
-			p.setStatus(Player.READY);
 			if (p != null) {
+				p.setStatus(Player.READY);
 				leftVBox.getChildren().add(createNewRunnnerInterface(p));
 			}
 		} else if (key.compareTo(KeyCode.UP) == 0) {
