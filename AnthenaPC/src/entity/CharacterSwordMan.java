@@ -345,7 +345,7 @@ public class CharacterSwordMan extends Character {
 		Shape s = new Rectangle(r.getX() + positionX, r.getY() + positionY, r.getWidth(), r.getHeight());
 		return s;
 	}
-
+	
 	public Shape getCollisionZone(double x, double y) {
 		Rectangle r = (Rectangle) collisionZone;
 		Shape s = new Rectangle(r.getX() + x, r.getY() + y, r.getWidth(), r.getHeight());

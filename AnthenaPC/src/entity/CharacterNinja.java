@@ -28,6 +28,7 @@ public class CharacterNinja extends Character {
 
 	private double[][] kagebushinCurrPos = new double[4][2];
 	private double[][] kagebushinGoToPos = new double[4][2];
+	private boolean[] kagebushinIsFliped = new boolean[4];
 	private boolean isKageActive = false;
 	private double kageTimeStore = 0;
 	private double kageDuration = 3;
@@ -199,8 +200,27 @@ public class CharacterNinja extends Character {
 
 			// AI stuff to move kage
 			if (isKageActive) {
+				Random r = new Random();
 				for (int i = 0; i < kagebushinCurrPos.length; i++) {
-
+					
+					double sld = Math.sqrt(Math.pow(kagebushinCurrPos[i][0] - kagebushinGoToPos[i][0], 2) + Math.pow(kagebushinCurrPos[i][1] - kagebushinGoToPos[i][1], 2));
+					if (sld < totalMovementDistance) {
+						kagebushinCurrPos[i][0] = kagebushinGoToPos[i][0];
+						kagebushinCurrPos[i][1] = kagebushinGoToPos[i][1];
+						kagebushinGoToPos[i][0] = kagebushinCurrPos[i][0]  + (r.nextDouble() - 0.5) * 180;
+						kagebushinGoToPos[i][1] = kagebushinCurrPos[i][1]  + (r.nextDouble() - 0.5) * 180;
+					} else {
+						double ratioToGo = totalMovementDistance / sld;
+						moveX = (kagebushinGoToPos[i][0] - kagebushinCurrPos[i][0]) * ratioToGo;
+						moveY = (kagebushinGoToPos[i][1] - kagebushinCurrPos[i][1]) * ratioToGo;
+						if (moveX < 0) {
+							kagebushinIsFliped[i] = true;
+						} else if (moveX > 0) {
+							kagebushinIsFliped[i] = false;
+						}
+						kagebushinCurrPos[i][0] = kagebushinCurrPos[i][0] + moveX;
+						kagebushinCurrPos[i][1] = kagebushinCurrPos[i][1] + moveY;
+					}
 				}
 			}
 		}
@@ -300,10 +320,25 @@ public class CharacterNinja extends Character {
 
 			if (isKageActive) {
 				for (int i = 0; i < kagebushinCurrPos.length; i++) {
-					gc.drawImage(idleStateFrames, FRAME_POSITION_IDLE[currentFrameIdle][0],
-							FRAME_POSITION_IDLE[currentFrameIdle][1], animationFrameWidth, animationFrameHeight,
-							kagebushinCurrPos[i][0], kagebushinCurrPos[i][1], displayWidth, displayHeight);
+					gc.save();
+					if (!kagebushinIsFliped[i]) {
+						gc.drawImage(movingStateFrames, FRAME_POSITION_MOVING[currentAnimationFrame][0],
+								FRAME_POSITION_MOVING[currentAnimationFrame][1], animationFrameWidth, animationFrameHeight,
+								kagebushinCurrPos[i][0], kagebushinCurrPos[i][1], displayWidth, displayHeight);
+					} else {
+						Rotate r = new Rotate(180, kagebushinCurrPos[i][0], kagebushinCurrPos[i][1]);
+						r.setAxis(Rotate.Y_AXIS);
+						gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+						gc.translate(-width, 0);
+						gc.drawImage(movingStateFrames, FRAME_POSITION_MOVING[currentAnimationFrame][0],
+								FRAME_POSITION_MOVING[currentAnimationFrame][1], animationFrameWidth, animationFrameHeight,
+								kagebushinCurrPos[i][0], kagebushinCurrPos[i][1], width, height);
+						
+					}
+					gc.restore();
+					
 				}
+				
 			}
 
 			if (isImmune) {
@@ -394,8 +429,9 @@ public class CharacterNinja extends Character {
 		for (int i = 0; i < kagebushinCurrPos.length; i++) {
 			kagebushinCurrPos[i][0] = positionX;
 			kagebushinCurrPos[i][1] = positionY;
-			kagebushinGoToPos[i][0] = positionX + (r.nextDouble() - 0.5) * 30;
-			kagebushinGoToPos[i][1] = positionY + (r.nextDouble() - 0.5) * 30;
+			kagebushinGoToPos[i][0] = positionX + (r.nextDouble() - 0.5) * 60;
+			kagebushinGoToPos[i][1] = positionY + (r.nextDouble() - 0.5) * 60;
+			kagebushinIsFliped[i] = false;
 		}
 
 	}
