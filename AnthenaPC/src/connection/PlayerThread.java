@@ -36,6 +36,7 @@ public class PlayerThread implements Runnable {
 	boolean isReady = false;
 	boolean isStarted = false;
 
+	private int packetCount = 0;
 	public PlayerThread(InetAddress ipAddress, int playerNo, Socket socket, LogicMain logicMain) {
 		_ipAddress = ipAddress;
 		_playerNo = playerNo;
@@ -118,12 +119,18 @@ public class PlayerThread implements Runnable {
 
 	private void sendDataToProgram(GamePacket data) {
 		if (data.getType() == GamePacket.TYPE_STOMPER) {
-			System.out.println("Player " + _playerNo + " stomps [X: " + data.getX() + ", Y: " + data.getY() + "]");
+		    if(data.getX() != -1000) {
+		        packetCount++;
+		    }
+			System.out.println("("+ packetCount + ")Player " + _playerNo + " stomps [X: " + data.getX() + ", Y: " + data.getY() + "]");
 			if (_logicMain != null) {
 				_logicMain.executeAttack(_player, data.getX(), data.getY());
 			}
 		} else if (data.getType() == GamePacket.TYPE_RUNNER) {
-			System.out.println("Player " + _playerNo + " running to [X: " + data.getX() + ", Y: " + data.getY() + "]");
+		    if(data.getX() != -1000) {
+                packetCount++;
+            }
+		    System.out.println("("+ packetCount + ")Player " + _playerNo + " running to [X: " + data.getX() + ", Y: " + data.getY() + "]");
 			if (_logicMain != null) {
 				_logicMain.updatePlayerPosition(_player, data.getX(), data.getY());
 			}
@@ -152,6 +159,10 @@ public class PlayerThread implements Runnable {
 				_player.setStatus(Player.READY_TO_GO);
 				// _logicMain.updatePlayerStatus(_player);
 			}
+		} else if(data.getType() == GamePacket.TYPE_SKILL) {
+		    System.out.println("Player " + _playerNo +" used skill");
+		    //This is the skill type
+		    data.getSkill();
 		} else {
 			System.out.println("Data sent from client not recognized!");
 		}
