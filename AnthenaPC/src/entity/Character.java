@@ -158,8 +158,8 @@ public class Character extends Sprite {
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
 		gc.setEffect(dropShadow);
 		gc.setStroke(player.getColor());
-		gc.strokeText(player.getNameLabel().getText(), positionX + (width - player.getNameLabel().getMinWidth()) / 2,
-				positionY + height + 12);
+		gc.strokeText(player.getNameLabel().getText(),
+				drawPositionX + (width - player.getNameLabel().getMinWidth()) / 2, drawPositionY + height + 12);
 		gc.restore();
 	}
 
@@ -168,7 +168,8 @@ public class Character extends Sprite {
 		gc.setGlobalBlendMode(BlendMode.SRC_OVER);
 		for (int i = 0; i < player.getHealth(); i++) {
 			double tempC = heartWidth * i;
-			gc.drawImage(heart, 0, 0, 65, 60, positionX + tempC, positionY - heartHeight, heartWidth, heartHeight);
+			gc.drawImage(heart, 0, 0, 65, 60, drawPositionX + tempC, drawPositionY - heartHeight, heartWidth,
+					heartHeight);
 		}
 		gc.restore();
 	}
@@ -286,5 +287,16 @@ public class Character extends Sprite {
 
 	public void executeSkill() {
 
+	}
+
+	public void calculateBoundary() {
+		double boundaryWidth = width * 0.5;
+		double boundaryHeight = height * 0.3;
+		double boundaryX = -boundaryWidth / 2;
+		double boundaryY = -boundaryHeight / 2;
+		collisionZone = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
+
+		drawOffSetX = width / 2;
+		drawOffSetY = height * 0.82;
 	}
 }

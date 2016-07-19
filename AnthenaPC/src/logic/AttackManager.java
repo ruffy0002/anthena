@@ -11,7 +11,7 @@ import javafx.scene.shape.Shape;
 
 public class AttackManager {
 
-	private int mode = 0;
+	private int mode = 1;
 	private ArrayList<Attack> attacks = new ArrayList<Attack>();
 	private Shape map_boundary;
 

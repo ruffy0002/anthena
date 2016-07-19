@@ -129,14 +129,6 @@ public class CharacterSwordMan extends Character {
 		calculateBoundary();
 	}
 
-	public void calculateBoundary() {
-		double boundaryWidth = width * 0.6;
-		double boundaryHeight = height * 0.3;
-		double boundaryX = (width - boundaryWidth) / 3;
-		double boundaryY = (height - boundaryHeight);
-		collisionZone = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
-	}
-
 	public void updateRunnerPC(double time) {
 		double totalMovementDistance = movementSpeed * time;
 		double moveX = 0;
@@ -261,8 +253,9 @@ public class CharacterSwordMan extends Character {
 				currentDeathAnimationFrame = (int) (frameSpeedControl / deathAnimationFrameSpeed);
 				currentDeathAnimationFrame = currentDeathAnimationFrame % deathAnimationLength;
 			}
-
 		}
+		drawPositionX = positionX - drawOffSetX;
+		drawPositionY = positionY - drawOffSetY;
 	}
 
 	public void render(GraphicsContext gc) {
@@ -278,34 +271,34 @@ public class CharacterSwordMan extends Character {
 				if (!isFlipped) {
 					gc.drawImage(idleStateFrames, FRAME_POSITION_IDLE[currentFrameIdle][0],
 							FRAME_POSITION_IDLE[currentFrameIdle][1], animationFrameWidth, animationFrameHeight,
-							positionX, positionY, displayWidth, displayHeight);
+							drawPositionX, drawPositionY, width, height);
 				} else {
-					Rotate r = new Rotate(180, positionX, positionY);
+					Rotate r = new Rotate(180, drawPositionX, drawPositionY);
 					r.setAxis(Rotate.Y_AXIS);
 					gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 					gc.translate(-width, 0);
 					gc.drawImage(idleStateFrames, FRAME_POSITION_IDLE[currentFrameIdle][0],
 							FRAME_POSITION_IDLE[currentFrameIdle][1], animationFrameWidth, animationFrameHeight,
-							positionX, positionY, width, height);
+							drawPositionX, drawPositionY, width, height);
 				}
 			} else if (currentState == State.STUN) {
 				if (!isFlipped) {
 					gc.drawImage(defeatedImage, FRAME_POSITION_MOVING[0][0], FRAME_POSITION_MOVING[0][1],
-							animationFrameWidth, animationFrameHeight, positionX, positionY, displayWidth,
-							displayHeight);
+							animationFrameWidth, animationFrameHeight, drawPositionX, drawPositionY, width,
+							height);
 				} else {
-					Rotate r = new Rotate(180, positionX, positionY);
+					Rotate r = new Rotate(180, drawPositionX, drawPositionY);
 					r.setAxis(Rotate.Y_AXIS);
 					gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 					gc.translate(-width, 0);
 					gc.drawImage(defeatedImage, FRAME_POSITION_MOVING[0][0], FRAME_POSITION_MOVING[0][1],
-							animationFrameWidth, animationFrameHeight, positionX, positionY, width, height);
+							animationFrameWidth, animationFrameHeight, drawPositionX, drawPositionY, width, height);
 				}
 			} else {
 				if (!isFlipped) {
 					gc.drawImage(movingStateFrames, FRAME_POSITION_MOVING[currentAnimationFrame][0],
 							FRAME_POSITION_MOVING[currentAnimationFrame][1], animationFrameWidth, animationFrameHeight,
-							positionX, positionY, displayWidth, displayHeight);
+							drawPositionX, drawPositionY, width, height);
 				} else {
 					Rotate r = new Rotate(180, positionX, positionY);
 					r.setAxis(Rotate.Y_AXIS);
@@ -313,18 +306,18 @@ public class CharacterSwordMan extends Character {
 					gc.translate(-width, 0);
 					gc.drawImage(movingStateFrames, FRAME_POSITION_MOVING[currentAnimationFrame][0],
 							FRAME_POSITION_MOVING[currentAnimationFrame][1], animationFrameWidth, animationFrameHeight,
-							positionX, positionY, width, height);
+							drawPositionX, drawPositionY, width, height);
 				}
 			}
 		} else {
 			if (!hasFinishDeathAnimation) {
 				gc.drawImage(defeatedImage, defeatedAnimationFrameWidth * currentDefeatedAnimationFrame, 0,
-						defeatedAnimationFrameWidth, defeatedAnimationFrameHeight, positionX, positionY, displayWidth,
-						displayHeight);
+						defeatedAnimationFrameWidth, defeatedAnimationFrameHeight, drawPositionX, drawPositionY, width,
+						height);
 			} else {
 				gc.drawImage(deathImage, deathAnimationFrameWidth * currentDeathAnimationFrame, 0,
-						deathAnimationFrameWidth, deathAnimationFrameHeight, positionX, positionY, displayWidth,
-						displayHeight);
+						deathAnimationFrameWidth, deathAnimationFrameHeight, drawPositionX, drawPositionY, width,
+						height);
 			}
 		}
 		gc.restore();

@@ -178,7 +178,7 @@ public class GameLoop extends AnimationTimer {
 		for (int k = 0; k < trapManager.getTraps().size(); k++) {
 			for (int kk = 0; kk < character.size(); kk++) {
 				if (!trapManager.getTraps().get(k).belongsToMe(character.get(kk).getPlayer())) {
-					System.out.println("collided on " + trapManager.getTraps().get(k).getPlayer().getName() + " trap");
+					//System.out.println("collided on " + trapManager.getTraps().get(k).getPlayer().getName() + " trap");
 				}
 			}
 		}
@@ -267,8 +267,8 @@ public class GameLoop extends AnimationTimer {
 		attackManager.createAttack(x, y, player);
 	}
 
-	public void addTrapToField(float x, float y, Player player) {
-		trapManager.createTrap(x, y, player);
+	public void addTrapToField(double d, double e, Player player) {
+		trapManager.createTrap(d, e, player);
 	}
 
 	public void addRunner(Player p) {

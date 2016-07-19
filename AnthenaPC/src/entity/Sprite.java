@@ -36,6 +36,11 @@ public class Sprite implements Comparable<Sprite> {
 	protected double previousX;
 	protected double previousY;
 
+	protected double drawPositionX;
+	protected double drawPositionY;
+	protected double drawOffSetX;
+	protected double drawOffSetY;
+
 	protected double boundaryX;
 	protected double boundaryY;
 

@@ -163,7 +163,8 @@ public class PlayerThread implements Runnable {
 		} else if(data.getType() == GamePacket.TYPE_SKILL) {
 		    System.out.println("Player " + _playerNo +" used skill");
 		    //This is the skill type
-		    data.getSkill();
+		   System.out.println(data.getSkill());
+		   _logicMain.addTrapToField(_player, _player.getCharacter().getPositionX(), _player.getCharacter().getPositionY());
 		} else {
 			System.out.println("Data sent from client not recognized!");
 		}

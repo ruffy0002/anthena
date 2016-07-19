@@ -49,7 +49,6 @@ public class CharacterNinja extends Character {
 		FRAME_POSITION_IDLE[3][1] = 0;
 		FRAME_POSITION_IDLE[4][0] = 0;
 		FRAME_POSITION_IDLE[4][1] = 0;
-		
 
 		// moving state
 		FRAME_POSITION_MOVING[0][0] = 0;
@@ -128,13 +127,7 @@ public class CharacterNinja extends Character {
 		calculateBoundary();
 	}
 
-	public void calculateBoundary() {
-		double boundaryWidth = width * 0.6;
-		double boundaryHeight = height * 0.3;
-		double boundaryX = (width - boundaryWidth) / 3;
-		double boundaryY = (height - boundaryHeight);
-		collisionZone = new Rectangle(boundaryX, boundaryY, boundaryWidth, boundaryHeight);
-	}
+	
 
 	public void updateRunnerPC(double time) {
 		if (executingSkill) {
@@ -191,13 +184,14 @@ public class CharacterNinja extends Character {
 			if (isKageActive) {
 				Random r = new Random();
 				for (int i = 0; i < kagebushinCurrPos.length; i++) {
-					
-					double sld = Math.sqrt(Math.pow(kagebushinCurrPos[i][0] - kagebushinGoToPos[i][0], 2) + Math.pow(kagebushinCurrPos[i][1] - kagebushinGoToPos[i][1], 2));
+
+					double sld = Math.sqrt(Math.pow(kagebushinCurrPos[i][0] - kagebushinGoToPos[i][0], 2)
+							+ Math.pow(kagebushinCurrPos[i][1] - kagebushinGoToPos[i][1], 2));
 					if (sld < totalMovementDistance) {
 						kagebushinCurrPos[i][0] = kagebushinGoToPos[i][0];
 						kagebushinCurrPos[i][1] = kagebushinGoToPos[i][1];
-						kagebushinGoToPos[i][0] = kagebushinCurrPos[i][0]  + (r.nextDouble() - 0.5) * 180;
-						kagebushinGoToPos[i][1] = kagebushinCurrPos[i][1]  + (r.nextDouble() - 0.5) * 180;
+						kagebushinGoToPos[i][0] = kagebushinCurrPos[i][0] + (r.nextDouble() - 0.5) * 180;
+						kagebushinGoToPos[i][1] = kagebushinCurrPos[i][1] + (r.nextDouble() - 0.5) * 180;
 					} else {
 						double ratioToGo = totalMovementDistance / sld;
 						moveX = (kagebushinGoToPos[i][0] - kagebushinCurrPos[i][0]) * ratioToGo;
@@ -298,6 +292,8 @@ public class CharacterNinja extends Character {
 			}
 
 		}
+		drawPositionX = positionX - drawOffSetX;
+		drawPositionY = positionY - drawOffSetY;
 	}
 
 	public void render(GraphicsContext gc) {
@@ -312,22 +308,22 @@ public class CharacterNinja extends Character {
 					gc.save();
 					if (!kagebushinIsFliped[i]) {
 						gc.drawImage(movingStateFrames, FRAME_POSITION_MOVING[currentAnimationFrame][0],
-								FRAME_POSITION_MOVING[currentAnimationFrame][1], animationFrameWidth, animationFrameHeight,
-								kagebushinCurrPos[i][0], kagebushinCurrPos[i][1], displayWidth, displayHeight);
+								FRAME_POSITION_MOVING[currentAnimationFrame][1], animationFrameWidth,
+								animationFrameHeight, kagebushinCurrPos[i][0], kagebushinCurrPos[i][1], width, height);
 					} else {
 						Rotate r = new Rotate(180, kagebushinCurrPos[i][0], kagebushinCurrPos[i][1]);
 						r.setAxis(Rotate.Y_AXIS);
 						gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 						gc.translate(-width, 0);
 						gc.drawImage(movingStateFrames, FRAME_POSITION_MOVING[currentAnimationFrame][0],
-								FRAME_POSITION_MOVING[currentAnimationFrame][1], animationFrameWidth, animationFrameHeight,
-								kagebushinCurrPos[i][0], kagebushinCurrPos[i][1], width, height);
-						
+								FRAME_POSITION_MOVING[currentAnimationFrame][1], animationFrameWidth,
+								animationFrameHeight, kagebushinCurrPos[i][0], kagebushinCurrPos[i][1], width, height);
+
 					}
 					gc.restore();
-					
+
 				}
-				
+
 			}
 
 			if (isImmune) {
@@ -337,52 +333,51 @@ public class CharacterNinja extends Character {
 				if (!isFlipped) {
 					gc.drawImage(idleStateFrames, FRAME_POSITION_IDLE[currentFrameIdle][0],
 							FRAME_POSITION_IDLE[currentFrameIdle][1], animationFrameWidth, animationFrameHeight,
-							positionX, positionY, displayWidth, displayHeight);
+							drawPositionX, drawPositionY, width, height);
 				} else {
-					Rotate r = new Rotate(180, positionX, positionY);
+					Rotate r = new Rotate(180, drawPositionX, drawPositionY);
 					r.setAxis(Rotate.Y_AXIS);
 					gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 					gc.translate(-width, 0);
 					gc.drawImage(idleStateFrames, FRAME_POSITION_IDLE[currentFrameIdle][0],
 							FRAME_POSITION_IDLE[currentFrameIdle][1], animationFrameWidth, animationFrameHeight,
-							positionX, positionY, width, height);
+							drawPositionX, drawPositionY, width, height);
 				}
 			} else if (currentState == State.STUN) {
 				if (!isFlipped) {
 					gc.drawImage(defeatedImage, FRAME_POSITION_MOVING[0][0], FRAME_POSITION_MOVING[0][1],
-							animationFrameWidth, animationFrameHeight, positionX, positionY, displayWidth,
-							displayHeight);
+							animationFrameWidth, animationFrameHeight, drawPositionX, drawPositionY, width, height);
 				} else {
-					Rotate r = new Rotate(180, positionX, positionY);
+					Rotate r = new Rotate(180, drawPositionX, drawPositionY);
 					r.setAxis(Rotate.Y_AXIS);
 					gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 					gc.translate(-width, 0);
 					gc.drawImage(defeatedImage, FRAME_POSITION_MOVING[0][0], FRAME_POSITION_MOVING[0][1],
-							animationFrameWidth, animationFrameHeight, positionX, positionY, width, height);
+							animationFrameWidth, animationFrameHeight, drawPositionX, drawPositionY, width, height);
 				}
 			} else {
 				if (!isFlipped) {
 					gc.drawImage(movingStateFrames, FRAME_POSITION_MOVING[currentAnimationFrame][0],
 							FRAME_POSITION_MOVING[currentAnimationFrame][1], animationFrameWidth, animationFrameHeight,
-							positionX, positionY, displayWidth, displayHeight);
+							drawPositionX, drawPositionY, width, height);
 				} else {
-					Rotate r = new Rotate(180, positionX, positionY);
+					Rotate r = new Rotate(180, drawPositionX, drawPositionY);
 					r.setAxis(Rotate.Y_AXIS);
 					gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 					gc.translate(-width, 0);
 					gc.drawImage(movingStateFrames, FRAME_POSITION_MOVING[currentAnimationFrame][0],
 							FRAME_POSITION_MOVING[currentAnimationFrame][1], animationFrameWidth, animationFrameHeight,
-							positionX, positionY, width, height);
+							drawPositionX, drawPositionY, width, height);
 				}
 			}
 		} else {
 			if (!hasFinishDeathAnimation) {
 				gc.drawImage(defeatedImage, defeatedAnimationFrameWidth * currentDefeatedAnimationFrame, 0,
-						defeatedAnimationFrameWidth, defeatedAnimationFrameHeight, positionX, positionY, displayWidth,
-						displayHeight);
+						defeatedAnimationFrameWidth, defeatedAnimationFrameHeight, drawPositionX, drawPositionY,
+						displayWidth, displayHeight);
 			} else {
 				gc.drawImage(deathImage, deathAnimationFrameWidth * currentDeathAnimationFrame, 0,
-						deathAnimationFrameWidth, deathAnimationFrameHeight, positionX, positionY, displayWidth,
+						deathAnimationFrameWidth, deathAnimationFrameHeight, drawPositionX, drawPositionY, displayWidth,
 						displayHeight);
 			}
 		}
@@ -390,12 +385,12 @@ public class CharacterNinja extends Character {
 
 		// draw collison box
 
-		/*gc.save();
+		gc.save();
 		gc.setGlobalBlendMode(BlendMode.LIGHTEN);
 		gc.setFill(player.getColor());
 		Bounds b = getCollisionZone().getLayoutBounds();
 		gc.fillRect(b.getMinX(), b.getMinY(), b.getWidth(), b.getHeight());
-		gc.restore();*/
+		gc.restore();
 
 	}
 

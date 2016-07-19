@@ -38,10 +38,8 @@ public class TrapManager {
 		}
 	}
 	
-	public void createTrap(float x, float y, Player player) {
-		double x1 = 800 * x;
-		double y1 = 600 * y;
-		Trap trap = new Trap(x1, y1, player);
+	public void createTrap(double d, double e, Player player) {
+		Trap trap = new Trap(d, e, player);
 		if (inBounds(trap)) {
 			traps.add(trap);
 		}
