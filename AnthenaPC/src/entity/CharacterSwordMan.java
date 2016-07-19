@@ -300,7 +300,7 @@ public class CharacterSwordMan extends Character {
 							FRAME_POSITION_MOVING[currentAnimationFrame][1], animationFrameWidth, animationFrameHeight,
 							drawPositionX, drawPositionY, width, height);
 				} else {
-					Rotate r = new Rotate(180, positionX, positionY);
+					Rotate r = new Rotate(180, drawPositionX, drawPositionY);
 					r.setAxis(Rotate.Y_AXIS);
 					gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 					gc.translate(-width, 0);

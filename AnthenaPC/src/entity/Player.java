@@ -124,7 +124,7 @@ public class Player {
 	}
 
 	public Character createSprite() {
-		character = new CharacterNinja(this);
+		character = new CharacterSwordMan(this);
 		character.setControl(control);
 		return character;
 	}
