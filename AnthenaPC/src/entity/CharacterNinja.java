@@ -16,12 +16,12 @@ import resource.Resources.CharacterType;
 public class CharacterNinja extends Character {
 
 	private static final double[][] FRAME_POSITION_MOVING = new double[14][2];
-	private static final double[][] FRAME_POSITION_IDLE = new double[11][2];
+	private static final double[][] FRAME_POSITION_IDLE = new double[5][2];
 
 	private static double animationLengthMoving = 14;
-	private static double animationSpeedMoving = 5;
+	private static double animationSpeedMoving = 6;
 
-	private static int animationLengthIdle = 11;
+	private static int animationLengthIdle = 5;
 	private static double animationFrameSpeedIdle = 0.4;
 	private double animationIdleTimeStore = 0;
 	private int currentFrameIdle = 0;
@@ -35,8 +35,8 @@ public class CharacterNinja extends Character {
 
 	public static void initMain() {
 
-		double fWidth = 300;
-		double fHeight = 537;
+		double fWidth = 400;
+		double fHeight = 683;
 
 		// idle state
 		FRAME_POSITION_IDLE[0][0] = 0;
@@ -45,22 +45,11 @@ public class CharacterNinja extends Character {
 		FRAME_POSITION_IDLE[1][1] = 0;
 		FRAME_POSITION_IDLE[2][0] = fWidth * 2;
 		FRAME_POSITION_IDLE[2][1] = 0;
-		FRAME_POSITION_IDLE[3][0] = fWidth * 3;
+		FRAME_POSITION_IDLE[3][0] = fWidth;
 		FRAME_POSITION_IDLE[3][1] = 0;
-		FRAME_POSITION_IDLE[4][0] = fWidth * 4;
+		FRAME_POSITION_IDLE[4][0] = 0;
 		FRAME_POSITION_IDLE[4][1] = 0;
-		FRAME_POSITION_IDLE[5][0] = fWidth * 5;
-		FRAME_POSITION_IDLE[5][1] = 0;
-		FRAME_POSITION_IDLE[6][0] = fWidth * 4;
-		FRAME_POSITION_IDLE[6][1] = 0;
-		FRAME_POSITION_IDLE[7][0] = fWidth * 3;
-		FRAME_POSITION_IDLE[7][1] = 0;
-		FRAME_POSITION_IDLE[8][0] = fWidth * 2;
-		FRAME_POSITION_IDLE[8][1] = 0;
-		FRAME_POSITION_IDLE[9][0] = fWidth;
-		FRAME_POSITION_IDLE[9][1] = 0;
-		FRAME_POSITION_IDLE[10][0] = 0;
-		FRAME_POSITION_IDLE[10][1] = 0;
+		
 
 		// moving state
 		FRAME_POSITION_MOVING[0][0] = 0;
@@ -104,8 +93,8 @@ public class CharacterNinja extends Character {
 	public void init() {
 		super.init();
 
-		animationFrameWidth = 300;
-		animationFrameHeight = 537;
+		animationFrameWidth = 400;
+		animationFrameHeight = 683;
 
 		deathAnimationLength = 2;
 		deathAnimationSpeed = 0.5;
@@ -132,8 +121,8 @@ public class CharacterNinja extends Character {
 		super.setPositionYFinal(200);
 		super.setVelocityX(0);
 		super.setRotationAngle(0);
-		super.setIdleStateFrames(Resources.getAnimationFrame(CharacterType.SWORDMAN, State.IDLE));
-		super.setMovingFrames(Resources.getAnimationFrame(CharacterType.SWORDMAN, State.MOVING));
+		super.setIdleStateFrames(Resources.getAnimationFrame(CharacterType.NINJA, State.IDLE));
+		super.setMovingFrames(Resources.getAnimationFrame(CharacterType.NINJA, State.MOVING));
 		super.setDeathImage(Resources.getDeathImage(0));
 		super.setDefeatedImage(Resources.getDefeatedImage(0));
 		calculateBoundary();
@@ -401,12 +390,12 @@ public class CharacterNinja extends Character {
 
 		// draw collison box
 
-		gc.save();
+		/*gc.save();
 		gc.setGlobalBlendMode(BlendMode.LIGHTEN);
 		gc.setFill(player.getColor());
 		Bounds b = getCollisionZone().getLayoutBounds();
 		gc.fillRect(b.getMinX(), b.getMinY(), b.getWidth(), b.getHeight());
-		gc.restore();
+		gc.restore();*/
 
 	}
 

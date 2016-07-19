@@ -18,13 +18,14 @@ import javafx.scene.paint.Color;
 public class Resources {
 
 	public enum CharacterType {
-		SWORDMAN;
+		SWORDMAN, NINJA;
 	}
 
 	private static final Image[] GAME_MAPS = new Image[10];
 	private static final Image[] ANTS = new Image[2];
 
 	private static final Image[] SWORD_MAN = new Image[2];
+	private static final Image[] NINJA = new Image[2];
 	private static final Image[] CHARACTER_SET_DEATH = new Image[1];
 	private static final Image[] DEATH = new Image[1];
 
@@ -116,6 +117,9 @@ public class Resources {
 	public void loadCharacterSprites() {
 		SWORD_MAN[0] = new Image("sprite/swordmanMoving.png");
 		SWORD_MAN[1] = new Image("sprite/swordmanIdle.png");
+		
+		NINJA[0] = new Image("sprite/skeleton-idlesheet.png");
+		NINJA[1] = new Image("sprite/skeleton-walkingsheet.png");
 
 		CHARACTER_SET_DEATH[0] = new Image("sprite/swordmandefeated.png");
 		DEATH[0] = new Image("sprite/swordmandeath.png");
@@ -192,6 +196,12 @@ public class Resources {
 				return SWORD_MAN[1];
 			} else if (state == State.MOVING) {
 				return SWORD_MAN[0];
+			}
+		}else if(type== CharacterType.NINJA){
+			if (state == State.IDLE) {
+				return NINJA[0];
+			} else if (state == State.MOVING) {
+				return NINJA[1];
 			}
 		}
 		return null;
