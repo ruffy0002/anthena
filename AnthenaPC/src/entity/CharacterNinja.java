@@ -19,7 +19,7 @@ public class CharacterNinja extends Character {
 	private static final double[][] FRAME_POSITION_IDLE = new double[5][2];
 
 	private static double animationLengthMoving = 14;
-	private static double animationSpeedMoving = 6;
+	private static double animationSpeedMoving = 4;
 
 	private static int animationLengthIdle = 5;
 	private static double animationFrameSpeedIdle = 0.4;

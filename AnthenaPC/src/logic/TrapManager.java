@@ -9,7 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.shape.Shape;
 
 public class TrapManager {
-	
+
 	private ArrayList<Trap> traps = new ArrayList<Trap>();
 	private Shape map_boundary;
 
@@ -20,7 +20,7 @@ public class TrapManager {
 	private double spawnminY;
 	private double spawnmaxY;
 	private double spawnZoneHeight;
-	
+
 	public TrapManager(Shape map_boundary) {
 		this.map_boundary = map_boundary;
 		spawnminX = map_boundary.getBoundsInLocal().getMinX() + (Trap.WIDTH / 2);
@@ -31,20 +31,30 @@ public class TrapManager {
 		spawnmaxY = map_boundary.getBoundsInLocal().getMaxY() - (Trap.visibleHeight / 2);
 		spawnZoneHeight = spawnmaxY - spawnminY;
 	}
-	
+
+	public void update(double elapsedTime) {
+		for (int i = 0; i < traps.size(); i++) {
+			if (traps.get(i).isReadyToClear()) {
+				traps.remove(i--);
+			} else {
+				traps.get(i).update(elapsedTime);
+			}
+		}
+	}
+
 	public void draw(GraphicsContext graphicContext) {
 		for (int i = 0; i < traps.size(); i++) {
 			traps.get(i).render(graphicContext);
 		}
 	}
-	
+
 	public void createTrap(double d, double e, Player player) {
 		Trap trap = new Trap(d, e, player);
 		if (inBounds(trap)) {
 			traps.add(trap);
 		}
 	}
-	
+
 	public boolean inBounds(Trap trap) {
 		Shape shape = Shape.subtract(trap.getCollisionZone(), map_boundary);
 		if (shape.getBoundsInLocal().getWidth() == -1 && shape.getBoundsInLocal().getHeight() == -1) {
@@ -52,8 +62,8 @@ public class TrapManager {
 		}
 		return false;
 	}
-	
-	public ArrayList<Trap> getTraps(){
+
+	public ArrayList<Trap> getTraps() {
 		return traps;
 	}
 }

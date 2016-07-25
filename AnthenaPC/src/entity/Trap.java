@@ -9,12 +9,12 @@ import resource.Resources;
 public class Trap extends Sprite {
 	private Player player;
 
-	public static final double HEIGHT = 100;
-	public static final double WIDTH = 100;
+	public static final double HEIGHT = 50;
+	public static final double WIDTH = 50;
 	public static double visibleHeight = 0;
 	private static double perceptionRotate = 60;
 	private double timePast;
-	private double fadeTime = 3;
+	private double trapDuration = 3;
 	private double fadeDelay = 2;
 	private double currentFadeTime = 3;
 	private double fadeSpeed = 3;
@@ -87,22 +87,28 @@ public class Trap extends Sprite {
 	}
 
 	public void update(double time) {
-
+		timePast += time;
+		if (timePast >= trapDuration) {
+			readyToClear = true;
+		}
 	}
 
 	public boolean belongsToMe(Player player) {
 		if (this.player == null || player == null) {
 			return false;
 		}
-		
+
 		if (this.player == player) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
-	public Player getPlayer(){
+
+	public boolean isReadyToClear() {
+		return readyToClear;
+	}
+	public Player getPlayer() {
 		return player;
 	}
 }

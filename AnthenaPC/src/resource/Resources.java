@@ -118,8 +118,8 @@ public class Resources {
 		SWORD_MAN[0] = new Image("sprite/swordmanMoving.png");
 		SWORD_MAN[1] = new Image("sprite/swordmanIdle.png");
 		
-		NINJA[0] = new Image("sprite/skeleton-idlesheet.png");
-		NINJA[1] = new Image("sprite/skeleton-walkingsheet.png");
+		NINJA[0] = new Image("sprite/ninjaidlesheet.png");
+		NINJA[1] = new Image("sprite/ninjawalkingsheet.png");
 
 		CHARACTER_SET_DEATH[0] = new Image("sprite/swordmandefeated.png");
 		DEATH[0] = new Image("sprite/swordmandeath.png");

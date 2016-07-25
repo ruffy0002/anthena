@@ -124,7 +124,7 @@ public class Player {
 	}
 
 	public Character createSprite() {
-		character = new CharacterSwordMan(this);
+		character = new CharacterNinja(this);
 		character.setControl(control);
 		return character;
 	}
@@ -179,7 +179,9 @@ public class Player {
 	}
 
 	public void setPanelConnected() {
-		panelSet.changeToConnected();
+		if (panelSet != null) {
+			panelSet.changeToConnected();
+		}
 	}
 
 	public PanelSetFace getPanelSet() {
