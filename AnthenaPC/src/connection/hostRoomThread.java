@@ -142,6 +142,28 @@ public class hostRoomThread implements Runnable {
         }
     }
 	
+	/**
+	 * Deletes a disconnected existing player
+	 * 
+	 * @param playerNo - Array slot of player to be deleted
+	 * @return -1 - Player is not disconnected
+	 *         -2 - Player number invalid
+	 *         1 - Player deletion successful
+	 */
+	public int deleteDisconnectedPlayerThread (int playerNo) {
+	    if(playerThreads[playerNo] == null) {
+	        return -2;
+	    }
+	    if(playerThreads[playerNo].checkConnection() == false) {
+	        playerThreads[playerNo].stop();
+	        playerThreads[playerNo] = null;
+	        currentPlayerNo--;
+	        return 1;
+	    } else {
+	        return -1;
+	    }
+	}
+	
 	public void run() {
 		listenAtPort();
 	}

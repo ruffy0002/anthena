@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class GameMessagePacket implements Serializable {
     static final long serialVersionUID = 568750799;
     
+    public static final int MESSAGETYPE_TRAPPED = 1;
     /**
      * Sends a message for the client to display
      * 
@@ -12,7 +13,7 @@ public class GameMessagePacket implements Serializable {
      * @param _duration - Duration where the message is shown (This is not used
      *            for now)
      * @param _type - how the message is to be shown, look at the declarations
-     *            startiing with MESSAGETYE_
+     *            starting with MESSAGETYE_
      */
     GameMessagePacket(String _message, int _duration, int _type) {
         message = _message;
