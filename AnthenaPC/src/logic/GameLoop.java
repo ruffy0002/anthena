@@ -50,15 +50,19 @@ public class GameLoop extends AnimationTimer {
 	private ArrayList<Character> mobileCharacter = new ArrayList<Character>();
 	private PriorityQueue<Sprite> spriteDrawPQ = new PriorityQueue<>();
 	private ArrayList<Attack> attack = new ArrayList<Attack>();
+	private boolean gamePause;
+	private double gamePauseTimeStore = 0;
+	private double gamePauseDelay = 0.3;
 
 	private Resources resources;
+	private LogicMain logic;
 	private CollectableManager collectableManager;
 	private AttackManager attackManager;
 	private TrapManager trapManager;
 	private Shape map_oundary;
 
-	public GameLoop(GameInterface gi, Controller controller, Resources resources) {
-
+	public GameLoop(GameInterface gi, Controller controller, Resources resources, LogicMain logic) {
+		this.logic = logic;
 		this.gameInterface = gi;
 		this.resources = resources;
 		this.controller = controller;
@@ -66,6 +70,7 @@ public class GameLoop extends AnimationTimer {
 		this.backgroundCanvas = gi.getBackgroundCanvas();
 		this.overlayGridPane = gi.getOverlayBox();
 
+		gamePause = false;
 		drawMap();
 		graphicContext = mainCanvas.getGraphicsContext2D();
 
@@ -95,13 +100,18 @@ public class GameLoop extends AnimationTimer {
 
 	@Override
 	public void handle(long currentNanoTime) {
+
 		double elapsedTime = (currentNanoTime - startNanoTime) / 1000000000.0;
 		startNanoTime = currentNanoTime;
 
-		updateOverlay(elapsedTime);
-		process();
-		update(elapsedTime);
-		draw();
+		process(elapsedTime);
+		if (gamePause) {
+
+		} else {
+			updateOverlay(elapsedTime);
+			update(elapsedTime);
+			draw();
+		}
 	}
 
 	private void updateOverlay(double elapsedTime) {
@@ -112,8 +122,11 @@ public class GameLoop extends AnimationTimer {
 		}
 	}
 
-	private void process() {
+	private void process(double elapsedTime) {
 
+		if (gamePauseTimeStore > 0) {
+			gamePauseTimeStore -= elapsedTime;
+		}
 		// set all ants velocity to 0
 		for (int k = 0; k < character.size(); k++) {
 			character.get(k).setVelocityX(0);
@@ -125,17 +138,44 @@ public class GameLoop extends AnimationTimer {
 		ArrayList<KeyCode> temp = controller.getKeyCodes();
 		for (int i = 0; i < temp.size(); i++) {
 			KeyCode code = temp.get(i);
-			if (code.compareTo(KeyCode.DIGIT1) == 0) {
-				createAttack(0.5f, 0.5f, null);
+
+			if (code.compareTo(KeyCode.ESCAPE) == 0) {
+
+				if (gamePauseTimeStore <= 0) {
+					if (gamePause) {
+						gamePause = false;
+						logic.hideGamePauseMenu();
+					} else {
+						gamePause = true;
+						logic.showGamePauseMenu();
+					}
+					gamePauseTimeStore = gamePauseDelay;
+				}
 			}
 
-			if (code.compareTo(KeyCode.DIGIT2) == 0) {
-				addTrapToField(0.5f, 0.5f, null);
+			if (gamePause) {
+				if (code.compareTo(KeyCode.UP) == 0 || code.compareTo(KeyCode.DOWN) == 0
+						|| code.compareTo(KeyCode.ENTER) == 0) {
+					gamePauseTimeStore = gamePauseDelay;
+					if (code.compareTo(KeyCode.ENTER) == 0) {
+						logic.endGame();
+					}
+				}
+
 			}
 
-			for (int k = 0; k < character.size(); k++) {
-				if (character.get(k).getControl() != null) {
-					character.get(k).update(code);
+			if (!gamePause) {
+				if (code.compareTo(KeyCode.DIGIT1) == 0) {
+					createAttack(0.5f, 0.5f, null);
+				}
+
+				if (code.compareTo(KeyCode.DIGIT2) == 0) {
+					addTrapToField(0.5f, 0.5f, null);
+				}
+				for (int k = 0; k < character.size(); k++) {
+					if (character.get(k).getControl() != null) {
+						character.get(k).update(code);
+					}
 				}
 			}
 		}

@@ -1,5 +1,6 @@
 package userinterface;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 import entity.Player;
@@ -40,6 +41,8 @@ public class GameRoomInterface implements GameScene {
 	private VBox rightVBox;
 	private ScreenInformation _screenInformation;
 	private TreeMap<Integer, StackPane> playersFace = new TreeMap<Integer, StackPane>();
+	
+	private EventHandler<KeyEvent> eventHandler;
 
 	public static final Font FONT_LABEL_READY = new Font(PrimaryInterface.FONT_TITLE_LABLES, 40);
 	public static final Font FONT_LABEL_MSG = new Font(PrimaryInterface.FONT_TITLE_LABLES, 50);
@@ -64,34 +67,11 @@ public class GameRoomInterface implements GameScene {
 
 		leftVBox = new VBox();
 		leftVBox.setPrefWidth(240);
+		rebuildLeftVBox();
+
 		rightVBox = new VBox();
 		rightVBox.setPrefWidth(240);
-
-		StackPane leftTeamInfo = new StackPane();
-		leftTeamInfo.setPrefSize(240, 40);
-		leftTeamInfo.setMaxSize(240, 40);
-		leftTeamInfo.setMinSize(240, 40);
-		leftTeamInfo.setStyle("-fx-background-color:rgba(50,200,50,0.8)");
-
-		Label leftBoxDesc = new Label("Defense Team");
-		leftBoxDesc.setFont(PrimaryInterface.FONT_LABEL);
-		leftBoxDesc.setTextFill(Color.WHITE);
-		leftTeamInfo.getChildren().add(leftBoxDesc);
-
-		leftVBox.getChildren().add(leftTeamInfo);
-
-		StackPane rightTeamInfo = new StackPane();
-		rightTeamInfo.setPrefSize(240, 40);
-		rightTeamInfo.setMaxSize(240, 40);
-		rightTeamInfo.setMinSize(240, 40);
-		rightTeamInfo.setStyle("-fx-background-color:rgba(200,50,50,0.8)");
-
-		Label rightBoxDesc = new Label("Attack Team");
-		rightBoxDesc.setFont(PrimaryInterface.FONT_LABEL);
-		rightBoxDesc.setTextFill(Color.WHITE);
-		rightTeamInfo.getChildren().add(rightBoxDesc);
-
-		rightVBox.getChildren().add(rightTeamInfo);
+		rebuildRightVBox();
 
 		_mainComponent = new StackPane();
 		_mainComponent.setPrefSize(_screenInformation.get_width(), _screenInformation.get_height());
@@ -125,7 +105,42 @@ public class GameRoomInterface implements GameScene {
 		scene = new Scene(_masterStackPane);
 	}
 
+	public void rebuildLeftVBox() {
+
+		leftVBox.getChildren().clear();
+
+		StackPane leftTeamInfo = new StackPane();
+		leftTeamInfo.setPrefSize(240, 40);
+		leftTeamInfo.setMaxSize(240, 40);
+		leftTeamInfo.setMinSize(240, 40);
+		leftTeamInfo.setStyle("-fx-background-color:rgba(50,200,50,0.8)");
+
+		Label leftBoxDesc = new Label("Defense Team");
+		leftBoxDesc.setFont(PrimaryInterface.FONT_LABEL);
+		leftBoxDesc.setTextFill(Color.WHITE);
+		leftTeamInfo.getChildren().add(leftBoxDesc);
+
+		leftVBox.getChildren().add(leftTeamInfo);
+	}
+
+	public void rebuildRightVBox() {
+		rightVBox.getChildren().clear();
+		StackPane rightTeamInfo = new StackPane();
+		rightTeamInfo.setPrefSize(240, 40);
+		rightTeamInfo.setMaxSize(240, 40);
+		rightTeamInfo.setMinSize(240, 40);
+		rightTeamInfo.setStyle("-fx-background-color:rgba(200,50,50,0.8)");
+
+		Label rightBoxDesc = new Label("Attack Team");
+		rightBoxDesc.setFont(PrimaryInterface.FONT_LABEL);
+		rightBoxDesc.setTextFill(Color.WHITE);
+		rightTeamInfo.getChildren().add(rightBoxDesc);
+
+		rightVBox.getChildren().add(rightTeamInfo);
+	}
+
 	public void initControls(EventHandler<KeyEvent> event) {
+		eventHandler = event;
 		scene.setOnKeyReleased(event);
 	}
 
@@ -141,10 +156,6 @@ public class GameRoomInterface implements GameScene {
 				p.setStatus(Player.READY);
 				leftVBox.getChildren().add(createNewRunnnerInterface(p));
 			}
-		} else if (key.compareTo(KeyCode.UP) == 0) {
-			logic.updatePlayerType(0, 2);
-		} else if (key.compareTo(KeyCode.DOWN) == 0) {
-			logic.updatePlayerType(0, 1);
 		} else if (key.compareTo(KeyCode.ENTER) == 0) {
 			return 1;
 		}
@@ -355,6 +366,28 @@ public class GameRoomInterface implements GameScene {
 	private void doSomething() {
 		msgOpacity = msgOpacity - 0.01;
 		statusMessageFrame.setOpacity(msgOpacity);
+	}
+
+	public void cleanUp() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+
+				rebuildRightVBox();
+				rebuildLeftVBox();
+
+				playersFace = null;
+				playersFace = new TreeMap<Integer, StackPane>();
+			}
+		});
+	}
+	
+	public void disableControls() {
+		scene.setOnKeyReleased(null);
+	}
+	
+	public void enableControls(){
+		scene.setOnKeyReleased(eventHandler);
 	}
 
 }

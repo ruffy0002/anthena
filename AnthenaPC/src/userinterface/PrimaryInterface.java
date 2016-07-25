@@ -43,7 +43,7 @@ public class PrimaryInterface extends Application {
 	public PrimaryInterface() {
 		initScreenInformation();
 		resources = initResources();
-		logic = new LogicMain(resources);
+		logic = new LogicMain(resources,this);
 		scenes[0] = initStartScene();
 		scenes[1] = initSettingScene();
 		scenes[2] = initGameRoomScene(logic);
@@ -70,19 +70,6 @@ public class PrimaryInterface extends Application {
 
 		stage.setX(0);
 		stage.setY(0);
-
-		stage.widthProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				/*
-				 * double newWidth = newValue.doubleValue(); double newHeight =
-				 * newWidth * ASPECT_RATIO_W_TO_H; Rectangle2D rec = new
-				 * Rectangle2D(0, 0, newWidth, newHeight);
-				 * stage.setWidth(newWidth); stage.setHeight(newHeight);
-				 */
-			}
-		});
-
 		stage.setResizable(false);
 		stage.centerOnScreen();
 		stage.setScene(scenes[0].getScene());
@@ -128,6 +115,7 @@ public class PrimaryInterface extends Application {
 								if(fullScreen){
 									stage.setFullScreen(true);
 								}
+								logic.initGameLoop();
 								logic.startGameLoop();
 							} else {
 								hostRoomInterface.showNotReady();
@@ -185,10 +173,10 @@ public class PrimaryInterface extends Application {
 		return hostRoomInterface;
 	}
 
-	private GameScene initGameScene() {
+	public GameScene initGameScene() {
 		GameInterface gi = GameInterface.getInstance(logic, _screenInformation);
 		initControlsForGameScene(gi.getScene());
-		logic.initGameLoop(gi, controller, resources, gi);
+		logic.init(gi, controller);
 		return gi;
 	}
 
@@ -200,6 +188,14 @@ public class PrimaryInterface extends Application {
 	private Resources initResources() {
 		Resources resource = new Resources();
 		return resource;
+	}
+
+	public void goToLobby() {
+		scenes[3] = initGameScene();
+		stage.setScene(scenes[2].getScene());
+		if(fullScreen){
+			stage.setFullScreen(true);
+		}
 	}
 
 }

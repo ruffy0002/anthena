@@ -17,16 +17,20 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import resource.Resources;
 import userinterface.GameInterface;
 import userinterface.GameRoomInterface;
+import userinterface.PrimaryInterface;
 import userinterface.ScreenInformation;
 
 public class LogicMain {
 
+	private PrimaryInterface primaryUserInterface;
 	private GameLoop gameLoop;
 	private Resources resources;
 	private GameInterface gameInterface;
+	private Controller controller;
 	private GameRoomInterface hostRoomInterface;
 	private hostRoomThread masterRoomThread;
 	private ArrayList<Player> playerList = new ArrayList<Player>();
@@ -36,14 +40,19 @@ public class LogicMain {
 
 	private int controlsIndex = 0;
 
-	public LogicMain(Resources resources) {
+	public LogicMain(Resources resources, PrimaryInterface primaryUserInterface) {
+		this.primaryUserInterface = primaryUserInterface;
 		this.resources = resources;
 	}
 
-	public void initGameLoop(GameInterface gi, Controller controller, Resources resources,
-			GameInterface gameInterface) {
-		this.gameInterface = gameInterface;
-		gameLoop = new GameLoop(gi, controller, resources);
+	public void init(GameInterface gi, Controller controller) {
+		this.gameInterface = gi;
+		this.controller = controller;
+	}
+
+	public void initGameLoop() {
+		gameLoop = null;
+		gameLoop = new GameLoop(gameInterface, controller, resources, this);
 	}
 
 	public void startGameLoop() {
@@ -58,21 +67,35 @@ public class LogicMain {
 				tempQ.offer(Player.getAll_players_list().get(i));
 			}
 		}
-		masterRoomThread.sendStartGame();
 		gameLoop.initGameLoop();
+		masterRoomThread.sendStartGame();
 		waitCheckForPlayers(tempQ);
 	}
 
 	private void waitCheckForPlayers(Queue<Player> tempQ) {
 		Thread thread = new Thread() {
 			public void run() {
-				while (tempQ.size() > 0) {
-					Player p = tempQ.poll();
+				Queue<Player> workingQ = tempQ;
+				Queue<Player> tempQ2 = new LinkedList<Player>();
+
+				while (workingQ.size() > 0) {
+					Player p = workingQ.poll();
 					if (p.getStatus() != Player.READY_TO_GO) {
-						tempQ.offer(p);
+						tempQ2.offer(p);
 						try {
 							Thread.sleep(300);
 						} catch (InterruptedException e) {
+						}
+					}
+					if (workingQ.size() <= 0) {
+						if (tempQ2.size() > 0) {
+							masterRoomThread.sendStartGame();
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+							}
+							workingQ = tempQ2;
+							tempQ2 = new LinkedList<Player>();
 						}
 					}
 				}
@@ -95,8 +118,8 @@ public class LogicMain {
 	public void executeAttack(Player player, float x, float y) {
 		gameLoop.createAttack(x, y, player);
 	}
-	
-	public void addTrapToField(Player player, double d, double e){
+
+	public void addTrapToField(Player player, double d, double e) {
 		gameLoop.addTrapToField(d, e, player);
 	}
 
@@ -152,13 +175,13 @@ public class LogicMain {
 	}
 
 	public void updatePlayerType(int player_id, int type) {
-			Player.getAll_players_list().get(player_id).setPlayerType(type);
-			hostRoomInterface.addPlayer(Player.getAll_players_list().get(player_id));
+		Player.getAll_players_list().get(player_id).setPlayerType(type);
+		hostRoomInterface.addPlayer(Player.getAll_players_list().get(player_id));
 	}
 
 	public void updatePlayerPosition(Player player, float x, float y) {
-		double xPos = 800*x;
-		double yPos = 600*y;
+		double xPos = 800 * x;
+		double yPos = 600 * y;
 		player.getCharacter().setPositionXFinal(xPos);
 		player.getCharacter().setPositionYFinal(yPos);
 	}
@@ -168,12 +191,68 @@ public class LogicMain {
 	}
 
 	public boolean isAllPlayerReady() {
+		
+		if(Player.getAll_players_list().size() == 0){
+			return false;
+		}
+		
 		for (int i = 0; i < Player.getAll_players_list().size(); i++) {
 			if (Player.getAll_players_list().get(i).getStatus() == Player.NOT_READY) {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	public void setAllPlayersUnready() {
+		for (int i = 0; i < Player.getAll_players_list().size(); i++) {
+			Player.getAll_players_list().get(i).setStatus(Player.NOT_READY);
+		}
+	}
+
+	public void showGamePauseMenu() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				gameInterface.getGamePausePane().setOpacity(1);
+			}
+		});
+	}
+
+	public void hideGamePauseMenu() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				gameInterface.getGamePausePane().setOpacity(0);
+			}
+		});
+	}
+
+	public void endGame() {
+		gameLoop.stop();
+		gameLoop = null;
+		gameInterface = null;
+		reviewPlayerStatus();
+		setAllPlayersUnready();
+		hostRoomInterface.cleanUp();
+		rebuildLobbyUsers();
+		primaryUserInterface.goToLobby();
+	}
+
+	private void rebuildLobbyUsers() {
+		for (int i = 0; i < Player.getAll_players_list().size(); i++) {
+			hostRoomInterface.addPlayer(Player.getAll_players_list().get(i));
+		}
+	}
+
+	private void reviewPlayerStatus() {
+		for (int i = 0; i < Player.getAll_players_list().size(); i++) {
+			if (!Player.getAll_players_list().get(i).isConnected()) {
+				Player p = Player.getAll_players_list().get(i);
+				Player.getAll_players_list().remove(i--);
+				p = null;
+			}
+		}
 	}
 
 }

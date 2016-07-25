@@ -18,6 +18,7 @@ import logic.LogicMain;
 
 public class GameInterface implements GameScene {
 
+	private static GameInterface gameInstance; 
 	private LogicMain logic;
 	private ScreenInformation _screenInformation;
 
@@ -34,10 +35,12 @@ public class GameInterface implements GameScene {
 	private StackPane _masterStackPane;
 	private StackPane _fixedStackPane;
 	private StackPane _waitInformation;
+	private StackPane _gamePausePane;
 	private Group root;
 
 	public static GameInterface getInstance(LogicMain logic, ScreenInformation _screenInformation) {
-		GameInterface gameInstance = new GameInterface(logic, _screenInformation);
+		gameInstance = null;
+		gameInstance = new GameInterface(logic, _screenInformation);
 		return gameInstance;
 	}
 
@@ -52,6 +55,7 @@ public class GameInterface implements GameScene {
 		_masterStackPane = new StackPane();
 		_fixedStackPane = new StackPane();
 		_waitInformation = new StackPane();
+		_gamePausePane = new StackPane();
 
 		_waitInformation.setPrefSize(screenBounds.get_width(), screenBounds.get_height());
 		_waitInformation.setMinSize(screenBounds.get_width(), screenBounds.get_height());
@@ -61,6 +65,16 @@ public class GameInterface implements GameScene {
 		Label labelWait = new Label("Waiting for all players....");
 		labelWait.setStyle("-fx-text-fill:rgba(255,255,255,0.9)");
 		_waitInformation.getChildren().add(labelWait);
+		
+		_gamePausePane.setPrefSize(screenBounds.get_width(), screenBounds.get_height());
+		_gamePausePane.setMinSize(screenBounds.get_width(), screenBounds.get_height());
+		_gamePausePane.setMaxSize(screenBounds.get_width(), screenBounds.get_height());
+		_gamePausePane.setStyle("-fx-background-color:rgba(0,0,0, 0.8)");
+		_gamePausePane.setOpacity(0);
+
+		Label gamePause = new Label("Game Paused");
+		gamePause.setStyle("-fx-text-fill:rgba(255,255,255,1)");
+		_gamePausePane.getChildren().add(gamePause);
 
 		_fixedStackPane.setPrefSize(screenBounds.get_width(), screenBounds.get_height());
 		_fixedStackPane.setMinSize(screenBounds.get_width(), screenBounds.get_height());
@@ -77,6 +91,7 @@ public class GameInterface implements GameScene {
 		root.getChildren().add(mainCanvas);
 		root.getChildren().add(overlayBox);
 		root.getChildren().add(_waitInformation);
+		root.getChildren().add(_gamePausePane);
 		_fixedStackPane.getChildren().add(root);
 		_masterStackPane.getChildren().add(_fixedStackPane);
 	}
@@ -137,6 +152,10 @@ public class GameInterface implements GameScene {
 
 	public StackPane getWaitInformationPane() {
 		return _waitInformation;
+	}
+	
+	public StackPane getGamePausePane() {
+		return _gamePausePane;
 	}
 
 	public void createFace(Player p) {
