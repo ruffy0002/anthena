@@ -1,6 +1,7 @@
 package userinterface;
 
 import entity.Player;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
@@ -37,6 +38,8 @@ public class GameInterface implements GameScene {
 	private StackPane _waitInformation;
 	private StackPane _gamePausePane;
 	private Group root;
+	
+	private Label labelWait;
 
 	public static GameInterface getInstance(LogicMain logic, ScreenInformation _screenInformation) {
 		gameInstance = null;
@@ -62,7 +65,7 @@ public class GameInterface implements GameScene {
 		_waitInformation.setMaxSize(screenBounds.get_width(), screenBounds.get_height());
 		_waitInformation.setStyle("-fx-background-color:rgba(0,0,0, 0.8)");
 
-		Label labelWait = new Label("Waiting for all players....");
+		labelWait = new Label("Waiting for all players....");
 		labelWait.setStyle("-fx-text-fill:rgba(255,255,255,0.9)");
 		_waitInformation.getChildren().add(labelWait);
 		
@@ -202,6 +205,15 @@ public class GameInterface implements GameScene {
 		HBox hboxToMove = player.getPanelSet().getMasterBox();
 		leftGrid.getChildren().remove(hboxToMove);
 		createFace(player);
+	}
+	
+	public void setLabelWaitText(String text){
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				labelWait.setText(text);
+			}
+		});
 	}
 
 }

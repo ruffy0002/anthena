@@ -2,6 +2,7 @@ package userinterface;
 
 import controls.Controller;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -192,10 +193,15 @@ public class PrimaryInterface extends Application {
 
 	public void goToLobby() {
 		scenes[3] = initGameScene();
-		stage.setScene(scenes[2].getScene());
-		if(fullScreen){
-			stage.setFullScreen(true);
-		}
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				stage.setScene(scenes[2].getScene());
+				if(fullScreen){
+					stage.setFullScreen(true);
+				}
+			}
+		});
 	}
 
 }

@@ -23,7 +23,6 @@ public class Player {
 	public static final int READY = 1;
 	public static final int READY_TO_GO = 2;
 
-	private static int totalPlayer = 0;
 	private static ArrayList<Player> all_players_list = new ArrayList<Player>();
 
 	private int player_id;
@@ -48,7 +47,6 @@ public class Player {
 	public Player(Control control, String name, Color color, ColorAdjust colorAdjust, PlayerThread thread,
 			LogicMain logicMain, Boolean isMobile) {
 		Player.all_players_list.add(this);
-		this.player_id = totalPlayer++;
 
 		this.isMobile = isMobile;
 		this.thread = thread;
@@ -186,6 +184,14 @@ public class Player {
 
 	public PanelSetFace getPanelSet() {
 		return panelSet;
+	}
+
+	public void destory() {
+		
+	}
+	
+	public int getPlayerThreadNo(){
+		return thread.getPlayerNo();
 	}
 
 }

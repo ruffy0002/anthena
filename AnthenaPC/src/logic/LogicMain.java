@@ -75,6 +75,10 @@ public class LogicMain {
 	private void waitCheckForPlayers(Queue<Player> tempQ) {
 		Thread thread = new Thread() {
 			public void run() {
+				// double startTime = System.currentTimeMillis();
+				int resendCount = 10;
+
+				boolean allGood = true;
 				Queue<Player> workingQ = tempQ;
 				Queue<Player> tempQ2 = new LinkedList<Player>();
 
@@ -89,23 +93,36 @@ public class LogicMain {
 					}
 					if (workingQ.size() <= 0) {
 						if (tempQ2.size() > 0) {
-							masterRoomThread.sendStartGame();
-							try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e) {
+							if (resendCount <= 0) {
+								allGood = false;
+							} else {
+								masterRoomThread.sendStartGame();
+								resendCount--;
+								gameInterface
+										.setLabelWaitText("WaitingWaiting for all players....(" + resendCount + ")");
+								try {
+									Thread.sleep(1000);
+								} catch (InterruptedException e) {
+								}
+								workingQ = tempQ2;
+								tempQ2 = new LinkedList<Player>();
 							}
-							workingQ = tempQ2;
-							tempQ2 = new LinkedList<Player>();
+
 						}
 					}
 				}
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						gameInterface.getWaitInformationPane().setOpacity(0);
-					}
-				});
-				gameLoop.start();
+				if (allGood) {
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							gameInterface.getWaitInformationPane().setOpacity(0);
+						}
+					});
+					gameLoop.start();
+				} else {
+					endGame();
+				}
+
 			}
 		};
 		thread.start();
@@ -191,11 +208,11 @@ public class LogicMain {
 	}
 
 	public boolean isAllPlayerReady() {
-		
-		if(Player.getAll_players_list().size() == 0){
+
+		if (Player.getAll_players_list().size() == 0) {
 			return false;
 		}
-		
+
 		for (int i = 0; i < Player.getAll_players_list().size(); i++) {
 			if (Player.getAll_players_list().get(i).getStatus() == Player.NOT_READY) {
 				return false;
@@ -249,8 +266,12 @@ public class LogicMain {
 		for (int i = 0; i < Player.getAll_players_list().size(); i++) {
 			if (!Player.getAll_players_list().get(i).isConnected()) {
 				Player p = Player.getAll_players_list().get(i);
-				Player.getAll_players_list().remove(i--);
-				p = null;
+
+				if (masterRoomThread.deleteDisconnectedPlayerThread(p.getPlayerThreadNo()) == 1) {
+					Player.getAll_players_list().remove(i--);
+					p.destory();
+					p = null;
+				}
 			}
 		}
 	}
