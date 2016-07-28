@@ -38,6 +38,9 @@ public class PlayerThread implements Runnable {
 	boolean isStarted = false;
 
 	private int packetCount = 0;
+	
+	private int playerType = GamePacket.TYPE_RUNNER;
+	
 	public PlayerThread(InetAddress ipAddress, int playerNo, Socket socket, LogicMain logicMain) {
 		_ipAddress = ipAddress;
 		_playerNo = playerNo;
@@ -113,6 +116,7 @@ public class PlayerThread implements Runnable {
 			// Initialisation data
 			System.out.println("type = " + data.getType());
 			_logicMain.updatePlayerType(_player.getPlayer_id(), data.getType());
+			playerType = data.getType();
 		} else {
 			sendDataToProgram(data);
 		}
@@ -182,9 +186,21 @@ public class PlayerThread implements Runnable {
 	 */
 	public boolean sendPlayerTypeChange() {
 		GamePacket gameStartPacket = new GamePacket(0, 0, GamePacket.TYPE_CHANGEPLAYERTYPE);
+		playerType = GamePacket.TYPE_STOMPER;
 		return sendData(gameStartPacket);
 	}
 
+	/**
+     * Used to get a player to rejoin a game or a new player to start game
+     * 
+     * @return
+     */
+    public boolean sendGameAlreadyStarted() {
+        GamePacket gameAlreadyStartPacket = new GamePacket(0, 0, GamePacket.TYPE_GAMEALREADYSTARTED);
+        gameAlreadyStartPacket.setSkill(playerType);
+        return sendData(gameAlreadyStartPacket);
+    }
+    
 	/**
 	 * Sends a message to the player's mobile screen
 	 * @param packet

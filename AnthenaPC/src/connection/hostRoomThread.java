@@ -24,6 +24,8 @@ public class hostRoomThread implements Runnable {
 	private LogicMain logicMain;
 	PlayerThread[] playerThreads;
 	private int currentPlayerNo = 0;
+	
+	private boolean gameStarted = false;
 
 	public hostRoomThread(LogicMain logicMain, int portNo) {
 		this.logicMain = logicMain;
@@ -40,7 +42,9 @@ public class hostRoomThread implements Runnable {
 	            playerThreads[i].sendGameStart();
 	        }
 	    }
+	    gameStarted = true;
 	}
+	
 	
 	/**
      * Checks if a particular player is ready
@@ -213,7 +217,23 @@ public class hostRoomThread implements Runnable {
         
         if( playerThreads[repeatedSocketNo] != null) {
             playerThreads[repeatedSocketNo].setNewSocket(socket);
+            if(gameStarted) {
+                if(sendDirectGameStart(repeatedSocketNo)) {
+                    System.out.println("Sent forced game start to player " + repeatedSocketNo);
+                }
+            }
+            
+            //#FORSHAN
+            //logicMain.NOTIFYPLAYERJOINED(repeatedSocketNo); repeatedSocketNo is the player number
             return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean sendDirectGameStart (int playerNo) {
+        if(playerThreads[playerNo] != null) {
+            return playerThreads[playerNo].sendGameAlreadyStarted();
         } else {
             return false;
         }
@@ -226,6 +246,11 @@ public class hostRoomThread implements Runnable {
                 Thread thread = new Thread(playerThreads[i]);
                 thread.start();
                 currentPlayerNo++;
+                if(gameStarted) {
+                    sendDirectGameStart(i);
+                }
+                //#FORSHAN
+                //logicMain.NOTIFYPLAYERJOINED(i); i is the player number
                 break;
             }
         }
